@@ -1,71 +1,63 @@
-export type ContactInfo = {
-    firstName: string
-    lastName: string
-    emailAddress: string
-    phoneNumber: string
-    website: string
-    linkedIn: string
-    github: string
-}
+import { User } from '../../../node_modules/.prisma/client'
+import prisma from '../db'
 
 export default async function ContactInfoPage() {
     async function postContactInfo(formData: FormData) {
         'use server'
         // @todo seems like there should be a more concise way to extract this data
-        const ci: ContactInfo = {
+        const user: User = {
+            id: 1,
             firstName: formData.get('firstName')?.toString() || '',
             lastName: formData.get('lastName')?.toString() || '',
             emailAddress: formData.get('emailAddress')?.toString() || '',
             phoneNumber: formData.get('phoneNumber')?.toString() || '',
-            website: formData.get('firstName')?.toString() || '',
-            github: formData.get('firstName')?.toString() || '',
-            linkedIn: formData.get('firstName')?.toString() || '',
+            website: formData.get('website')?.toString() || '',
+            github: formData.get('github')?.toString() || '',
+            linkedIn: formData.get('linkedIn')?.toString() || ''
         }
-        
-        // @todo write code to save to database
+
+        await prisma.user.upsert({
+            where: { id: 1 },
+            update: { ...user },
+            create: { ...user },
+        })
+
+        return {
+            message: 'Saved updated contact information'
+        }
     }
 
     async function getContactInfo() {
-        // @todo rewrite this to pull from database
-        return new Promise<ContactInfo>((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    firstName: 'Rusty',
-                    lastName: 'Tanton',
-                    emailAddress: 'rusty.tanton@gmail.com',
-                    phoneNumber: '678 523-3606',
-                    website: 'https://rustytanton.com',
-                    github: 'https://github.com/rustytanton/',
-                    linkedIn: 'https://www.linkedin.com/in/rustytanton/'
-                })
-            }, 1)
+        const user = await prisma.user.findFirst({
+            where: { id: 1 }
         })
+        return user || {}
     }
 
-    const ci: ContactInfo = await getContactInfo()
+    const ci: User = await getContactInfo() as User
     
     return (
         <form action={postContactInfo}>
             <label>
-                First Name: <input type="text" name="firstName" defaultValue={ci.firstName} />
+                First Name: <input type="text" name="firstName" defaultValue={ci.firstName || ''} />
             </label>
             <label>
-                Last Name: <input type="text" name="lastName" defaultValue={ci.lastName} />
+                Last Name: <input type="text" name="lastName" defaultValue={ci.lastName || ''} />
             </label>
             <label>
-                Email Address: <input type="email" name="emailAddress" defaultValue={ci.emailAddress} />
+                Email Address: <input type="email" name="emailAddress" defaultValue={ci.emailAddress || ''} />
             </label>
             <label>
-                Phone Number: <input type="text" name="phoneNumber" defaultValue={ci.phoneNumber} />
+                Phone Number: <input type="text" name="phoneNumber" defaultValue={ci.phoneNumber || ''} />
             </label>
             <label>
-                Website: <input type="url" name="website" defaultValue={ci.website} />
+                Website: <input type="url" name="website" defaultValue={ci.website || ''} />
             </label>
             <label>
-                LinkedIn URL: <input type="url" name="linkedIn" defaultValue={ci.linkedIn} />
+                LinkedIn URL: <input type="url" name="linkedIn" defaultValue={ci.linkedIn || ''} />
             </label>
             <label>
-                Github URL: <input type="url" name="github" defaultValue={ci.github} />
+                Github URL: <input type="url" name="github" defaultValue={ci.github || ''} />
             </label>
             <input type="submit" value="Submit" />
         </form>
