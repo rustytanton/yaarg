@@ -17,9 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <h1><a href="/">MyResume.ai</a></h1>
-        {children}
+        
+        <main>
+          <h1 className="p-10 w-full"><a href="/">MyResume.ai</a></h1>
+          {children}
         </main>
       </body>
     </html>

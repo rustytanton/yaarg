@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Home() {
 
   return (
-      <>
+      <section className="p-10">
         <p>I want to:</p>
         <ul>
           <li>
@@ -22,6 +22,6 @@ export default function Home() {
             <a href="">Create a new Resume</a>
           </li>
         </ul>
-      </>
+      </section>
   );
 }

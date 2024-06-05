@@ -37,29 +37,29 @@ export default async function ContactInfoPage() {
     const ci: User = await getContactInfo() as User
     
     return (
-        <form action={postContactInfo}>
-            <label>
-                First Name: <input type="text" name="firstName" defaultValue={ci.firstName || ''} />
+        <form action={postContactInfo} className="w-1/2 flex flex-wrap pl-10">
+            <label className="w-full flex p-2">
+                <span className="w-48">First Name:</span> <input className="block text-black w-1/2" type="text" name="firstName" defaultValue={ci.firstName || ''} />
             </label>
-            <label>
-                Last Name: <input type="text" name="lastName" defaultValue={ci.lastName || ''} />
+            <label className="w-full flex p-2">
+                <span className="w-48">Last Name:</span> <input className="block text-black w-1/2" type="text" name="lastName" defaultValue={ci.lastName || ''} />
             </label>
-            <label>
-                Email Address: <input type="email" name="emailAddress" defaultValue={ci.emailAddress || ''} />
+            <label className="w-full flex p-2">
+                <span className="w-48">Email Address:</span> <input className="block text-black w-1/2" type="email" name="emailAddress" defaultValue={ci.emailAddress || ''} />
             </label>
-            <label>
-                Phone Number: <input type="text" name="phoneNumber" defaultValue={ci.phoneNumber || ''} />
+            <label className="w-full flex p-2">
+                <span className="w-48">Phone Number:</span> <input className="block text-black w-1/2" type="text" name="phoneNumber" defaultValue={ci.phoneNumber || ''} />
             </label>
-            <label>
-                Website: <input type="url" name="website" defaultValue={ci.website || ''} />
+            <label className="w-full flex p-2">
+                <span className="w-48">Website:</span> <input className="block text-black w-1/2" type="url" name="website" defaultValue={ci.website || ''} />
             </label>
-            <label>
-                LinkedIn URL: <input type="url" name="linkedIn" defaultValue={ci.linkedIn || ''} />
+            <label className="w-full flex p-2">
+                <span className="w-48">LinkedIn URL:</span> <input className="block text-black w-1/2" type="url" name="linkedIn" defaultValue={ci.linkedIn || ''} />
             </label>
-            <label>
-                Github URL: <input type="url" name="github" defaultValue={ci.github || ''} />
+            <label className="w-full flex p-2">
+                <span className="w-48">Github URL:</span> <input className="block text-black w-1/2" type="url" name="github" defaultValue={ci.github || ''} />
             </label>
-            <input type="submit" value="Submit" />
+            <input className="m-2 p-1 bg-gray-200 text-black" type="submit" value="Submit" />
         </form>
     )
 }

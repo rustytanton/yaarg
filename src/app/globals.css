@@ -31,16 +31,3 @@ body {
     text-wrap: balance;
   }
 }
-
-
-/* temp css */
-input, textarea {
-  color: #000;
-}
-input[type='submit'] {
-  color: #fff;
-}
-label {
-  display: block;
-  margin-bottom: 10px;
-}
