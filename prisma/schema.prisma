@@ -24,3 +24,15 @@ model User {
   linkedIn  String?
   location String?
 }
+
+model Education {
+  id    Int     @id @default(autoincrement())
+  institution String
+  description String
+  major String
+  minor String
+  startDate DateTime
+  endDate DateTime
+  graduated Boolean
+  gpa Float  
+}
