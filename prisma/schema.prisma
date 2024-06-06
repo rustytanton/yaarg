@@ -22,4 +22,5 @@ model User {
   website  String?
   github  String?
   linkedIn  String?
+  location String?
 }
