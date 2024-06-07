@@ -5,7 +5,7 @@ import { upsertUser } from './actions'
 import { User } from '@prisma/client'
 import FormMessage from '../components/FormMessage'
 import FormInputText from '../components/FormInputText'
-import FormSubmitButton from '../components/FormSubmitButton'
+import FormButton from '../components/FormButton'
 
 const initialState = {
     message: ''
@@ -26,7 +26,7 @@ export default function ContactInfoForm(user: User) {
             <FormInputText label="Website:" inputName="website" defaultValue={user.website || ''} />
             <FormInputText label="LinkedIn URL:" inputName="linkedIn" defaultValue={user.linkedIn || ''} />
             <FormInputText label="Github URL:" inputName="github" defaultValue={user.github || ''} />
-            <FormSubmitButton />
+            <FormButton buttonText="Submit" isSubmit={true} />
         </form>
     )
 }

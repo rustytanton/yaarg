@@ -10,6 +10,9 @@ export default function Home() {
             <a href="/contact-info">Manage my contact info</a>
           </li>
           <li>
+            <a href="/education">Manage my education and credentials</a>
+          </li>
+          {/* <li>
             <a href="">Manage my work experiences</a>
           </li>
           <li>
@@ -20,7 +23,7 @@ export default function Home() {
           </li>
           <li>
             <a href="">Create a new Resume</a>
-          </li>
+          </li> */}
         </ul>
       </section>
   );
