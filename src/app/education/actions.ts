@@ -70,7 +70,7 @@ export async function handleFormChange(prevState: any, formData: FormData) {
                 startDate: validDateOrNull(formData.get(group + 'startDate') as string),
                 endDate: validDateOrNull(formData.get(group + 'endDate') as string),
                 gpa: Number(formData.get(group + 'gpa')),
-                graduated: formData.get(group + 'graduated') ? true : false
+                graduated: formData.get(group + 'graduated') === 'on' ? true : false
             }
 
             let education: Education
