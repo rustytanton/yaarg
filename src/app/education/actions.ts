@@ -4,6 +4,7 @@ import { Education } from '@prisma/client'
 import prisma from '../db'
 import { EducationFormState } from './types'
 import { validDateOrNull } from '../util/formatters'
+import { revalidatePath } from 'next/cache'
 
 export async function getEducations() {
     const educations = await prisma.education.findMany()
@@ -81,6 +82,8 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
 
             educations.push(education)
         }
+
+        revalidatePath('/education')
 
         return {
             ...prevState,

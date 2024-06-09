@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import prisma from '../db'
 import { User } from '@prisma/client'
 
@@ -21,6 +22,8 @@ export async function upsertUser(prevState: any, formData: FormData) {
         update: { ...user },
         create: { ...user },
     })
+
+    revalidatePath('/contact-info')
 
     return {
         message: 'User information updated'
