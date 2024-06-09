@@ -2,7 +2,7 @@
 
 import { Education } from '@prisma/client'
 import prisma from '../db'
-import { revalidatePath } from 'next/cache'
+import { EducationFormState } from './types'
 
 export async function getEducations() {
     const educations = await prisma.education.findMany()
@@ -18,12 +18,11 @@ function validDateOrNull(dateString: string): Date | null {
     }
 }
 
-export async function handleFormChange(prevState: any, formData: FormData) {        
+export async function handleFormChange(prevState: EducationFormState, formData: FormData): Promise<EducationFormState> {        
     if (prevState.addSection) {
         return {
-            ...prevState,
             addSection: false,
-            educations: prevState.educations.concat([{}]),
+            educations: prevState.educations.concat([{} as Education]),
             message: 'Added new education section'
         }
     } else {
@@ -38,12 +37,12 @@ export async function handleFormChange(prevState: any, formData: FormData) {
                 return Number(field[1])
             })
 
-        deletes.forEach(async (id) => {
+        for (const id of deletes) {
             await prisma.education.delete({
                 where: { id: id }
             })
-            messages.push(`Deleted education ${id}.`)
-        })
+            messages.push(`Deleted education ${id}.`) 
+        }
 
         let groups = Array.from(formData.entries())
             .filter((field) => {
@@ -60,7 +59,7 @@ export async function handleFormChange(prevState: any, formData: FormData) {
                 }
             }) 
         
-        groups.forEach(async (group) => {
+        for (const group of groups) {
             let payload = {
                 id: Number(formData.get(group + 'id')) || undefined,
                 institution: formData.get(group + 'institution')?.toString() || '',
@@ -89,10 +88,7 @@ export async function handleFormChange(prevState: any, formData: FormData) {
             }
 
             educations.push(education)
-        })
-
-        // @todo this is not refreshing the cache as hoped after a form submission
-        revalidatePath('/education')
+        }
 
         return {
             ...prevState,

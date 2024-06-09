@@ -2,8 +2,14 @@ import FormInputText from '../components/FormInputText'
 import FormInputCheckbox from '../components/FormInputCheckbox'
 import { useState } from 'react'
 import FormButton from './FormButton'
+import { Education } from '@prisma/client'
 
-export default function FormSectionEducation(props) {   
+type Props = {
+    index: number
+    education: Education
+}
+
+export default function FormSectionEducation(props: Props) {   
     const [removeSection, setRemoveSection] = useState(false)
 
     if (removeSection) {
@@ -27,10 +33,10 @@ export default function FormSectionEducation(props) {
                 <FormInputText label="Description:" inputName={"[education" + props.index + "]description"} defaultValue={props?.education?.description || ''} />
                 <FormInputText label="Major:" inputName={"[education" + props.index + "]major"} defaultValue={props?.education?.major || ''} />
                 <FormInputText label="Minor:" inputName={"[education" + props.index + "]minor"} defaultValue={props?.education?.minor || ''} />
-                <FormInputText label="Start Date:" inputName={"[education" + props.index + "]startDate"} defaultValue={props?.education?.startDate || ''} />
-                <FormInputText label="End Date:" inputName={"[education" + props.index + "]endDate"} defaultValue={props?.education?.endDate || ''} />
-                <FormInputText label="GPA:" inputName={"[education" + props.index + "]gpa"} defaultValue={props?.education?.gpa || ''} />
-                <FormInputCheckbox label="Graduated" inputName={"[education" + props.index + "]graduated"} defaultValue={props?.education?.graduated || ''} />
+                <FormInputText label="Start Date:" inputName={"[education" + props.index + "]startDate"} defaultValue={props?.education?.startDate?.toString() || ''} />
+                <FormInputText label="End Date:" inputName={"[education" + props.index + "]endDate"} defaultValue={props?.education?.endDate?.toString() || ''} />
+                <FormInputText label="GPA:" inputName={"[education" + props.index + "]gpa"} defaultValue={props?.education?.gpa?.toString() || ''} />
+                <FormInputCheckbox label="Graduated" inputName={"[education" + props.index + "]graduated"} defaultValue={props?.education?.graduated ? true : false} />
                 <input type="hidden" name={"[education" + props.index + "]id"} defaultValue={props?.education?.id || ''} />
                 <FormButton buttonText="Remove Section" onClick={() => { setRemoveSection(true) }} />
             </section>
