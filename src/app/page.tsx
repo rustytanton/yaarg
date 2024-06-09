@@ -19,9 +19,6 @@ export default function Home() {
             <a href="">Manage my skills</a>
           </li>
           <li>
-            <a href="">Manage my education and credentials</a>
-          </li>
-          <li>
             <a href="">Create a new Resume</a>
           </li> */}
         </ul>
