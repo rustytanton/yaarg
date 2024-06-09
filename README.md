@@ -2,6 +2,8 @@
 
 Uses Next.js and prisma
 
+https://yaarg.vercel.app/
+
 ## Dev server
 
 To run the development server:
