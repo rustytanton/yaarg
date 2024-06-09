@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className={inter.className}>
         
         <main>
-          <h1 className="p-10 w-full"><a href="/">MyResume.ai</a></h1>
+          <h1 className="p-10 w-full"><a href="/">YAARG (Yet Another AI Resume Generator)</a></h1>
           {children}
         </main>
       </body>
