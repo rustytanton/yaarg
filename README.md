@@ -1,24 +1,29 @@
 # YAARG (Yet Another AI Resume Generator)
 
-Uses Next.js and prisma
+Uses Next.js, Prisma, Postgresql
 
-https://yaarg.vercel.app/
+Demo site: https://yaarg.vercel.app/
 
-## Dev server
+## Local Development
 
-To run the development server:
+### Environment File
 
-`npm run dev`
+Copy [.env.example](.env.example) to `.env`, modify as needed.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser
+### Postgresql
 
-
-## Postgresql setup for local dev
-
-I will eventually do this with docker compose or kubernetes:
+I may eventually do this with docker compose or kubernetes:
 
 ```
 docker pull postgres
 docker run --name yaarg-postgresql -e POSTGRES_PASSWORD=yaarg -e POSTGRES_USER=yaarg -p 5432:5432 -d postgres 
 npx prisma migrate dev
 ```
+
+### Dev Server
+
+After creating a .env file and database, run the development server:
+
+`npm run dev`
+
+Open [http://localhost:3000](http://localhost:3000) with your browser
