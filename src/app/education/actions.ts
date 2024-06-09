@@ -3,19 +3,11 @@
 import { Education } from '@prisma/client'
 import prisma from '../db'
 import { EducationFormState } from './types'
+import { validDateOrNull } from '../util/formatters'
 
 export async function getEducations() {
     const educations = await prisma.education.findMany()
     return educations || []
-}
-
-function validDateOrNull(dateString: string): Date | null {
-    let d = new Date(dateString)
-    if (isNaN(d.getDate())) {
-        return null
-    } else {
-        return d
-    }
 }
 
 export async function handleFormChange(prevState: EducationFormState, formData: FormData): Promise<EducationFormState> {        
@@ -57,7 +49,7 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                 } else {
                     return key !== arr[index-1]
                 }
-            }) 
+            })
         
         for (const group of groups) {
             let payload = {
