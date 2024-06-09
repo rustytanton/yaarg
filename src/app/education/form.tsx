@@ -28,7 +28,7 @@ export default function EducationForm(props: Props) {
     })
 
     return (
-        <form action={formAction}>
+        <form action={formAction} className="p-10">
             <FormMessage message={state?.message} />
             <p>Note: You can use this section for credentials too (examples: SCM, PMP, etc)</p>
             {state.educations.length > 0 ? state.educations.map((education: Education, index: number) => {

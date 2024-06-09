@@ -1,7 +1,8 @@
-export default function FormInputText({ defaultValue = '', inputName = '', inputType = 'text', label = '' }) {
+export default function FormInputText({ defaultValue = '', inputName = '', inputType = 'text', label = '', isDisabled = false }) {
     return (
         <label className="w-full flex p-2">
-            <span className="w-48">{label}</span> <input className="block text-black w-1/2" type={inputType} name={inputName} defaultValue={defaultValue || ''} />
+            <span className="w-48">{label}</span> 
+            <input className="block text-black w-1/2" type={inputType} name={inputName} defaultValue={defaultValue || ''} disabled={isDisabled} />
         </label>
     )
 }

@@ -1,8 +1,10 @@
-import Image from "next/image";
+import { auth } from './auth'
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth()
 
-  return (
+  if (session && session.user) {
+    return (
       <section className="p-10">
         <p>I want to:</p>
         <ul>
@@ -23,5 +25,11 @@ export default function Home() {
           </li> */}
         </ul>
       </section>
-  );
+    )
+  } else {
+    return (
+      <div className="p-10">Please login to see this page</div>
+    )
+  }
+  
 }
