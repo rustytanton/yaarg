@@ -17,7 +17,7 @@ export default function FormSectionEducation(props: Props) {
             <>
                 { props.education.institution && props.education.id ? 
                     <>
-                        <section className="border-b border-white">
+                        <section className="border-b border-white pt-10 pb-10">
                             <p><strong>{props.education.institution}</strong> will be deleted on form submission.</p>
                             <FormButton buttonText="Undo" onClick={() => { setRemoveSection(false) }} />
                         </section>

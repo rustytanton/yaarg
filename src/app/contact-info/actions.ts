@@ -11,6 +11,7 @@ export async function upsertUser(prevState: any, formData: FormData) {
             id: session.user.id as string,
             firstName: formData.get('firstName') as string,
             lastName: formData.get('lastName') as string,
+            emailAlt: formData.get('emailAlt') as string,
             phoneNumber: formData.get('phoneNumber') as string,
             website: formData.get('website') as string,
             github: formData.get('github') as string,
