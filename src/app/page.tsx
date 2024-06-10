@@ -28,7 +28,11 @@ export default async function Home() {
     )
   } else {
     return (
-      <div className="p-10">Please login to see this page</div>
+      <div className="p-10 w-1/2">
+        <p className="pb-5">Welcome! After you sign in with a Google account, you can use this tool to build resumes for jobs.</p>
+        <p className="pb-5">As you create more resumes, the tool will use experience and other information you&apos;ve entered into past resumes to suggest experience bullet points customized for the job you&apos;re applying for.</p>
+        <p className="pb-5">For now the tool is limited to approved Google accounts, email <a href="mailto:rusty.tanton@gmail.com">rusty.tanton@gmail.com</a> for access. Thanks!</p>
+      </div>
     )
   }
   

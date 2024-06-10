@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import "./globals.css";
-import SignIn from './components/SignIn'
-import SignOut from "./components/SignOut";
-import { auth } from './auth'
+import SiteHeader from './components/SiteHeader'
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,19 +16,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth()
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <main>
-          <h1 className="p-10 w-full"><a href="/">YAARG (Yet Another AI Resume Generator)</a></h1>
-          <div className="pl-10">
-            {session && session.user
-              ? <SignOut />
-              : <SignIn />
-            }
-          </div>
+          <SiteHeader />
           {children}
         </main>
       </body>
