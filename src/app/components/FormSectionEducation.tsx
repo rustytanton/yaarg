@@ -28,7 +28,7 @@ export default function FormSectionEducation(props: Props) {
         )
     } else {
         return (
-            <section className="border-b border-white">
+            <section className="border-b border-white pb-5 mb-10">
                 <FormInputText label="Institution:" inputName={"[education" + props.index + "]institution"} defaultValue={props?.education?.institution || ''} />
                 <FormInputText label="Description:" inputName={"[education" + props.index + "]description"} defaultValue={props?.education?.description || ''} />
                 <FormInputText label="Major:" inputName={"[education" + props.index + "]major"} defaultValue={props?.education?.major || ''} />

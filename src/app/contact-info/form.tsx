@@ -21,7 +21,7 @@ export default function ContactInfoForm(props: Props) {
     const user = props.user
 
     return (
-        <form action={formAction} className="w-1/2 flex flex-wrap pl-10">
+        <form action={formAction} className="pl-10">
             <FormMessage message={state?.message} />
             <FormInputText label="First Name:" inputName="firstName" defaultValue={user.firstName || ''} />
             <FormInputText label="Last Name:" inputName="lastName" defaultValue={user.lastName || ''} />

@@ -18,9 +18,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <main>
-          <SiteHeader />
+      <body className={inter.className + " flex flex-col items-center"}>
+        <SiteHeader />
+        <main className="w-5/6 flex flex-col items-center">
           {children}
         </main>
       </body>
