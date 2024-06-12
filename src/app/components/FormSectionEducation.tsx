@@ -33,12 +33,7 @@ export default function FormSectionEducation(props: Props) {
                     defaultValue={props.education.institution as string}
                 />
                 <FormInputText
-                    label="Description:"
-                    inputName={"[education" + props.index + "]description"}
-                    defaultValue={props.education.description as string}
-                />
-                <FormInputText
-                    label="Major:"
+                    label="Major / Credential:"
                     inputName={"[education" + props.index + "]major"}
                     defaultValue={props.education.major as string}
                 />
@@ -69,7 +64,7 @@ export default function FormSectionEducation(props: Props) {
                     placeholder='Example: 4.0'
                 />
                 <FormInputCheckbox
-                    label="Graduated"
+                    label="Graduated / Earned Credential"
                     inputName={"[education" + props.index + "]graduated"}
                     defaultValue={props.education.graduated ? true : false}
                 />

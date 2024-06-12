@@ -45,12 +45,11 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                     userId: session.user.id as string,
                     id: Number(formData.get(group + 'id')) || undefined,
                     institution: formData.get(group + 'institution')?.toString() || '',
-                    description: formData.get(group + 'description')?.toString() || '',
                     major: formData.get(group + 'major')?.toString() || '',
                     minor: formData.get(group + 'minor')?.toString() || '',
                     startDate: formData.get(group + 'startDate') as string,
                     endDate: formData.get(group + 'endDate') as string,
-                    gpa: Number(formData.get(group + 'gpa')) || null,
+                    gpa: formData.get(group + 'gpa') as string,
                     graduated: formData.get(group + 'graduated') === 'on' ? true : false
                 }
     
