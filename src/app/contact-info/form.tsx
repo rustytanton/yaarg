@@ -21,7 +21,7 @@ export default function ContactInfoForm(props: Props) {
     const user = props.user
 
     return (
-        <form action={formAction} className="pl-10">
+        <form action={formAction} className="pl-10 w-1/2">
             <FormMessage message={state?.message} />
             <p className="mb-10">If you specify an alternative email address, it will be used in place of your account email (which can&apos;t be changed) when generating resumes.</p>
             <FormInputText label="First Name:" inputName="firstName" defaultValue={user.firstName || ''} />
