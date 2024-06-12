@@ -1,8 +1,10 @@
+import { MouseEventHandler } from "react"
+
 type Props = {
     defaultValue: boolean
     inputName?: string
     label?: string
-    onClick?: (e: Event) => void | undefined
+    onClick?: MouseEventHandler<HTMLInputElement> | undefined
 }
 
 export default function FormInputCheckbox({ defaultValue = false, inputName = '', label = '', onClick = undefined }: Props) {
