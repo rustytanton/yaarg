@@ -51,16 +51,22 @@ export default function FormSectionEducation(props: Props) {
                     label="Start Date:"
                     inputName={"[education" + props.index + "]startDate"}
                     defaultValue={props.education.startDate?.toString()}
+                    pattern="^\d{1,2}/\d{2,4}"
+                    placeholder='Example: 8/1997'
                 />
                 <FormInputText
                     label="End Date:"
                     inputName={"[education" + props.index + "]endDate"}
                     defaultValue={props.education.endDate?.toString()}
+                    pattern="^\d{1,2}/\d{2,4}"
+                    placeholder='Example: 5/2002'
                 />
                 <FormInputText
                     label="GPA:"
                     inputName={"[education" + props.index + "]gpa"}
                     defaultValue={props.education.gpa?.toString()}
+                    pattern="^\d\.\d"
+                    placeholder='Example: 4.0'
                 />
                 <FormInputCheckbox
                     label="Graduated"

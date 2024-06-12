@@ -80,8 +80,8 @@ model Education {
   description String?
   major       String?
   minor       String?
-  startDate   DateTime?
-  endDate     DateTime?
+  startDate   String?
+  endDate     String?
   graduated   Boolean?
   gpa         Float?
 

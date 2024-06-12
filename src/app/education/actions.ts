@@ -69,8 +69,8 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                     description: formData.get(group + 'description')?.toString() || '',
                     major: formData.get(group + 'major')?.toString() || '',
                     minor: formData.get(group + 'minor')?.toString() || '',
-                    startDate: validDateOrNull(formData.get(group + 'startDate') as string),
-                    endDate: validDateOrNull(formData.get(group + 'endDate') as string),
+                    startDate: formData.get(group + 'startDate') as string,
+                    endDate: formData.get(group + 'endDate') as string,
                     gpa: Number(formData.get(group + 'gpa')) || null,
                     graduated: formData.get(group + 'graduated') === 'on' ? true : false
                 }
