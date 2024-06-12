@@ -3,9 +3,9 @@
 import { Education } from '@prisma/client'
 import prisma from '../db'
 import { EducationFormState } from './types'
-import { validDateOrNull } from '../util/formatters'
 import { revalidatePath } from 'next/cache'
 import { auth } from '../auth'
+import { fieldGroups, deleteIds } from '../util/form'
 
 export async function getEducations() {
     const session = await auth()
@@ -30,14 +30,8 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
         } else {
             let educations: Education[] = []
             let messages: string[] = []
-    
-            let deletes = Array.from(formData.entries())
-                .filter((field) => {
-                    return field[0] === '[delete]'
-                })
-                .map((field) => {
-                    return Number(field[1])
-                })
+            let deletes = deleteIds(formData)
+            let groups = fieldGroups(formData, 'education')
     
             for (const id of deletes) {
                 await prisma.education.delete({
@@ -45,21 +39,6 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                 })
                 messages.push(`Deleted education ${id}.`) 
             }
-    
-            let groups = Array.from(formData.entries())
-                .filter((field) => {
-                    return field[0].indexOf('[education') > -1
-                })
-                .map((field) => {
-                    return field[0].split(']')[0] + ']'
-                })
-                .filter((key, index, arr) => {
-                    if (index === 0) {
-                        return true
-                    } else {
-                        return key !== arr[index-1]
-                    }
-                })
             
             for (const group of groups) {
                 let payload = {

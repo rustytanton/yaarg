@@ -14,9 +14,10 @@ export default async function Home() {
           <li>
             <a href="/education">Manage my education and credentials</a>
           </li>
-          {/* <li>
-            <a href="">Manage my work experiences</a>
+          <li>
+            <a href="/jobs">Manage my jobs</a>
           </li>
+          {/* 
           <li>
             <a href="">Manage my skills</a>
           </li>

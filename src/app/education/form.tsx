@@ -7,7 +7,6 @@ import FormSectionEducation from '../components/FormSectionEducation'
 import FormButton from '../components/FormButton'
 import { Education } from '@prisma/client'
 import { EducationFormState } from './types'
-import { useRouter } from 'next/navigation'
 
 const initialState: EducationFormState = {
     addSection: false,
@@ -20,8 +19,6 @@ type Props = {
 }
 
 export default function EducationForm(props: Props) {
-    const router = useRouter()
-
     const [state, formAction] = useFormState(handleFormChange, {
         ...initialState,
         educations: props.educations
