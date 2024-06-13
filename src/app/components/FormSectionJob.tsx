@@ -15,7 +15,7 @@ export default function FormSectionJob(props: Props) {
     const [endDate, setEndDate] = useState(props.job.endDate)
     const [removeSection, setRemoveSection] = useState(false)
 
-    function toggleEndDate(e: Event) {
+    function toggleEndDate(e: React.MouseEvent) {
         const el = e.target as HTMLInputElement
         setStillEmployed(el.checked)
         if (el.checked) {
@@ -71,7 +71,7 @@ export default function FormSectionJob(props: Props) {
                 }
                 <FormInputCheckbox
                     label="Still employed here?"
-                    onClick={toggleEndDate}
+                    onClick={(e) => { toggleEndDate(e) }}
                     defaultValue={props.job.stillWorksHere}
                     inputName={ "[job" + props.index + "]stillWorksHere" } 
                 />
