@@ -17,6 +17,9 @@ export default async function Home() {
           <li>
             <a href="/jobs">Manage my jobs</a>
           </li>
+          <li>
+            <a href="/chatgpt-test">DEV: ChatGPT Test Page</a>
+          </li>
           {/* 
           <li>
             <a href="">Manage my skills</a>
