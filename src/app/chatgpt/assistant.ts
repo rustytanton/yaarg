@@ -30,7 +30,7 @@ export async function assistant(props: assistantProperties): Promise<ChatGptAssi
             })
             assistant = await prisma.chatGptAssistant.create({
                 data: {
-                    userId: session.user.id,
+                    userId: session.user.id as string,
                     name: props.name,
                     instructions: props.instructions,
                     model: props.model,
