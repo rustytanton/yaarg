@@ -33,6 +33,7 @@ model User {
   sessions      Session[]
   educations    Education[]
   jobs          Job[]
+  assistants    ChatGptAssistant[]
 }
 
 model Account {
@@ -98,5 +99,16 @@ model Job {
   attendanceModel String
   stillWorksHere  Boolean
   
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatGptAssistant {
+  id            Int       @id @default(autoincrement())
+  userId        String
+  externalId    String
+  name          String
+  instructions  String
+  model         String
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

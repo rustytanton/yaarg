@@ -1,0 +1,28 @@
+import { assistant, assistantProperties, assistantMessage } from "./assistant";
+
+export const assistantKeywordExtractor: assistantProperties = {
+    name: 'YAARG keywords extractor',
+    instructions: `
+Parse the provided job description, finding the skills mentioned and how many times each skill is mentioned.
+Return results in a JSON object which looks like this:
+{
+    "skills": [
+        {
+            "skill": string,
+            "mentioned": number
+        }
+    ]
+}`,
+    model: 'gpt-3.5-turbo'
+}
+
+export async function getKeywords(prompt: string) {
+    const _assistant = await assistant(assistantKeywordExtractor)
+    if (_assistant) {
+        const messages = await assistantMessage(_assistant.externalId, prompt)
+        if (messages) {
+            const result = messages.data[0].content[0].text
+            return JSON.parse(result.value)
+        }
+    }
+}
