@@ -20,9 +20,9 @@ export default function FormKeywords() {
     })
 
     return (
-        <form action={formAction} className="p-10">
+        <form action={formAction} className="p-10 w-3/4">
             <h2>Parse Job Description For Keywords</h2>
-            <textarea name="prompt" className="p-2 text-black w-full">
+            <textarea name="prompt" className="p-2 text-black w-full h-40">
 
             </textarea>
             <FormButton buttonText="Submit" isSubmit={true} />
