@@ -5,11 +5,12 @@ type Props = {
     buttonText: string,
     isSubmit?: boolean,
     onClick?: any
-    pendingMessage?: string
+    pendingMessage?: string,
+    href?: string
 }
 
 
-export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '' }: Props) {
+export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '', href = '' }: Props) {
     const { pending } = useFormStatus()
 
     if (isSubmit && pending) {
@@ -17,6 +18,16 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
             <>
                 <Spinner /> {pendingMessage}
             </>
+        )
+    } else if (href) {
+        return (
+            <a
+                className="m-2 p-1 bg-gray-200 text-black block"
+                href={href}
+                onClick={onClick}
+            >
+                {buttonText}
+            </a>
         )
     } else {
         return (
