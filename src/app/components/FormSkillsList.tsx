@@ -1,20 +1,22 @@
+'use client'
+
 import { useFormStatus } from 'react-dom'
-import { ChatGptKeyword } from '../chatgpt/assistant-keywords-extractor'
+import { ChatGptSkill } from '../chatgpt/assistant-skills-extractor'
 
 type Props = {
-    keywords: ChatGptKeyword[]
+    skills: ChatGptSkill[]
 }
 
-export default function FormKeywordsList(props: Props) {
+export default function FormSkillsList(props: Props) {
     const { pending } = useFormStatus()
 
     if (!pending) {
         return (
             <div className="pt-10">
-                {props.keywords.map((pair, index) => {
+                {props.skills.map((pair, index) => {
                     return (
                         <div key={index}>
-                            <strong>{pair.skill}</strong> ({pair.mentioned})
+                            <strong>{pair.skill}</strong> ({pair.mentions})
                         </div>
                     )
                 })}

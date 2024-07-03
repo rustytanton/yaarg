@@ -14,26 +14,28 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  email         String      @unique
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  emailVerified DateTime?
-  emailAlt      String?
-  image         String?  
-  phoneNumber   String?
-  name          String?
-  firstName     String?
-  lastName      String?
-  website       String?
-  github        String?
-  linkedIn      String?
-  location      String?
-  accounts      Account[]
-  sessions      Session[]
-  educations    Education[]
-  jobs          Job[]
-  assistants    ChatGptAssistant[]
+  id              String             @id @default(cuid())
+  email           String             @unique
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  emailVerified   DateTime?
+  emailAlt        String?
+  image           String?
+  phoneNumber     String?
+  name            String?
+  firstName       String?
+  lastName        String?
+  website         String?
+  github          String?
+  linkedIn        String?
+  location        String?
+  accounts        Account[]
+  sessions        Session[]
+  educations      Education[]
+  jobs            Job[]
+  assistants      ChatGptAssistant[]
+  jobDescriptions JobDescription[]
+  resumes         Resume[]
 }
 
 model Account {
@@ -76,7 +78,7 @@ model VerificationToken {
 }
 
 model Education {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   userId      String
   institution String?
   major       String?
@@ -90,7 +92,7 @@ model Education {
 }
 
 model Job {
-  id              Int       @id @default(autoincrement())
+  id              Int     @id @default(autoincrement())
   userId          String
   employer        String
   location        String
@@ -98,17 +100,45 @@ model Job {
   endDate         String
   attendanceModel String
   stillWorksHere  Boolean
-  
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ChatGptAssistant {
-  id            Int       @id @default(autoincrement())
-  userId        String
-  externalId    String
-  name          String
-  instructions  String
-  model         String
+  id           Int    @id @default(autoincrement())
+  userId       String
+  externalId   String
+  name         String
+  instructions String
+  model        String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model JobDescription {
+  id     Int    @id @default(autoincrement())
+  userId String
+  text   String
+
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume Resume[]
+  skills JobDescriptionSkill[]
+}
+
+model Resume {
+  id               Int    @id @default(autoincrement())
+  userId           String
+  jobDescriptionId Int
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id])
+}
+
+model JobDescriptionSkill {
+  id     Int    @id @default(autoincrement())
+  jobDescriptionId Int
+  skill String
+  mentions Int
+
+  jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
 }

@@ -1,10 +1,10 @@
-import { ChatGptKeyword } from "../chatgpt/assistant-keywords-extractor"
+import { ChatGptSkill } from "../chatgpt/assistant-skills-extractor"
 
 export type ChatGptKeywordFormState = {
     prompt: string
     result: {
         keywords: {
-            skills: Array<ChatGptKeyword>
+            skills: Array<ChatGptSkill>
         }
     }
 }

@@ -1,13 +1,22 @@
 import { useFormStatus } from 'react-dom'
 import Spinner from './Spinner'
 
+type Props = {
+    buttonText: string,
+    isSubmit?: boolean,
+    onClick?: any
+    pendingMessage?: string
+}
 
-export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {} }) {
+
+export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '' }: Props) {
     const { pending } = useFormStatus()
 
-    if (pending) {
+    if (isSubmit && pending) {
         return (
-            <Spinner />
+            <>
+                <Spinner /> {pendingMessage}
+            </>
         )
     } else {
         return (

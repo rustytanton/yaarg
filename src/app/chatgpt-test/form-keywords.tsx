@@ -4,7 +4,8 @@ import { useFormState } from "react-dom";
 import { ChatGptKeywordFormState } from "./types";
 import { handleKeywordsFormChange } from "./actions";
 import FormButton from "../components/FormButton";
-import FormKeywordsList from "../components/FormKeywordsList";
+import FormSkillsList from "../components/FormSkillsList";
+import FormTextarea from "../components/FormTextarea";
 
 const initialState: ChatGptKeywordFormState = {
     prompt: '',
@@ -22,12 +23,9 @@ export default function FormKeywords() {
 
     return (
         <form action={formAction} className="p-10 w-3/4">
-            <h2>Parse Job Description For Keywords</h2>
-            <textarea name="prompt" className="p-2 text-black w-full h-40">
-
-            </textarea>
+            <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' />
             <FormButton buttonText="Submit" isSubmit={true} />
-            <FormKeywordsList keywords={state.result.keywords.skills} />
+            <FormSkillsList skills={state.result.keywords.skills} />
         </form>
     )
 }
