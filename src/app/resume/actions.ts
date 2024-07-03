@@ -9,7 +9,16 @@ import { getSkills } from '@/app/chatgpt/assistant-skills-extractor'
 export async function handleFormChange(prevState: ResumeFormNewState, formData: FormData) {
     const session = await auth()
     if (session && session.user) {
+        const employer = formData.get('employer') as string
         const prompt = formData.get('prompt') as string
+        
+        if (!employer || !prompt) {
+            return {
+                ...prevState,
+                message: 'You must enter both an employer and a job description to proceed'
+            }
+        }
+        
         const skills = await getSkills(prompt)
         const jd = await prisma.jobDescription.create({
             data: {
@@ -20,6 +29,7 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
         const resume = await prisma.resume.create({
             data: {
                 userId: session.user.id as string,
+                employer: employer,
                 jobDescriptionId: jd.id
             }
         })

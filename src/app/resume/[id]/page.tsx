@@ -19,6 +19,7 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
     return (
         <div>
             <p>editing resume {params.id}</p>
+            <p>employer: {resume?.employer}</p>
             <FormSkillsList skills={skills} />
         </div>
     )

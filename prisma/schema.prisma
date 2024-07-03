@@ -120,14 +120,16 @@ model JobDescription {
   userId String
   text   String
 
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   resume Resume[]
   skills JobDescriptionSkill[]
 }
 
 model Resume {
-  id               Int    @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   userId           String
+  createdAt        DateTime @default(now())
+  employer         String
   jobDescriptionId Int
 
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -135,10 +137,10 @@ model Resume {
 }
 
 model JobDescriptionSkill {
-  id     Int    @id @default(autoincrement())
+  id               Int    @id @default(autoincrement())
   jobDescriptionId Int
-  skill String
-  mentions Int
+  skill            String
+  mentions         Int
 
   jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
 }
