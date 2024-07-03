@@ -4,6 +4,7 @@ import { useFormState } from "react-dom";
 import { ChatGptKeywordFormState } from "./types";
 import { handleKeywordsFormChange } from "./actions";
 import FormButton from "../components/FormButton";
+import FormKeywordsList from "../components/FormKeywordsList";
 
 const initialState: ChatGptKeywordFormState = {
     prompt: '',
@@ -26,13 +27,7 @@ export default function FormKeywords() {
 
             </textarea>
             <FormButton buttonText="Submit" isSubmit={true} />
-            {state.result.keywords.skills.map((pair, index) => {
-                return (
-                    <div key={index}>
-                        <strong>{pair.skill}</strong> ({pair.mentioned})
-                    </div>
-                )
-            })}
+            <FormKeywordsList keywords={state.result.keywords.skills} />
         </form>
     )
 }
