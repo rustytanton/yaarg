@@ -17,9 +17,10 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
     })
 
     return (
-        <div>
-            <p>editing resume {params.id}</p>
-            <p>employer: {resume?.employer}</p>
+        <div className="w-3/4">
+            <p>Editing resume {params.id}</p>
+            <p>Employer: {resume?.employer}</p>
+            <h2>Skills Mentioned in Job Description:</h2>
             <FormSkillsList skills={skills} />
         </div>
     )
