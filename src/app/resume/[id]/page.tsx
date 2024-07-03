@@ -1,15 +1,25 @@
 'use server'
 
+import { auth } from "@/app/auth"
 import FormSkillsList from "@/app/components/FormSkillsList"
 import ShowHideText from "@/app/components/ShowHideText"
 import prisma from "@/app/db"
 
+
 export default async function ResumePage({ params }:{ params: { id: string } }) {
+    const session = await auth()
+
     const resume = await prisma.resume.findFirst({
         where: {
             id: Number(params.id)
         }
     })
+
+    if (!session || !session.user || session.user.id !== resume?.userId) {
+        return (
+            <div>Must be logged in as the correct user to view this page</div>
+        )
+    }
 
     const skills = await prisma.jobDescriptionSkill.findMany({
         where: {
@@ -20,6 +30,12 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
     const jobDescription = await prisma.jobDescription.findFirst({
         where: {
             id: resume?.jobDescriptionId
+        }
+    })
+
+    const jobs = await prisma.job.findMany({
+        where: {
+            userId: session.user.id
         }
     })
 
