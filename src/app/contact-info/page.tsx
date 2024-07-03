@@ -1,7 +1,7 @@
 'use server';
 
 import ContactInfoForm from './form';
-import { auth } from '../auth'
+import { auth } from '@/app/auth'
 import { User } from '@prisma/client';
 
 export default async function ContactInfoPage() {

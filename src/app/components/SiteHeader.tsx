@@ -1,6 +1,6 @@
 import SignInGoogle from './SignInGoogle'
 import SignOut from "./SignOut"
-import { auth } from '../auth'
+import { auth } from '@/app/auth'
 import Image from 'next/image'
 
 export default async function SiteHeader() {

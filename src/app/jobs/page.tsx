@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '../auth'
+import { auth } from '@/app/auth'
 import JobForm from './form'
 import { getJobs } from './actions';
 

@@ -1,10 +1,10 @@
 'use server'
 
-import prisma from '../db'
-import { auth } from '../auth'
+import prisma from '@/app/db'
+import { auth } from '@/app/auth'
 import { Job } from '@prisma/client'
 import { JobFormState } from './types'
-import { deleteIds, fieldGroups } from '../util/form'
+import { deleteIds, fieldGroups } from '@/app/util/form'
 import { revalidatePath } from 'next/cache'
 
 export async function getJobs(): Promise<Job[]> {

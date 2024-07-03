@@ -1,6 +1,6 @@
 'use server'
 
-import { getSkills } from "../chatgpt/assistant-skills-extractor"
+import { getSkills } from "@/app/chatgpt/assistant-skills-extractor"
 import { ChatGptKeywordFormState } from './types'
 
 

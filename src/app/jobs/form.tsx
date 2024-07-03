@@ -1,12 +1,12 @@
 'use client'
 
-import FormButton from "../components/FormButton"
-import FormSectionJob from "../components/FormSectionJob"
+import FormButton from "@/app/components/FormButton"
+import FormSectionJob from "@/app/components/FormSectionJob"
 import { Job } from "@prisma/client"
 import { JobFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from './actions'
-import FormMessage from "../components/FormMessage"
+import FormMessage from "@/app/components/FormMessage"
 
 type Props = {
     jobs: Job[]

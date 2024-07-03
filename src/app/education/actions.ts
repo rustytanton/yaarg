@@ -1,11 +1,11 @@
 'use server'
 
 import { Education } from '@prisma/client'
-import prisma from '../db'
+import prisma from '@/app/db'
 import { EducationFormState } from './types'
 import { revalidatePath } from 'next/cache'
-import { auth } from '../auth'
-import { fieldGroups, deleteIds } from '../util/form'
+import { auth } from '@/app/auth'
+import { fieldGroups, deleteIds } from '@/app/util/form'
 
 export async function getEducations() {
     const session = await auth()

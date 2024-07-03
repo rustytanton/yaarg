@@ -1,5 +1,5 @@
-import FormInputText from '../components/FormInputText'
-import FormInputCheckbox from '../components/FormInputCheckbox'
+import FormInputText from './FormInputText'
+import FormInputCheckbox from './FormInputCheckbox'
 import { useState } from 'react'
 import FormButton from './FormButton'
 import { Education } from '@prisma/client'

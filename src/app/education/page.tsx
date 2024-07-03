@@ -1,7 +1,7 @@
 'use server';
 
 import { getEducations } from './actions'
-import { auth } from '../auth';
+import { auth } from '@/app/auth';
 import EducationForm from './form';
 
 export default async function EducationPage() {

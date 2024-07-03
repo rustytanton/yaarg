@@ -1,6 +1,6 @@
 import { ChatGptAssistant } from "@prisma/client";
-import prisma from "../db";
-import { auth } from "../auth";
+import prisma from "@/app/db";
+import { auth } from "@/app/auth";
 import OpenAI from 'openai'
 
 export type assistantProperties = {

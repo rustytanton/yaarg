@@ -1,8 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import prisma from '../db'
-import { auth } from '../auth'
+import prisma from '@/app/db'
+import { auth } from '@/app/auth'
 
 export async function upsertUser(prevState: any, formData: FormData) { 
     const session = await auth()
