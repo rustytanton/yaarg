@@ -17,6 +17,11 @@ Return results in a JSON object which looks like this:
     model: 'gpt-3.5-turbo'
 }
 
+export type ChatGptKeyword = {
+    skill: string
+    mentioned: number
+}
+
 type KeywordsMessageContent = MessageContent & {
     text: {
         value: string

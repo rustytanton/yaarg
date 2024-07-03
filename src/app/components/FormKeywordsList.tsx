@@ -1,5 +1,5 @@
 import { useFormStatus } from 'react-dom'
-import { ChatGptKeyword } from '../chatgpt-test/types'
+import { ChatGptKeyword } from '../chatgpt/assistant-keywords-extractor'
 
 type Props = {
     keywords: ChatGptKeyword[]

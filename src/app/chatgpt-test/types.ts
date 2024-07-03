@@ -1,7 +1,4 @@
-export type ChatGptKeyword = {
-    skill: string
-    mentioned: number
-}
+import { ChatGptKeyword } from "../chatgpt/assistant-keywords-extractor"
 
 export type ChatGptKeywordFormState = {
     prompt: string
