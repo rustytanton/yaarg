@@ -4,6 +4,7 @@ import { auth } from "@/app/auth"
 import FormSkillsList from "@/app/components/FormSkillsList"
 import ShowHideText from "@/app/components/ShowHideText"
 import prisma from "@/app/db"
+import Link from "next/link"
 
 
 export default async function ResumePage({ params }:{ params: { id: string } }) {
@@ -36,6 +37,9 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
     const jobs = await prisma.job.findMany({
         where: {
             userId: session.user.id
+        },
+        orderBy: {
+            endDate: 'desc'
         }
     })
 
@@ -53,6 +57,19 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
 
             <h3>Skills Mentioned in Job Description:</h3>
             <FormSkillsList skills={skills} />
+
+            <h3>Enter experience for your jobs:</h3>
+            <ul>
+            {jobs.map((job, index) => {
+                return (
+                    <li key={index}>
+                        <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
+                            {job.employer} {job.startDate} - {job.endDate}
+                        </Link>
+                    </li>
+                )
+            })}
+            </ul>
         </div>
     )
 }
