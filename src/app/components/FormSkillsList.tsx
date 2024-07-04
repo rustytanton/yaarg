@@ -1,7 +1,7 @@
 'use client'
 
 import { useFormStatus } from 'react-dom'
-import { ChatGptSkill } from '@/app/chatgpt/assistant-skills-extractor'
+import { ChatGptSkill } from '@/app/_lib/chatgpt/assistant-skills-extractor'
 
 type Props = {
     skills: ChatGptSkill[]

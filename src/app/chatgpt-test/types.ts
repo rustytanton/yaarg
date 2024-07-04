@@ -1,4 +1,4 @@
-import { ChatGptSkill } from "@/app/chatgpt/assistant-skills-extractor"
+import { ChatGptSkill } from "@/app/_lib/chatgpt/assistant-skills-extractor"
 
 export type ChatGptKeywordFormState = {
     prompt: string

@@ -4,7 +4,7 @@ import { ResumeFormNewState } from './types'
 import prisma from '@/app/db'
 import { auth } from '@/app/auth'
 import { redirect } from 'next/navigation'
-import { getSkills } from '@/app/chatgpt/assistant-skills-extractor'
+import { getSkills } from '@/app/_lib/chatgpt/assistant-skills-extractor'
 
 export async function handleFormChange(prevState: ResumeFormNewState, formData: FormData) {
     const session = await auth()
