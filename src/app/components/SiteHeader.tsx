@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import SignInGoogle from './SignInGoogle'
 import SignOut from "./SignOut"
 import { auth } from '@/app/auth'
@@ -10,7 +11,7 @@ export default async function SiteHeader() {
         <header className="flex items-center p-10">
             <Image alt="Pirate Avatar" src="/pirate-avatar.png" width={120} height={120} />
             <h1 className="pr-10">
-                <a href="/">YAARG (Yet Another AI R&eacute;sum&eacute; Generator)</a>
+                <Link href="/">YAARG (Yet Another AI R&eacute;sum&eacute; Generator)</Link>
             </h1>
             <div>
                 {session && session.user

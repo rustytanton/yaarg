@@ -5,6 +5,7 @@ import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
 import { ResumeFormDeleteState } from "./types"
 import FormMessage from "@/app/components/FormMessage"
+import Link from "next/link"
 
 type Props = {
     id: string
@@ -17,7 +18,7 @@ export default function ResumeDeleteForm(props: Props) {
         return (
             <>
                 <FormMessage message={state.message} />
-                <a href="/resumes">Return to Resumes</a>
+                <Link href="/resumes">Return to Resumes</Link>
             </>
         )
     } else {

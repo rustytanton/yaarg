@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from '@/app/db'
+import Link from 'next/link'
 
 export default async function ResumesPage() {
     const resumes = await prisma.resume.findMany()
@@ -26,8 +27,8 @@ export default async function ResumesPage() {
                             <td className="pr-10">
                                 {resume.employer}
                             </td>
-                            <td className="pr-5"><a href={ "/resume/" + resume.id }>View/Edit</a></td>
-                            <td><a href={ "/resume/" + resume.id + "/delete" }>Delete</a></td> 
+                            <td className="pr-5"><Link href={ "/resume/" + resume.id }>View/Edit</Link></td>
+                            <td><Link href={ "/resume/" + resume.id + "/delete" }>Delete</Link></td> 
                         </tr>
                     )
                 })}

@@ -1,5 +1,6 @@
 import { useFormStatus } from 'react-dom'
 import Spinner from './Spinner'
+import Link from 'next/link'
 
 type Props = {
     buttonText: string,
@@ -21,13 +22,13 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
         )
     } else if (href) {
         return (
-            <a
+            <Link
                 className="m-2 p-1 bg-gray-200 text-black block"
                 href={href}
                 onClick={onClick}
             >
                 {buttonText}
-            </a>
+            </Link>
         )
     } else {
         return (
