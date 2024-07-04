@@ -1,7 +1,13 @@
 'use server'
 
 import { auth } from "@/app/auth"
+import BodyHeader from "@/app/components/BodyHeading"
+import BodySection from "@/app/components/BodySection"
 import FormSkillsList from "@/app/components/FormSkillsList"
+import Heading2 from "@/app/components/Heading2"
+import Heading3 from "@/app/components/Heading3"
+import ListUnordered from "@/app/components/ListUnordered"
+import ListUnorderedItem from "@/app/components/ListUnorderedItem"
 import ShowHideText from "@/app/components/ShowHideText"
 import prisma from "@/app/db"
 import Link from "next/link"
@@ -45,31 +51,40 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
 
     return (
         <div className="w-3/4">
-            <h2>Resume {params.id}</h2>
-            <p>Employer: {resume?.employer}</p>
+            <BodyHeader>
+                <Heading2>Resume {params.id}</Heading2>
+                <p>Employer: {resume?.employer}</p>
+            </BodyHeader>
+
+            <BodySection>
+                <Heading3>Job Description</Heading3>
+                <ShowHideText isHidden={true}>
+                    <div className="whitespace-pre-wrap p-10">
+                        {jobDescription?.text}
+                    </div>
+                </ShowHideText>
+            </BodySection>
             
-            <h3>Job Description</h3>
-            <ShowHideText isHidden={true}>
-                <div className="whitespace-pre-wrap p-10">
-                    {jobDescription?.text}
-                </div>
-            </ShowHideText>
+            <BodySection>
+                <Heading3>Skills Mentioned in Job Description:</Heading3>
+                <FormSkillsList skills={skills} />
+            </BodySection>
 
-            <h3>Skills Mentioned in Job Description:</h3>
-            <FormSkillsList skills={skills} />
+            <BodySection>
+                <Heading3>Enter experience for your jobs:</Heading3>
+                <ListUnordered>
+                {jobs.map((job, index) => {
+                    return (
+                        <ListUnorderedItem key={index}>
+                            <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
+                                {job.employer} {job.startDate} - {job.endDate}
+                            </Link>
+                        </ListUnorderedItem>
+                    )
+                })}
+                </ListUnordered>
+            </BodySection>
 
-            <h3>Enter experience for your jobs:</h3>
-            <ul>
-            {jobs.map((job, index) => {
-                return (
-                    <li key={index}>
-                        <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
-                            {job.employer} {job.startDate} - {job.endDate}
-                        </Link>
-                    </li>
-                )
-            })}
-            </ul>
         </div>
     )
 }
