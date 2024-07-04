@@ -8,7 +8,7 @@ export default function SignOut() {
         await signOut({ redirectTo: '/', redirect: true })
       }}
     >
-      <button type="submit">Sign Out</button>
+      <button type="submit" className="text-amber-500">Sign Out</button>
     </form>
   )
 }

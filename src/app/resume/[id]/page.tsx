@@ -66,18 +66,20 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
             </BodySection>
             
             <BodySection>
-                <Heading3>Skills Mentioned in Job Description:</Heading3>
-                <FormSkillsList skills={skills} />
+                <Heading3>Skills Mentioned in Job Description</Heading3>
+                <ShowHideText isHidden={true}>
+                    <FormSkillsList skills={skills} />
+                </ShowHideText>
             </BodySection>
 
             <BodySection>
-                <Heading3>Enter experience for your jobs:</Heading3>
+                <Heading3>Work Experience</Heading3>
                 <ListUnordered>
                 {jobs.map((job, index) => {
                     return (
                         <ListUnorderedItem key={index}>
-                            <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
-                                {job.employer} {job.startDate} - {job.endDate}
+                            {job.employer} {job.startDate} - {job.endDate} | <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
+                                Edit
                             </Link>
                         </ListUnorderedItem>
                     )

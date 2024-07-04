@@ -31,3 +31,8 @@ body {
     text-wrap: balance;
   }
 }
+
+/** @todo there is probably a more tailwind way to do this */
+a {
+  color: rgb(245 158 11)
+}
