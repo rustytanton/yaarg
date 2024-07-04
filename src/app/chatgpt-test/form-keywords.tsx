@@ -3,9 +3,9 @@
 import { useFormState } from "react-dom";
 import { ChatGptKeywordFormState } from "./types";
 import { handleKeywordsFormChange } from "./actions";
-import FormButton from "@/app/components/FormButton";
-import FormSkillsList from "@/app/components/FormSkillsList";
-import FormTextarea from "@/app/components/FormTextarea";
+import FormButton from "@/app/_lib/components/FormButton";
+import FormSkillsList from "@/app/_lib/components/FormSkillsList";
+import FormTextarea from "@/app/_lib/components/FormTextarea";
 
 const initialState: ChatGptKeywordFormState = {
     prompt: '',

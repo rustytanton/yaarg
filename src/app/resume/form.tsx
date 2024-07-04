@@ -1,12 +1,12 @@
 'use client'
 
 import { useFormState } from "react-dom"
-import FormButton from "@/app/components/FormButton"
-import FormTextarea from "@/app/components/FormTextarea"
+import FormButton from "@/app/_lib/components/FormButton"
+import FormTextarea from "@/app/_lib/components/FormTextarea"
 import { handleFormChange } from './actions'
 import { ResumeFormNewState } from './types'
-import FormMessage from "@/app/components/FormMessage"
-import FormInputText from "../components/FormInputText"
+import FormMessage from "@/app/_lib/components/FormMessage"
+import FormInputText from "@/app/_lib/components/FormInputText"
 
 const initialState: ResumeFormNewState = {
     message: '',

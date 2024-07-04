@@ -1,10 +1,10 @@
 'use client'
 
-import FormButton from "@/app/components/FormButton"
+import FormButton from "@/app/_lib/components/FormButton"
 import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
 import { ResumeFormDeleteState } from "./types"
-import FormMessage from "@/app/components/FormMessage"
+import FormMessage from "@/app/_lib/components/FormMessage"
 import Link from "next/link"
 
 type Props = {

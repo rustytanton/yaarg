@@ -2,9 +2,9 @@
 
 import { useFormState } from 'react-dom'
 import { handleFormChange } from './actions'
-import FormMessage from '@/app/components/FormMessage'
-import FormSectionEducation from '@/app/components/FormSectionEducation'
-import FormButton from '@/app/components/FormButton'
+import FormMessage from '@/app/_lib/components/FormMessage'
+import FormSectionEducation from '@/app/_lib/components/FormSectionEducation'
+import FormButton from '@/app/_lib/components/FormButton'
 import { Education } from '@prisma/client'
 import { EducationFormState } from './types'
 

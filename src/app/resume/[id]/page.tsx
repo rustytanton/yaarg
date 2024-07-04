@@ -1,14 +1,14 @@
 'use server'
 
 import { auth } from "@/app/auth"
-import BodyHeader from "@/app/components/BodyHeading"
-import BodySection from "@/app/components/BodySection"
-import FormSkillsList from "@/app/components/FormSkillsList"
-import Heading2 from "@/app/components/Heading2"
-import Heading3 from "@/app/components/Heading3"
-import ListUnordered from "@/app/components/ListUnordered"
-import ListUnorderedItem from "@/app/components/ListUnorderedItem"
-import ShowHideText from "@/app/components/ShowHideText"
+import BodyHeader from "@/app/_lib/components/BodyHeading"
+import BodySection from "@/app/_lib/components/BodySection"
+import FormSkillsList from "@/app/_lib/components/FormSkillsList"
+import Heading2 from "@/app/_lib/components/Heading2"
+import Heading3 from "@/app/_lib/components/Heading3"
+import ListUnordered from "@/app/_lib/components/ListUnordered"
+import ListUnorderedItem from "@/app/_lib/components/ListUnorderedItem"
+import ShowHideText from "@/app/_lib/components/ShowHideText"
 import prisma from "@/app/db"
 import Link from "next/link"
 

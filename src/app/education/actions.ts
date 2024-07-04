@@ -5,7 +5,7 @@ import prisma from '@/app/db'
 import { EducationFormState } from './types'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/app/auth'
-import { fieldGroups, deleteIds } from '@/app/util/form'
+import { fieldGroups, deleteIds } from '@/app/_lib/util/form'
 
 export async function getEducations() {
     const session = await auth()

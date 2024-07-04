@@ -3,9 +3,9 @@
 import { useFormState } from 'react-dom'
 import { upsertUser } from './actions'
 import { User } from '@prisma/client'
-import FormMessage from '@/app/components/FormMessage'
-import FormInputText from '@/app/components/FormInputText'
-import FormButton from '@/app/components/FormButton'
+import FormMessage from '@/app/_lib/components/FormMessage'
+import FormInputText from '@/app/_lib/components/FormInputText'
+import FormButton from '@/app/_lib/components/FormButton'
 
 const initialState = {
     message: ''
