@@ -9,18 +9,16 @@ import Heading3 from "@/app/_lib/components/Heading3"
 import ListUnordered from "@/app/_lib/components/ListUnordered"
 import ListUnorderedItem from "@/app/_lib/components/ListUnorderedItem"
 import ShowHideText from "@/app/_lib/components/ShowHideText"
-import prisma from "@/app/db"
 import Link from "next/link"
+import { getResumeById } from "@/app/_lib/resume/crud"
+import { getJobsByUserId } from "@/app/_lib/job/crud"
+import { getJobDescriptionById } from "@/app/_lib/job-description/crud"
+import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
 
 
 export default async function ResumePage({ params }:{ params: { id: string } }) {
     const session = await auth()
-
-    const resume = await prisma.resume.findFirst({
-        where: {
-            id: Number(params.id)
-        }
-    })
+    const resume = await getResumeById(Number(params.id))
 
     if (!session || !session.user || session.user.id !== resume?.userId) {
         return (
@@ -28,37 +26,9 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
         )
     }
 
-    const skills = await prisma.jobDescriptionSkill.findMany({
-        where: {
-            jobDescriptionId: resume?.jobDescriptionId
-        }
-    })
-
-    const jobDescription = await prisma.jobDescription.findFirst({
-        where: {
-            id: resume?.jobDescriptionId
-        }
-    })
-
-    let jobs = await prisma.job.findMany({
-        where: {
-            userId: session.user.id
-        },
-        orderBy: {
-            startDateParsed: 'desc'
-        }
-    })
-
-    // jobs = jobs.sort((a, b) => {
-    //     const [monthA, yearA] = a.startDate.split('/')
-    //     const [monthB, yearB] = b.startDate.split('/')
-    //     const dateA = new Date(Number(yearA), Number(monthA))
-    //     const dateB = new Date(Number(yearB), Number(monthB))
-    //     if (dateA.getTime() === dateB.getTime()) {
-    //         return 0
-    //     }
-    //     return dateA.getTime() < dateB.getTime() ? -1 : 1
-    // })
+    const skills = await getJobDescriptionSkillsByJobDescriptionId(Number(resume?.jobDescriptionId))
+    const jobDescription = await getJobDescriptionById(Number(resume?.jobDescriptionId))
+    const jobs = await getJobsByUserId(session.user.id as string)
 
     return (
         <div className="w-3/4">
