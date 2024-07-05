@@ -40,14 +40,25 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
         }
     })
 
-    const jobs = await prisma.job.findMany({
+    let jobs = await prisma.job.findMany({
         where: {
             userId: session.user.id
         },
         orderBy: {
-            endDate: 'desc'
+            startDateParsed: 'desc'
         }
     })
+
+    // jobs = jobs.sort((a, b) => {
+    //     const [monthA, yearA] = a.startDate.split('/')
+    //     const [monthB, yearB] = b.startDate.split('/')
+    //     const dateA = new Date(Number(yearA), Number(monthA))
+    //     const dateB = new Date(Number(yearB), Number(monthB))
+    //     if (dateA.getTime() === dateB.getTime()) {
+    //         return 0
+    //     }
+    //     return dateA.getTime() < dateB.getTime() ? -1 : 1
+    // })
 
     return (
         <div className="w-3/4">

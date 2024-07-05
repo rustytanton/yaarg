@@ -97,6 +97,7 @@ model Job {
   employer        String
   location        String
   startDate       String
+  startDateParsed DateTime
   endDate         String
   attendanceModel String
   stillWorksHere  Boolean

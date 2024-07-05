@@ -6,6 +6,7 @@ import { Job } from '@prisma/client'
 import { JobFormState } from './types'
 import { deleteIds, fieldGroups } from '@/app/_lib/util/form'
 import { revalidatePath } from 'next/cache'
+import { parseMMYYYY } from '@/app/_lib/util/dates'
 
 export async function getJobs(): Promise<Job[]> {
     const session = await auth()
@@ -47,6 +48,7 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
                     employer: formData.get(group + 'employer') as string,
                     location: formData.get(group + 'location') as string,
                     startDate: formData.get(group + 'startDate') as string,
+                    startDateParsed: parseMMYYYY(formData.get(group + 'startDate') as string),
                     endDate: formData.get(group + 'endDate') as string,
                     attendanceModel: formData.get(group + 'attendanceModel') as string,
                     stillWorksHere: (formData.get(group + 'stillWorksHere') === 'on') ? true : false,
