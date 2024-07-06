@@ -46,6 +46,7 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
                     userId: session.user.id as string,
                     id: Number(formData.get(group + 'id')) || undefined,
                     employer: formData.get(group + 'employer') as string,
+                    title: formData.get(group + 'title') as string,
                     location: formData.get(group + 'location') as string,
                     startDate: formData.get(group + 'startDate') as string,
                     startDateParsed: parseMMYYYY(formData.get(group + 'startDate') as string),

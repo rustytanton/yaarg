@@ -44,6 +44,11 @@ export default function FormSectionJob(props: Props) {
                     defaultValue={props.job.employer}
                 />
                 <FormInputText
+                    label="Title:"
+                    inputName={ "[job" + props.index + "]title"  }
+                    defaultValue={props.job.title as string}
+                />
+                <FormInputText
                     label="Location:"
                     inputName={ "[job" + props.index + "]location" }
                     defaultValue={props.job.location}

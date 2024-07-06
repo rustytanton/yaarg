@@ -73,7 +73,7 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
                     })
                     return (
                         <ListUnorderedItem key={index}>
-                            <strong>{job.employer}</strong> | {job.startDate} - {job.endDate} | {job.location} | <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
+                            <strong>{job.employer}</strong> | {job.title} | {job.startDate} - {job.endDate} | {job.location} | <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
                                 Edit
                             </Link>
                             {(jobExperiences.length > 0) ?
