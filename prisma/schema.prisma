@@ -101,6 +101,7 @@ model Job {
   endDate         String
   attendanceModel String
   stillWorksHere  Boolean
+  jobExperiences  ResumeJobExperience[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -132,6 +133,7 @@ model Resume {
   createdAt        DateTime @default(now())
   employer         String
   jobDescriptionId Int
+  jobExperiences   ResumeJobExperience[]
 
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id])
@@ -144,4 +146,14 @@ model JobDescriptionSkill {
   mentions         Int
 
   jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+}
+
+model ResumeJobExperience {
+  id               Int    @id @default(autoincrement())
+  jobId            Int
+  resumeId         Int
+  content          String
+
+  job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 }

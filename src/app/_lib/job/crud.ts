@@ -12,3 +12,11 @@ export async function getJobsByUserId(userId: string) {
         }
     })
 }
+
+export async function getJobById(jobId: number) {
+    return await prisma.job.findFirst({
+        where: {
+            id: jobId
+        }
+    })
+}

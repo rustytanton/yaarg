@@ -36,3 +36,22 @@ body {
 a {
   color: rgb(245 158 11)
 }
+
+
+/* make a list with discs that align slightly off top */
+.list-disc-offsettop li {
+  position: relative;
+}
+.list-disc-offsettop li:before {
+  border-radius: 50%;
+  display: block;
+  background: #fff;
+  content: '';
+  height: 5px;
+  left: -10px;
+  position: absolute;
+  top: 16px;
+  width: 5px;
+}
+
+

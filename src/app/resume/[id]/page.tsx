@@ -14,7 +14,8 @@ import { getResumeById } from "@/app/_lib/resume/crud"
 import { getJobsByUserId } from "@/app/_lib/job/crud"
 import { getJobDescriptionById } from "@/app/_lib/job-description/crud"
 import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
-
+import { ResumeJobExperience } from "@prisma/client"
+import prisma from "@/app/db"
 
 export default async function ResumePage({ params }:{ params: { id: string } }) {
     const session = await auth()
@@ -29,6 +30,16 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
     const skills = await getJobDescriptionSkillsByJobDescriptionId(Number(resume?.jobDescriptionId))
     const jobDescription = await getJobDescriptionById(Number(resume?.jobDescriptionId))
     const jobs = await getJobsByUserId(session.user.id as string)
+    let experiences: ResumeJobExperience[] = []
+
+    for (const job of jobs) {
+        const jobExperiences = await prisma.resumeJobExperience.findMany({
+            where: {
+                jobId: job.id
+            }
+        })
+        experiences = experiences.concat(jobExperiences)
+    }
 
     return (
         <div className="w-3/4">
@@ -57,11 +68,25 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
                 <Heading3>Work Experience</Heading3>
                 <ListUnordered>
                 {jobs.map((job, index) => {
+                    const jobExperiences = experiences.filter((experience) => {
+                        return experience.jobId === job.id
+                    })
                     return (
                         <ListUnorderedItem key={index}>
-                            {job.employer} {job.startDate} - {job.endDate} | <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
+                            <strong>{job.employer}</strong> | {job.startDate} - {job.endDate} | {job.location} | <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
                                 Edit
                             </Link>
+                            {(jobExperiences.length > 0) ?
+                                <ListUnordered>
+                                    {jobExperiences.map((experience, eindex) => {
+                                        return (
+                                            <ListUnorderedItem key={eindex}>
+                                                {experience.content}
+                                            </ListUnorderedItem>
+                                        )
+                                    })}
+                                </ListUnordered>
+                            : ''}
                         </ListUnorderedItem>
                     )
                 })}
