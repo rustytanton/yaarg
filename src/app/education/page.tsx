@@ -3,6 +3,7 @@
 import { getEducations } from './actions'
 import { auth } from '@/app/auth';
 import EducationForm from './form';
+import NoAccessMessage from '@/app/_lib/components/NoAccessMessage';
 
 export default async function EducationPage() {
     const session = await auth()
@@ -14,7 +15,7 @@ export default async function EducationPage() {
         )
     } else {
         return (
-            <div className="p-10">Please login to see this page</div>
+            <NoAccessMessage />
         )
     }
 }

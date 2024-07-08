@@ -11,7 +11,11 @@ export async function getEducations() {
     const session = await auth()
 
     if (session && session.user) {
-        const educations = await prisma.education.findMany()
+        const educations = await prisma.education.findMany({
+            where: {
+                userId: session.user.id
+            }
+        })
         return educations || []
     } else {
         return []

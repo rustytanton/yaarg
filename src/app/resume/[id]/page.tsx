@@ -16,6 +16,7 @@ import { getJobDescriptionById } from "@/app/_lib/job-description/crud"
 import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
 import { ResumeJobExperience } from "@prisma/client"
 import prisma from "@/app/db"
+import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
 
 export default async function ResumePage({ params }:{ params: { id: string } }) {
     const session = await auth()
@@ -23,7 +24,7 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
 
     if (!session || !session.user || session.user.id !== resume?.userId) {
         return (
-            <div>Must be logged in as the correct user to view this page</div>
+            <NoAccessMessage message="Must be logged in as the correct user to view this page" />
         )
     }
 

@@ -12,7 +12,11 @@ export async function getJobs(): Promise<Job[]> {
     const session = await auth()
 
     if (session && session.user) {
-        const jobs = await prisma.job.findMany()
+        const jobs = await prisma.job.findMany({
+            where: {
+                userId: session.user.id
+            }
+        })
         return jobs || []
     } else {
         return []
