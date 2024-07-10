@@ -1,23 +1,24 @@
 'use client'
 
 import { useFormState } from 'react-dom'
-import { upsertUser } from './actions'
-import { User } from '@prisma/client'
+import { handleFormChange } from './actions'
 import FormMessage from '@/app/_lib/components/FormMessage'
 import FormInputText from '@/app/_lib/components/FormInputText'
 import FormButton from '@/app/_lib/components/FormButton'
+import { ContactInfoFormState } from './types'
+import { UserDTO } from '../_data/user'
 
-const initialState = {
+const initialState: ContactInfoFormState = {
     message: ''
 }
 
 type Props = {
-    user: User
+    user: UserDTO
 }
 
 export default function ContactInfoForm(props: Props) {
 
-    const [state, formAction] = useFormState(upsertUser, initialState)
+    const [state, formAction] = useFormState(handleFormChange, initialState)
     const user = props.user
 
     return (
@@ -33,6 +34,7 @@ export default function ContactInfoForm(props: Props) {
             <FormInputText label="Website:" inputName="website" defaultValue={user.website || ''} />
             <FormInputText label="LinkedIn URL:" inputName="linkedIn" defaultValue={user.linkedIn || ''} />
             <FormInputText label="Github URL:" inputName="github" defaultValue={user.github || ''} />
+            <input type="hidden" name="userId" value={user.id} />
             <FormButton buttonText="Submit" isSubmit={true} />
         </form>
     )

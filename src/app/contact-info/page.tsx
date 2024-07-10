@@ -1,19 +1,18 @@
-'use server';
+'use server'
 
+import { getUser } from '../_data/user';
+import { auth } from '../auth';
 import ContactInfoForm from './form';
-import { auth } from '@/app/auth'
-import { User } from '@prisma/client';
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage';
 
-export default async function ContactInfoPage() {
+export default async function TestPage() {
     const session = await auth()
-    if (session) {
+    if (session?.user) {
+        const user = await getUser(session.user.id as string)
         return (
-            <ContactInfoForm user={session.user as User} />
+            <ContactInfoForm user={user} />
         )
     } else {
-        return (
-            <NoAccessMessage />
-        )
+        return <NoAccessMessage />
     }
 }
