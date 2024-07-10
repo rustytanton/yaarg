@@ -2,14 +2,14 @@
 
 import FormButton from "@/app/_lib/components/FormButton"
 import FormSectionJob from "@/app/_lib/components/FormSectionJob"
-import { Job } from "@prisma/client"
 import { JobFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from './actions'
 import FormMessage from "@/app/_lib/components/FormMessage"
+import { JobDTOs } from "../_data/job"
 
 type Props = {
-    jobs: Job[]
+    jobs: JobDTOs
 }
 
 const initialState: JobFormState = {

@@ -2,13 +2,13 @@
 
 import { auth } from '@/app/auth'
 import JobForm from './form'
-import { getJobs } from './actions';
+import { getJobs } from '../_data/job'
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage';
 
-export default async function EducationPage() {
+export default async function JobsPage() {
     const session = await auth()
-    if (session) {
-        const jobs = await getJobs()
+    if (session?.user?.id) {
+        const jobs = await getJobs(session.user.id)
         return (
             <JobForm jobs={jobs} />
         )

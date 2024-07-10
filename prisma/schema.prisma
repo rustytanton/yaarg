@@ -95,10 +95,9 @@ model Job {
   id              Int     @id @default(autoincrement())
   userId          String
   employer        String
-  title           String?
+  title           String
   location        String
   startDate       String
-  startDateParsed DateTime
   endDate         String
   attendanceModel String
   stillWorksHere  Boolean
