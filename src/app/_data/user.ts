@@ -1,5 +1,4 @@
 import { User } from '@prisma/client'
-import { auth } from "../auth"
 import prisma from '../db'
 
 
