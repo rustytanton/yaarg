@@ -27,3 +27,7 @@ After creating a .env file and database, run the development server:
 `npm run dev`
 
 Open [http://localhost:3000](http://localhost:3000) with your browser
+
+### Known Issues
+
+*   Resend authenticator throws an error in middleware, issue is described [here](https://github.com/nextauthjs/next-auth/issues/10632)
