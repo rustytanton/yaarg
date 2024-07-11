@@ -5,8 +5,8 @@ import { handleFormChange } from './actions'
 import FormMessage from '@/app/_lib/components/FormMessage'
 import FormSectionEducation from '@/app/_lib/components/FormSectionEducation'
 import FormButton from '@/app/_lib/components/FormButton'
-import { Education } from '@prisma/client'
 import { EducationFormState } from './types'
+import { EducationDTO, EducationDTOs } from '../_data/education'
 
 const initialState: EducationFormState = {
     addSection: false,
@@ -15,7 +15,7 @@ const initialState: EducationFormState = {
 }
 
 type Props = {
-    educations: Education[]
+    educations: EducationDTOs
 }
 
 export default function EducationForm(props: Props) {
@@ -28,7 +28,7 @@ export default function EducationForm(props: Props) {
         <form action={formAction} className="p-10">
             <FormMessage message={state?.message} />
             <p>Note: You can use this section for credentials too (examples: SCM, PMP, etc)</p>
-            {state.educations.length > 0 ? state.educations.map((education: Education, index: number) => {
+            {state.educations.length > 0 ? state.educations.map((education: EducationDTO, index: number) => {
                 return (
                     <>
                         <FormSectionEducation key={'education-' + index} index={index} education={education} />

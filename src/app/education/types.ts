@@ -1,7 +1,7 @@
-import { Education } from "@prisma/client"
+import { EducationDTOs } from "../_data/education"
 
 export type EducationFormState = {
     addSection: boolean
-    educations: Education[]
+    educations: EducationDTOs
     message: string
 }
