@@ -1,8 +1,8 @@
-import { ResumeJobExperience } from "@prisma/client"
+import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
 
 export type ResumeJobFormState = {
     addExperience?: boolean
-    experiences?: ResumeJobExperience[]
+    experiences?: ResumeJobExperienceDTOs
     message?: string
     resumeId: number
     jobId: number

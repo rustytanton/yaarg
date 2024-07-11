@@ -1,12 +1,13 @@
 import { Job } from '@prisma/client'
 import { parseMMYYYY } from '../_lib/util/dates'
 import prisma from '../db'
+import { ResumeJobExperienceDTOs } from './resume-job-experience'
 
 export type JobEntity = Job
 export type JobEntities = JobEntity[]
 
 export type JobDTO = {
-    id: number
+    id?: number | undefined
     userId: string
     employer: string
     title: string
@@ -17,6 +18,7 @@ export type JobDTO = {
     endDateParsed: Date
     attendanceModel: string
     stillWorksHere: boolean
+    experiences?: ResumeJobExperienceDTOs
 }
 
 export type JobDTOs = JobDTO[]
@@ -37,7 +39,7 @@ export function JobDTOtoEntity(dto: JobDTO): JobEntity {
 
 export function JobEntitytoDTO(entity: JobEntity): JobDTO {
     return {
-        id: entity.id || 0,
+        id: entity.id || undefined,
         userId: entity.userId as string,
         employer: entity.employer as string,
         title: entity.title as string,
@@ -96,7 +98,8 @@ export async function updateJobs(jobs: JobDTOs) {
 export async function createJob(job: JobDTO) {
     const entity = await prisma.job.create({
         data: {
-            ...job
+            ...job,
+            id: undefined
         }
     })
     return JobEntitytoDTO(entity)

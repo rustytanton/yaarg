@@ -1,14 +1,16 @@
 'use server'
 
 import { ResumeFormNewState } from './types'
-import prisma from '@/app/db'
 import { auth } from '@/app/auth'
 import { redirect } from 'next/navigation'
 import { getSkills } from '@/app/_lib/chatgpt/assistant-skills-extractor'
+import { createJobDescription } from '@/app/_data/job-description'
+import { createJobDescriptionSkill } from '@/app/_data/job-description-skill'
+import { createResume } from '@/app/_data/resume'
 
 export async function handleFormChange(prevState: ResumeFormNewState, formData: FormData) {
     const session = await auth()
-    if (session && session.user) {
+    if (session?.user) {
         const employer = formData.get('employer') as string
         const prompt = formData.get('prompt') as string
         
@@ -20,27 +22,23 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
         }
         
         const skills = await getSkills(prompt)
-        const jd = await prisma.jobDescription.create({
-            data: {
-                userId: session.user.id as string,
-                text: prompt
-            }
+        const jd = await createJobDescription({
+            userId: session.user.id as string,
+            text: prompt
         })
-        const resume = await prisma.resume.create({
-            data: {
-                userId: session.user.id as string,
-                employer: employer,
-                jobDescriptionId: jd.id
-            }
+        const resume = await createResume({
+            userId: session.user.id as string,
+            employer: employer,
+            jobDescription: jd
         })
         for (const skill of skills) {
-            await prisma.jobDescriptionSkill.create({
-                data: {
+            if (jd.id) {
+                await createJobDescriptionSkill({
                     jobDescriptionId: jd.id,
                     skill: skill.skill,
                     mentions: skill.mentions
-                }
-            })
+                })
+            }
         }
 
         redirect(`/resume/${resume.id}`)

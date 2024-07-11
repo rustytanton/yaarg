@@ -1,14 +1,14 @@
 'use server'
 
-import { ResumeJobExperience } from "@prisma/client";
 import { ResumeJobFormState } from "./types";
 import prisma from "@/app/db";
 import { deleteIds, fieldGroups } from "@/app/_lib/util/form";
+import { ResumeJobExperienceDTO, ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience";
 
 export async function handleFormChange(prevState: ResumeJobFormState, formData: FormData) {
     if (formData.get('addExperience') === 'true') {
         const experiences = prevState?.experiences || []
-        experiences.push({} as ResumeJobExperience)
+        experiences.push({} as ResumeJobExperienceDTO)
         return {
             ...prevState,
             addExperience: false,
@@ -16,7 +16,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         }
     } else {
         const deletes = deleteIds(formData)
-        const experiences: ResumeJobExperience[] = []
+        const experiences: ResumeJobExperienceDTOs = []
         const groups = fieldGroups(formData, 'experience')
         const jobId = Number(formData.get('jobId'))
         const resumeId = Number(formData.get('resumeId'))

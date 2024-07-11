@@ -2,16 +2,16 @@
 
 import FormButton from "@/app/_lib/components/FormButton"
 import Heading3 from "@/app/_lib/components/Heading3"
-import { ResumeJobExperience } from '@prisma/client'
 import { ResumeJobFormState } from "./types"
 import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
 import FormTextareaBullet from "@/app/_lib/components/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { useState } from "react"
+import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
 
 type Props = {
-    jobExperiences?: ResumeJobExperience[],
+    jobExperiences?: ResumeJobExperienceDTOs,
     resumeId: number,
     jobId: number
 }

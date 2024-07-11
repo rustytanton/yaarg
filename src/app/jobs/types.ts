@@ -1,7 +1,7 @@
-import { Job } from "@prisma/client"
+import { JobDTOs } from "../_data/job"
 
 export type JobFormState = {
     addSection: boolean
-    jobs: Job[]
+    jobs: JobDTOs
     message: string
 }

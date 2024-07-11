@@ -2,12 +2,12 @@ import FormInputText from "./FormInputText";
 import FormInputCheckbox from "./FormInputCheckbox";
 import FormSelect from "./FormSelect"
 import { useState } from "react";
-import { Job } from "@prisma/client";
 import FormButton from "./FormButton";
+import { JobDTO } from "@/app/_data/job";
 
 type Props = {
     index: number
-    job: Job
+    job: JobDTO
 }
 
 export default function FormSectionJob(props: Props) {

@@ -6,23 +6,25 @@ import FormSkillsList from "@/app/_lib/components/FormSkillsList"
 import Heading2 from "@/app/_lib/components/Heading2"
 import Heading3 from "@/app/_lib/components/Heading3"
 import ShowHideText from "@/app/_lib/components/ShowHideText"
-import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
-import { getJobById } from "@/app/_lib/job/crud"
-import { getResumeById } from "@/app/_lib/resume/crud"
+// import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
+// import { getJobById } from "@/app/_lib/job/crud"
+// import { getResumeById } from "@/app/_lib/resume/crud"
 import Link from "next/link"
 import FormResumeJob from "./form"
-import { getExperiences } from "@/app/_lib/resume-job-experience/crud"
+// import { getExperiences } from "@/app/_lib/resume-job-experience/crud"
 import { auth } from "@/app/auth"
 import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
+import { getResume } from "@/app/_data/resume"
+import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
 
 export default async function ResumeJobPage({ params }:{ params: { id: string, jobId: string } }) {
 
     const session = await auth()
     if (session) {
-        const resume = await getResumeById(Number(params.id))
-        const job = await getJobById(Number(params.jobId))
-        const skills = await getJobDescriptionSkillsByJobDescriptionId(Number(resume?.jobDescriptionId))
-        const experiences = await getExperiences(Number(params.id), Number(params.jobId))
+        const resume = await getResume(Number(params.id))
+        const job = resume?.jobs?.filter(job => {
+            return job.id === Number(params.jobId)
+        })[0]
 
         if (resume?.userId !== session.user?.id) {
             return (
@@ -41,12 +43,12 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
                 <BodySection>
                     <Heading3>Skills Mentioned in Job Description</Heading3>
                     <ShowHideText isHidden={true}>
-                        <FormSkillsList skills={skills} />
+                        <FormSkillsList skills={resume?.jobDescription?.skills} />
                     </ShowHideText>
                 </BodySection>
     
                 <BodySection>
-                    <FormResumeJob jobExperiences={experiences} resumeId={Number(params.id)} jobId={Number(params.jobId)} />
+                    <FormResumeJob jobExperiences={job?.experiences as ResumeJobExperienceDTOs} resumeId={Number(params.id)} jobId={Number(params.jobId)} />
                 </BodySection>
     
                 <BodySection>

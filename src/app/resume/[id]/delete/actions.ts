@@ -2,23 +2,16 @@
 
 import { auth } from "@/app/auth";
 import { ResumeFormDeleteState } from "./types";
-import prisma from "@/app/db";
+import { deleteResume, userOwnsResume } from "@/app/_data/resume";
+import { revalidatePath } from "next/cache";
 
 export async function handleFormChange(prevState: ResumeFormDeleteState, formData: FormData) {
     const session = await auth()
     if (session && session.user) {
         const resumeId = Number(formData.get('resumeId'))
-        const resume = await prisma.resume.findFirst({
-            where: {
-                id: resumeId
-            }
-        })
-        if (resume && resume.userId === session.user.id) {
-            await prisma.resume.delete({
-                where: {
-                    id: resumeId
-                }
-            })
+        if (await userOwnsResume(resumeId, session.user.id as string)) {
+            await deleteResume(resumeId)
+            revalidatePath('/resumes')
             return {
                 ...prevState,
                 message: `Resume ${resumeId} deleted`

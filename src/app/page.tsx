@@ -24,9 +24,6 @@ export default async function Home() {
           <li>
             <Link href="/resumes">View Resumes</Link>
           </li>
-          <li>
-            <Link href="/chatgpt-test">DEV: ChatGPT Test Page</Link>
-          </li>
         </ul>
       </section>
     )

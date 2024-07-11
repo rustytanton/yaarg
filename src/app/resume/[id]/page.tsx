@@ -10,36 +10,18 @@ import ListUnordered from "@/app/_lib/components/ListUnordered"
 import ListUnorderedItem from "@/app/_lib/components/ListUnorderedItem"
 import ShowHideText from "@/app/_lib/components/ShowHideText"
 import Link from "next/link"
-import { getResumeById } from "@/app/_lib/resume/crud"
-import { getJobsByUserId } from "@/app/_lib/job/crud"
-import { getJobDescriptionById } from "@/app/_lib/job-description/crud"
-import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
-import { ResumeJobExperience } from "@prisma/client"
-import prisma from "@/app/db"
 import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
+import { getResume } from "@/app/_data/resume"
+import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
 
 export default async function ResumePage({ params }:{ params: { id: string } }) {
     const session = await auth()
-    const resume = await getResumeById(Number(params.id))
+    const resume = await getResume(Number(params.id))
 
-    if (!session || !session.user || session.user.id !== resume?.userId) {
+    if (session?.user?.id !== resume?.userId) {
         return (
             <NoAccessMessage message="Must be logged in as the correct user to view this page" />
         )
-    }
-
-    const skills = await getJobDescriptionSkillsByJobDescriptionId(Number(resume?.jobDescriptionId))
-    const jobDescription = await getJobDescriptionById(Number(resume?.jobDescriptionId))
-    const jobs = await getJobsByUserId(session.user.id as string)
-    let experiences: ResumeJobExperience[] = []
-
-    for (const job of jobs) {
-        const jobExperiences = await prisma.resumeJobExperience.findMany({
-            where: {
-                jobId: job.id
-            }
-        })
-        experiences = experiences.concat(jobExperiences)
     }
 
     return (
@@ -53,7 +35,7 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
                 <Heading3>Job Description</Heading3>
                 <ShowHideText isHidden={true}>
                     <div className="whitespace-pre-wrap p-10">
-                        {jobDescription?.text}
+                        {resume.jobDescription?.text}
                     </div>
                 </ShowHideText>
             </BodySection>
@@ -61,23 +43,22 @@ export default async function ResumePage({ params }:{ params: { id: string } }) 
             <BodySection>
                 <Heading3>Skills Mentioned in Job Description</Heading3>
                 <ShowHideText isHidden={true}>
-                    <FormSkillsList skills={skills} />
+                    <FormSkillsList skills={resume?.jobDescription?.skills} />
                 </ShowHideText>
             </BodySection>
 
             <BodySection>
                 <Heading3>Work Experience</Heading3>
                 <ListUnordered>
-                {jobs.map((job, index) => {
-                    const jobExperiences = experiences.filter((experience) => {
-                        return experience.jobId === job.id
-                    })
+                {resume?.jobs?.map((job, index) => {
+                    let jobExperiences: ResumeJobExperienceDTOs = job.experiences || []
+                    let resumeId: number = resume.id || 0
                     return (
                         <ListUnorderedItem key={index}>
-                            <strong>{job.employer}</strong> | {job.title} | {job.startDate} - {job.endDate} | {job.location} | <Link href={ "/resume/" + resume?.id.toString() + "/job/" + job.id }>
+                            <strong>{job.employer}</strong> | {job.title} | {job.startDate} - {job.endDate} | {job.location} | <Link href={ "/resume/" + resumeId + "/job/" + job.id }>
                                 Edit
                             </Link>
-                            {(jobExperiences.length > 0) ?
+                            {((jobExperiences.length) > 0) ?
                                 <ListUnordered>
                                     {jobExperiences.map((experience, eindex) => {
                                         return (
