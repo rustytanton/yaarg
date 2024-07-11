@@ -39,7 +39,8 @@ export async function createJobDescription(jobDescription: JobDescriptionDTO) {
     const entity = JobDescriptionDTOtoEntity(jobDescription)
     const result = await prisma.jobDescription.create({
         data: {
-            ...entity
+            ...entity,
+            id: undefined
         }
     })
     return await JobDescriptionEntityToDTO(result)
