@@ -9,6 +9,7 @@ import FormTextareaBullet from "@/app/_lib/components/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { useState } from "react"
 import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
+import { APIResponseSuggestions } from "@/app/api/suggestions/route"
 
 type Props = {
     jobExperiences?: ResumeJobExperienceDTOs,
@@ -30,12 +31,40 @@ export default function FormResumeJob(props: Props) {
         experiences: props.jobExperiences
     })
 
+    const [suggestions, setSuggestions] = useState([] as Array<string>)
+
     const [addExperience, setAddExperience] = useState(false)
+
+    function fetchSuggestions() {
+        fetch('/api/suggestions')
+            .then((response) => response.json())
+            .then((data: APIResponseSuggestions) => {
+                setSuggestions(data.suggestions)
+            })
+    }
 
     return (
         <form action={formAction}>
             <Heading3>Experience</Heading3>
             <FormMessage message={state.message} />
+            <div className="pt-2 pb-10 pl-5">
+                {suggestions.length > 0
+                    ?
+                        <>
+                            <Heading3>AI Suggestions:</Heading3>
+                            <ul className="list-disc list-outside ml-5 mb-5">
+                            {suggestions.map((suggestion, index) => {
+                                return (
+                                    <li key={index}>{suggestion}</li>
+                                )
+                            })}
+                            </ul>
+                        </>
+                    :
+                        ''
+                }
+                <FormButton buttonText="Load AI Suggestions" onClick={fetchSuggestions} />
+            </div>
             <ul className="list-outside list-disc-offsettop">
             {state.experiences?.map((experience, index) => {
                 return (
