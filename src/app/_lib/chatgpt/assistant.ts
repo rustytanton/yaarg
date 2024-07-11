@@ -1,5 +1,4 @@
-import { ChatGptAssistant } from "@prisma/client";
-import prisma from "@/app/db";
+import { ChatGptAssistantDTO, createChatGptAssistant, getChatGptAssistant } from "@/app/_data/chatgpt-assistant";
 import { auth } from "@/app/auth";
 import OpenAI from 'openai'
 
@@ -9,35 +8,28 @@ export type assistantProperties = {
     model: string
 }
 
-export async function assistant(props: assistantProperties): Promise<ChatGptAssistant | null> {
+export async function assistant(props: assistantProperties): Promise<ChatGptAssistantDTO | null> {
     const session = await auth()
     const openai = new OpenAI()
 
     if (session && session.user) {
-        let assistant = await prisma.chatGptAssistant.findFirst({
-            where: {
-                name: props.name,
-                userId: session.user?.id
-            }
-        })
-        if (assistant) {
-            return assistant
+        const existingAssitant = await getChatGptAssistant(session.user?.id as string, props.name)
+        if (existingAssitant) {
+            return existingAssitant
         } else {
             const assistantRemote = await openai.beta.assistants.create({
                 name: props.name,
                 instructions: props.instructions,
                 model: props.model,
             })
-            assistant = await prisma.chatGptAssistant.create({
-                data: {
-                    userId: session.user.id as string,
-                    name: props.name,
-                    instructions: props.instructions,
-                    model: props.model,
-                    externalId: assistantRemote.id
-                }
+            const assistantLocal = await createChatGptAssistant({
+                userId: session.user.id as string,
+                name: props.name,
+                instructions: props.instructions,
+                model: props.model,
+                externalId: assistantRemote.id
             })
-            return assistant
+            return assistantLocal
         }
     } else {
         return null
