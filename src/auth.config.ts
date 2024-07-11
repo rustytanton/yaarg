@@ -1,8 +1,10 @@
 import type { NextAuthConfig } from "next-auth"
-import Google from 'next-auth/providers/google'
+import Resend from 'next-auth/providers/resend'
 
 export default { 
-    providers: [Google],
+    providers: [Resend({
+        from: "no-reply@rustytanton.com"
+    })],
     callbacks: {
         jwt({ token, user }) {
             if (user) {

@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import SignInGoogle from './SignInGoogle'
 import SignOut from "./SignOut"
 import { auth } from '@/app/auth'
 import Image from 'next/image'
+import SignIn from './SignIn'
 
 export default async function SiteHeader() {
     const session = await auth()
@@ -14,10 +14,7 @@ export default async function SiteHeader() {
                 <Link href="/">YAARG (Yet Another AI R&eacute;sum&eacute; Generator)</Link>
             </h1>
             <div>
-                {session && session.user
-                ? <SignOut />
-                : <SignInGoogle />
-                }
+                {session?.user ? <SignOut /> : <SignIn /> }
             </div>
         </header>
     )

@@ -5,6 +5,7 @@ import { auth } from '@/app/auth'
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage'
 import { getResumes } from '../_data/resume'
 
+
 export default async function ResumesPage() {
     const session = await auth()
     if (session && session.user) {
