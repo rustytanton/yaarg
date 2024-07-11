@@ -5,6 +5,7 @@ import { getResumeJobExperiences, ResumeJobExperienceDTOs } from "./resume-job-e
 import { getJobs, JobDTOs } from "./job"
 
 export type ResumeEntity = Resume
+export type ResumeEntities = ResumeEntity[]
 
 export type ResumeDTO = {
     id?: number | undefined
@@ -13,6 +14,7 @@ export type ResumeDTO = {
     jobs?: JobDTOs
     jobDescription?: JobDescriptionDTO
 }
+export type ResumeDTOs = ResumeDTO[]
 
 export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO> {
     const jd = await getJobDescription(entity.jobDescriptionId)
@@ -50,7 +52,20 @@ export async function getResume(resumeId: number) {
             id: resumeId
         }
     })
-    return ResumeEntityToDTO(entity as ResumeEntity)
+    return await ResumeEntityToDTO(entity as ResumeEntity)
+}
+
+export async function getResumes(userId: string): Promise<ResumeDTOs> {
+    const entities = await prisma.resume.findMany({
+        where: {
+            userId: userId
+        }
+    })
+    const dtos: ResumeDTOs = []
+    for (const entity of entities) {
+        dtos.push(await ResumeEntityToDTO(entity))
+    }
+    return dtos
 }
 
 export async function createResume(resume: ResumeDTO) {

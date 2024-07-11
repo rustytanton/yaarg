@@ -1,18 +1,14 @@
 'use server'
 
-import prisma from '@/app/db'
 import Link from 'next/link'
 import { auth } from '@/app/auth'
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage'
+import { getResumes } from '../_data/resume'
 
 export default async function ResumesPage() {
     const session = await auth()
     if (session && session.user) {
-        const resumes = await prisma.resume.findMany({
-            where: {
-                userId: session.user.id
-            }
-        })
+        const resumes = await getResumes(session.user.id as string)
         if (resumes.length) {
             return (
                 <table>
