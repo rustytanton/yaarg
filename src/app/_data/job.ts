@@ -96,13 +96,14 @@ export async function updateJobs(jobs: JobDTOs) {
 }
 
 export async function createJob(job: JobDTO) {
-    const entity = await prisma.job.create({
+    const entity = JobDTOtoEntity(job)
+    const result = await prisma.job.create({
         data: {
-            ...job,
+            ...entity,
             id: undefined
         }
     })
-    return JobEntitytoDTO(entity)
+    return JobEntitytoDTO(result)
 }
 
 export async function deleteJob(jobId: number) {
