@@ -9,7 +9,6 @@ import FormTextareaBullet from "@/app/_lib/components/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { useState } from "react"
 import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
-import { APIResponseSuggestions } from "@/app/api/suggestions/route"
 
 type Props = {
     jobExperiences?: ResumeJobExperienceDTOs,

@@ -1,5 +1,6 @@
 import { ResumeJobExperience } from "@prisma/client";
 import prisma from "../db";
+import { getResumeJobExperienceSkills, ResumeJobExperienceSkillDTOs } from "./resume-job-experience-skill";
 
 export type ResumeJobExperienceEntity = ResumeJobExperience
 export type ResumeJobExperienceEntities = ResumeJobExperienceEntity[]
@@ -9,15 +10,25 @@ export type ResumeJobExperienceDTO = {
     jobId: number
     resumeId: number
     content: string
+    skills?: ResumeJobExperienceSkillDTOs
 }
 export type ResumeJobExperienceDTOs = ResumeJobExperienceDTO[]
 
-export function ResumeJobExperienceEntityToDTO(entity: ResumeJobExperienceEntity) {
-    return entity as ResumeJobExperienceDTO
+export async function ResumeJobExperienceEntityToDTO(entity: ResumeJobExperienceEntity) {
+    const skills = await getResumeJobExperienceSkills(Number(entity.id))
+    return {
+        ...entity,
+        skills: skills
+    }
 }
 
 export function ResumeJobExperienceDTOtoEntity(dto: ResumeJobExperienceDTO) {
-    return dto as ResumeJobExperienceEntity
+    return {
+        id: dto.id,
+        jobId: Number(dto.id),
+        resumeId: dto.resumeId,
+        content: dto.content
+    }
 }
 
 export async function getResumeJobExperience(experienceId: number) {
@@ -36,7 +47,11 @@ export async function getResumeJobExperiences(resumeId: number, jobId: number): 
             resumeId: resumeId
         }
     }) as ResumeJobExperienceEntities
-    return entities.map(entity => ResumeJobExperienceEntityToDTO(entity))
+    const result: ResumeJobExperienceDTOs = []
+    for (const entity of entities) {
+        result.push(await ResumeJobExperienceEntityToDTO(entity))
+    }
+    return result
 }
 
 export async function createResumeJobExperience(experience: ResumeJobExperienceDTO): Promise<ResumeJobExperienceDTO> {
@@ -47,5 +62,5 @@ export async function createResumeJobExperience(experience: ResumeJobExperienceD
             id: undefined
         }
     })
-    return ResumeJobExperienceEntityToDTO(result)
+    return await ResumeJobExperienceEntityToDTO(result)
 }
