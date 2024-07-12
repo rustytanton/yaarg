@@ -3,6 +3,8 @@ import { getJobDescription, JobDescriptionDTO } from "./job-description"
 import prisma from "../db"
 import { getResumeJobExperiences, ResumeJobExperienceDTOs } from "./resume-job-experience"
 import { getJobs, JobDTOs } from "./job"
+import { getUser, UserDTO } from "./user"
+import { EducationDTOs, getEducations } from "./education"
 
 export type ResumeEntity = Resume
 export type ResumeEntities = ResumeEntity[]
@@ -13,12 +15,16 @@ export type ResumeDTO = {
     employer: string
     jobs?: JobDTOs
     jobDescription?: JobDescriptionDTO
+    user?: UserDTO
+    educations?: EducationDTOs
 }
 export type ResumeDTOs = ResumeDTO[]
 
 export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO> {
     const jd = await getJobDescription(entity.jobDescriptionId)
     const jobs = await getJobs(entity.userId)
+    const user = await getUser(entity.userId)
+    const educations = await getEducations(entity.userId)
     for (let i = 0; i < jobs.length; i++) {
         jobs[i].experiences = await getResumeJobExperiences(entity.id, Number(jobs[i].id)) || []
     }
@@ -27,7 +33,9 @@ export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO
         userId: entity.userId,
         employer: entity.employer,
         jobs: jobs,
-        jobDescription: jd
+        jobDescription: jd,
+        user: user,
+        educations: educations
     }
 }
 
