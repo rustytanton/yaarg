@@ -39,3 +39,6 @@ next-env.d.ts
 
 # local notes
 NOTES.md
+
+# folders
+src/app/chatgpt-test
