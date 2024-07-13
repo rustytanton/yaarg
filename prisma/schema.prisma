@@ -128,13 +128,14 @@ model JobDescription {
 }
 
 model Resume {
-  id               Int      @id @default(autoincrement())
-  userId           String
-  createdAt        DateTime @default(now())
-  employer         String
-  jobDescriptionId Int
-  summary          String?
-  jobExperiences   ResumeJobExperience[]
+  id                  Int      @id @default(autoincrement())
+  userId              String
+  createdAt           DateTime @default(now())
+  employer            String
+  jobDescriptionId    Int
+  summary             String?
+  summarySuggestions  ResumeSummarySuggestion[]
+  jobExperiences      ResumeJobExperience[]
 
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id])
@@ -175,4 +176,12 @@ model ResumeJobExperienceSugggestion {
   suggestion       String
 
   experience ResumeJobExperience @relation(fields: [jobExperienceId], references: [id], onDelete: Cascade)
+}
+
+model ResumeSummarySuggestion {
+  id               Int    @id @default(autoincrement())
+  resumeId         Int
+  suggestion       String
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 }

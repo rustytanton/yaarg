@@ -6,7 +6,8 @@ export const assistantSuggestions: assistantProperties = {
     instructions: `
 You will be prompted with a JSON object with the following structure:
 {
-    "skills": string[]
+    "summary": string,
+    "skills": string[],
     "bullets": [
         {
             "bulletText": string,
@@ -14,6 +15,8 @@ You will be prompted with a JSON object with the following structure:
         }
     ]
 }
+
+The "summary" property is the text of a resume summary or headline. Offer suggestions to improve the summary text writing quality. Summary text should be gramatically correct and include no misspelled words. Summary text should use strong action verbs and mention as many skills from the "skills" array as possible.
 
 Each item in the "bullets" array is a bullet point which describes an accomplishment to be included in the experience section of a resume. Bullet text should follow STAR format (Situation Task Action Result) and use strong action verbs when possible. Bullet text should include specific success metrics when possible. Bullet text should avoid repetitive language. Bullet text should be gramatically correct and include no misspelled words.
 
@@ -23,6 +26,7 @@ For each item in the "bullets" array:
 
 Then return a JSON object with this structure:
 {
+    "summaryQualitySuggestions": string[],
     "result": [
         {
             "bulletText": string,
@@ -61,18 +65,19 @@ export type ChatGptSuggestionsResultItem = {
 }
 
 export type ChatGptSuggestionsResult = {
+    summaryQualitySuggestions: string[],
     result: ChatGptSuggestionsResultItem[]
 }
 
-export async function getBulletAnalysis(prompt: string): Promise<ChatGptSuggestionsResultItem[]> {
+export async function getBulletAnalysis(prompt: string): Promise<ChatGptSuggestionsResult> {
     const _assistant = await assistant(assistantSuggestions)
     if (_assistant) {
         const messages = await assistantMessage(_assistant.externalId, prompt)
         if (messages) {
             const result = messages.data[0].content[0] as SuggestionsMessageContent
             const json = JSON.parse(result.text.value) as ChatGptSuggestionsResult
-            return json.result
+            return json
         }
     }
-    return []
+    return {} as ChatGptSuggestionsResult
 }

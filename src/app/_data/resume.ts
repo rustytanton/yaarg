@@ -5,6 +5,7 @@ import { getResumeJobExperiences, ResumeJobExperienceDTOs } from "./resume-job-e
 import { getJobs, JobDTOs } from "./job"
 import { getUser, UserDTO } from "./user"
 import { EducationDTOs, getEducations } from "./education"
+import { getResumeSummarySuggestions, ResumeSummarySuggestionDTOs } from "./resume-summary-suggestion"
 
 export type ResumeEntity = Resume
 export type ResumeEntities = ResumeEntity[]
@@ -17,7 +18,8 @@ export type ResumeDTO = {
     jobDescription?: JobDescriptionDTO
     user?: UserDTO
     educations?: EducationDTOs
-    summary: string
+    summary: string,
+    summarySuggestions?: ResumeSummarySuggestionDTOs
 }
 export type ResumeDTOs = ResumeDTO[]
 
@@ -26,6 +28,7 @@ export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO
     const jobs = await getJobs(entity.userId)
     const user = await getUser(entity.userId)
     const educations = await getEducations(entity.userId)
+    const summarySuggestions = await getResumeSummarySuggestions(entity.id)
     for (let i = 0; i < jobs.length; i++) {
         jobs[i].experiences = await getResumeJobExperiences(entity.id, Number(jobs[i].id)) || []
     }
@@ -37,7 +40,8 @@ export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO
         jobs: jobs,
         jobDescription: jd,
         user: user,
-        educations: educations
+        educations: educations,
+        summarySuggestions: summarySuggestions
     }
 }
 

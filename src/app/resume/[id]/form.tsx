@@ -66,6 +66,18 @@ export default function ResumeForm(props: Props) {
                                 &nbsp;|&nbsp;<a className="text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>Edit</a>
                             </div>
                     }
+                    {state.resume?.summarySuggestions && state.resume?.summarySuggestions.length > 0
+                        ?
+                            <ul className="list-disc pl-5 text-red-500 text-sm">
+                                {state.resume?.summarySuggestions.map((suggestion, suggestionIndex) => {
+                                    return (
+                                        <li key={suggestionIndex}>{suggestion.suggestion}</li>
+                                    )
+                                })}
+                            </ul>
+                        :
+                            ''
+                    }
                 </div>
                 <div className="mb-10">
                     <h2 className="text-2xl mb-5">Work Experience</h2>
