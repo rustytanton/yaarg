@@ -154,6 +154,7 @@ model ResumeJobExperience {
   resumeId         Int
   content          String
   skills           ResumeJobExperienceSkill[]
+  suggestions      ResumeJobExperienceSugggestion[]
 
   job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
   resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
@@ -163,6 +164,14 @@ model ResumeJobExperienceSkill {
   id               Int    @id @default(autoincrement())
   jobExperienceId  Int
   skill            String
+
+  experience ResumeJobExperience @relation(fields: [jobExperienceId], references: [id], onDelete: Cascade)
+}
+
+model ResumeJobExperienceSugggestion {
+  id               Int    @id @default(autoincrement())
+  jobExperienceId  Int
+  suggestion       String
 
   experience ResumeJobExperience @relation(fields: [jobExperienceId], references: [id], onDelete: Cascade)
 }

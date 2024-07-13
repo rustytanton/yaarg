@@ -4,6 +4,7 @@ import { ChatGptSuggestionsrPromptBullet, getBulletAnalysis } from "@/app/_lib/c
 import { ResumeFormState } from "./types"
 import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from "@/app/_data/resume-job-experience-skill"
 import { revalidatePath } from "next/cache"
+import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
     const loadSuggestions = formData.get('suggestions')
@@ -32,6 +33,14 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
                 await createResumeJobExperienceSkill({
                     jobExperienceId: suggestion.bulletId,
                     skill: skill
+                })
+            }
+
+            await deleteResumeJobExperienceSuggestions(suggestion.bulletId)
+            for (const item of suggestion.qualitySuggestions) {
+                await createResumeJobExperienceSugggestion({
+                    jobExperienceId: suggestion.bulletId,
+                    suggestion: item
                 })
             }
         }

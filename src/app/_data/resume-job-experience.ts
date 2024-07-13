@@ -1,6 +1,7 @@
 import { ResumeJobExperience } from "@prisma/client";
 import prisma from "../db";
 import { getResumeJobExperienceSkills, ResumeJobExperienceSkillDTOs } from "./resume-job-experience-skill";
+import { getResumeJobExperienceSugggestion, getResumeJobExperienceSugggestions, ResumeJobExperienceSugggestionDTOs } from "./resume-job-experience-suggestion";
 
 export type ResumeJobExperienceEntity = ResumeJobExperience
 export type ResumeJobExperienceEntities = ResumeJobExperienceEntity[]
@@ -11,14 +12,17 @@ export type ResumeJobExperienceDTO = {
     resumeId: number
     content: string
     skills?: ResumeJobExperienceSkillDTOs
+    suggestions?: ResumeJobExperienceSugggestionDTOs
 }
 export type ResumeJobExperienceDTOs = ResumeJobExperienceDTO[]
 
 export async function ResumeJobExperienceEntityToDTO(entity: ResumeJobExperienceEntity) {
     const skills = await getResumeJobExperienceSkills(Number(entity.id))
+    const suggestions = await getResumeJobExperienceSugggestions(Number(entity.id))
     return {
         ...entity,
-        skills: skills
+        skills: skills,
+        suggestions: suggestions
     }
 }
 

@@ -60,6 +60,18 @@ export default function ResumeForm(props: Props) {
                                     return (
                                         <li key={experienceIndex}>
                                             <div>{experience.content}</div>
+                                            {(experience.suggestions && experience.suggestions.length > 0)
+                                                ?
+                                                    <ul className="list-disc pl-5 text-red-500 text-sm">
+                                                        {experience.suggestions.map((suggestion, suggestionIndex) => {
+                                                            return (
+                                                                <li key={suggestionIndex}>{suggestion.suggestion}</li>
+                                                            )
+                                                        })}
+                                                    </ul>
+                                                :
+                                                    ''
+                                            }
                                         </li>
                                     )
                                 })}
