@@ -42,7 +42,7 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
     
                 <BodySection>
                     <Heading3>Skills Mentioned in Job Description</Heading3>
-                    <ShowHideText isHidden={true}>
+                    <ShowHideText>
                         <FormSkillsList skills={resume?.jobDescription?.skills} />
                     </ShowHideText>
                 </BodySection>
