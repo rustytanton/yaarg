@@ -17,6 +17,7 @@ export type ResumeDTO = {
     jobDescription?: JobDescriptionDTO
     user?: UserDTO
     educations?: EducationDTOs
+    summary: string
 }
 export type ResumeDTOs = ResumeDTO[]
 
@@ -32,6 +33,7 @@ export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO
         id: entity.id,
         userId: entity.userId,
         employer: entity.employer,
+        summary: entity.summary as string,
         jobs: jobs,
         jobDescription: jd,
         user: user,
@@ -50,7 +52,8 @@ export async function ResumeDTOtoEntity(dto: ResumeDTO): Promise<ResumeEntity> {
         userId: dto.userId,
         createdAt: entityPrevious?.createdAt as Date,
         employer: dto.employer,
-        jobDescriptionId: dto?.jobDescription?.id || 0
+        jobDescriptionId: dto?.jobDescription?.id || 0,
+        summary: dto.summary
     }
 }
 

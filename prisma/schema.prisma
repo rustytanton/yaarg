@@ -133,6 +133,7 @@ model Resume {
   createdAt        DateTime @default(now())
   employer         String
   jobDescriptionId Int
+  summary          String?
   jobExperiences   ResumeJobExperience[]
 
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)

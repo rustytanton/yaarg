@@ -24,6 +24,7 @@ export default function ResumeFormNew() {
             <div className="pb-10">
                 <FormInputText label='Employer' inputName="employer" />
             </div>
+            <FormTextarea inputName='summary' label='Enter a summary to appear at the top of your resume:' />
             <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' />
             <FormButton buttonText="Next" isSubmit={true} pendingMessage="Extracting skills with ChatGPT..." />
         </form>

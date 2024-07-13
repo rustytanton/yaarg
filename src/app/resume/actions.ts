@@ -13,6 +13,7 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
     if (session?.user) {
         const employer = formData.get('employer') as string
         const prompt = formData.get('prompt') as string
+        const summary = formData.get('summary') as string
         
         if (!employer || !prompt) {
             return {
@@ -29,7 +30,8 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
         const resume = await createResume({
             userId: session.user.id as string,
             employer: employer,
-            jobDescription: jd
+            jobDescription: jd,
+            summary: summary
         })
         for (const skill of skills) {
             if (jd.id) {

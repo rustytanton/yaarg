@@ -4,10 +4,37 @@ import { ChatGptSuggestionsrPromptBullet, getBulletAnalysis } from "@/app/_lib/c
 import { ResumeFormState } from "./types"
 import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from "@/app/_data/resume-job-experience-skill"
 import { revalidatePath } from "next/cache"
-import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
+import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
+import { ResumeDTO, updateResume, userOwnsResume } from "@/app/_data/resume"
+import { auth } from "@/app/auth"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
     const loadSuggestions = formData.get('suggestions')
+    const summary = formData.get('summary') as string
+
+    const session = await auth()
+
+    if (await !userOwnsResume(Number(prevState.resume?.id), session?.user?.id as string)) {
+        throw new Error('User does not own resume, cannot make edits')
+    }
+
+    if (summary && session && session.user && loadSuggestions !== 'true') {
+        await updateResume({
+            ...prevState.resume,
+            userId: prevState.resume?.userId as string,
+            employer: prevState.resume?.employer as string,
+            summary: summary
+        })
+
+        return {
+            ...prevState,
+            loadSuggestions: false,
+            resume: {
+                ...prevState.resume,
+                summary: summary
+            } as ResumeDTO
+        }
+    }
 
     if (loadSuggestions === 'true' && prevState.resume?.jobs) {
         const bullets: ChatGptSuggestionsrPromptBullet[] = []
@@ -47,7 +74,6 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
 
         revalidatePath('/resume/' + prevState.resume.id)
     }
-    
     return {
         ...prevState,
         loadSuggestions: false

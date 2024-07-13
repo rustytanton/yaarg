@@ -7,6 +7,8 @@ import { handleFormChange } from "./actions"
 import FormButton from "@/app/_lib/components/FormButton"
 import Link from "next/link"
 import { useState } from "react"
+import FormTextarea from "@/app/_lib/components/FormTextarea"
+import TextareaAutosize from 'react-textarea-autosize'
 
 type Props = {
     resume: ResumeDTO
@@ -24,6 +26,7 @@ export default function ResumeForm(props: Props) {
     })
 
     const [suggestions, setSuggestions] = useState(false)
+    const [editSummary, setEditSummary] = useState(false)
 
     return (
         <form action={formAction}>
@@ -42,6 +45,27 @@ export default function ResumeForm(props: Props) {
                         <div>{state.resume?.user?.linkedIn}</div>
                         <div>{state.resume?.user?.github}</div>
                     </div>
+                </div>
+                <div className="mb-10">
+                    {editSummary
+                        ?
+                            <>
+                                <TextareaAutosize
+                                    className="p-2 w-full h-10 outline-0 resize-none"
+                                    name='summary'
+                                    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault(); }}
+                                >{state.resume?.summary}</TextareaAutosize>
+                                <div className="flex">
+                                    <FormButton buttonText="Save" isSubmit={true} />
+                                    <FormButton buttonText="Cancel" onClick={() => { setEditSummary(false) }} />
+                                </div>
+                            </>
+                        :
+                            <div>
+                                {state.resume?.summary}
+                                &nbsp;|&nbsp;<a className="text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>Edit</a>
+                            </div>
+                    }
                 </div>
                 <div className="mb-10">
                     <h2 className="text-2xl mb-5">Work Experience</h2>
