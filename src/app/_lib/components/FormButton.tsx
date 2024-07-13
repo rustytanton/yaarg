@@ -17,7 +17,7 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
     if (isSubmit && pending) {
         return (
             <>
-                <Spinner /> {pendingMessage}
+                <Spinner />&nbsp;{pendingMessage}
             </>
         )
     } else if (href) {

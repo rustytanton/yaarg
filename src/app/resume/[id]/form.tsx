@@ -6,14 +6,15 @@ import { useFormState } from "react-dom"
 import { handleFormChange } from "./actions"
 import FormButton from "@/app/_lib/components/FormButton"
 import Link from "next/link"
+import { useState } from "react"
 
 type Props = {
     resume: ResumeDTO
 }
 
 const initialState: ResumeFormState = {
-    message: '',
-    resume: undefined
+    loadSuggestions: false,
+    message: ''
 }
 
 export default function ResumeForm(props: Props) {
@@ -22,10 +23,12 @@ export default function ResumeForm(props: Props) {
         resume: props.resume
     })
 
+    const [suggestions, setSuggestions] = useState(false)
+
     return (
         <form action={formAction}>
             <div className="flex justify-center items-center mb-5">
-                <FormButton buttonText="Load AI Suggestions" isSubmit={true} />
+                <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
             </div>
             <div className="bg-white text-black p-10 mb-5 w-full">
                 <h1 className="text-4xl mb-2">{state.resume?.user?.firstName} {state.resume?.user?.lastName}</h1>
@@ -56,7 +59,7 @@ export default function ResumeForm(props: Props) {
                                 {job.experiences?.map((experience, experienceIndex) => {
                                     return (
                                         <li key={experienceIndex}>
-                                            {experience.content}
+                                            <div>{experience.content}</div>
                                         </li>
                                     )
                                 })}
@@ -77,6 +80,7 @@ export default function ResumeForm(props: Props) {
                     )
                 })}
             </div>
+            {suggestions ? <input name="suggestions" type="hidden" value="true" /> : '' }
         </form>
     )
 }
