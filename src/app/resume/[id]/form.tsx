@@ -7,8 +7,10 @@ import { handleFormChange } from "./actions"
 import FormButton from "@/app/_lib/components/FormButton"
 import Link from "next/link"
 import { useState } from "react"
-import FormTextarea from "@/app/_lib/components/FormTextarea"
 import TextareaAutosize from 'react-textarea-autosize'
+import FormSkillsList from "@/app/_lib/components/FormSkillsList"
+import Heading3 from "@/app/_lib/components/Heading3"
+import ShowHideText from "@/app/_lib/components/ShowHideText"
 
 type Props = {
     resume: ResumeDTO
@@ -30,6 +32,22 @@ export default function ResumeForm(props: Props) {
 
     return (
         <form action={formAction}>
+            <div className="mb-10">
+                <h1 className="text-4xl">Resume - {state.resume?.employer}</h1>
+            </div>
+            <div className="mb-10">
+                <Heading3>Job Description</Heading3>
+                <ShowHideText isHidden={true}>
+                    <div className="bg-slate-800 p-10 whitespace-pre-wrap">
+                        {state.resume?.jobDescription?.text}
+                    </div>
+                </ShowHideText>
+            </div>
+            <div className="mb-10">
+                <Heading3>Skills Mentioned in Job Description</Heading3>
+                <p className="text-sm mb-5">You can see how many skills are mentioned in your resume by loading AI suggesitons below</p>
+                <FormSkillsList skills={state.resume?.jobDescription?.skills} />
+            </div>
             <div className="flex justify-center items-center mb-5">
                 <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
             </div>

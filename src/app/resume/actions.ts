@@ -38,7 +38,8 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
                 await createJobDescriptionSkill({
                     jobDescriptionId: jd.id,
                     skill: skill.skill,
-                    mentions: skill.mentions
+                    mentions: skill.mentions,
+                    usedInResume: false
                 })
             }
         }

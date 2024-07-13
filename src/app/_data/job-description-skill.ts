@@ -8,7 +8,8 @@ export type JobDescriptionSkillDTO = {
     id?: number | undefined
     jobDescriptionId: number
     skill: string
-    mentions: number
+    mentions: number,
+    usedInResume: boolean
 }
 export type JobDescriptionSkillDTOs = JobDescriptionSkillDTO[]
 
@@ -37,4 +38,27 @@ export async function getJobDescriptionSkills(jobDescriptionId: number): Promise
         }
     })
     return entities.map(skill => JobDescriptionSkillEntityToDTO(skill))
+}
+
+export async function setJobDescriptionSkillUsedBySkillName(jobDescriptionId: number, skillName: string) {
+    await prisma.jobDescriptionSkill.updateMany({
+        where: {
+            jobDescriptionId: jobDescriptionId,
+            skill: skillName
+        },
+        data: {
+            usedInResume: true
+        }
+    })
+}
+
+export async function resetJobDescriptionSkillsUsedField(jobDescriptionId: number) {
+    await prisma.jobDescriptionSkill.updateMany({
+        where: {
+            jobDescriptionId: jobDescriptionId
+        },
+        data: {
+            usedInResume: false
+        }
+    })
 }

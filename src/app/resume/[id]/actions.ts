@@ -2,12 +2,13 @@
 
 import { ChatGptSuggestionsrPromptBullet, getBulletAnalysis } from "@/app/_lib/chatgpt/assistant-suggestions"
 import { ResumeFormState } from "./types"
-import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from "@/app/_data/resume-job-experience-skill"
+import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills, ResumeJobExperienceSkillDTOs } from "@/app/_data/resume-job-experience-skill"
 import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
 import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
 import { ResumeDTO, updateResume, userOwnsResume } from "@/app/_data/resume"
 import { auth } from "@/app/auth"
+import { resetJobDescriptionSkillsUsedField, setJobDescriptionSkillUsedBySkillName } from "@/app/_data/job-description-skill"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
     const loadSuggestions = formData.get('suggestions')
@@ -56,6 +57,8 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
             bullets: bullets
         }))
 
+        await resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
+
         for (const suggestion of Array.from(suggestions.result)) {
             await deleteResumeJobExperienceSkills(suggestion.bulletId)
             for (const skill of suggestion.skillsUsed) {
@@ -63,6 +66,7 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
                     jobExperienceId: suggestion.bulletId,
                     skill: skill
                 })
+                await setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
             }
 
             await deleteResumeJobExperienceSuggestions(suggestion.bulletId)

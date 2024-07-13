@@ -146,6 +146,7 @@ model JobDescriptionSkill {
   jobDescriptionId Int
   skill            String
   mentions         Int
+  usedInResume     Boolean @default(false)
 
   jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
 }
