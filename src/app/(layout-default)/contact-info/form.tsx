@@ -8,6 +8,7 @@ import FormButton from '@/app/_lib/components/FormButton'
 import { ContactInfoFormState } from './types'
 import { UserDTO } from '../../_data/user'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
+import RequiredInfo from '@/app/_lib/components/form/RequiredInfo'
 
 const initialState: ContactInfoFormState = {
     message: ''
@@ -26,9 +27,10 @@ export default function ContactInfoForm(props: Props) {
         <form action={formAction} className="pl-10 w-1/2">
             <FormMessage message={state?.message} />
             <p className="mb-10">If you specify an alternative email address, it will be used in place of your account email (which can&apos;t be changed) when generating resumes.</p>
-            <FormInputText label="First Name:" inputName="firstName" defaultValue={user.firstName || ''} />
-            <FormInputText label="Last Name:" inputName="lastName" defaultValue={user.lastName || ''} />
-            <FormInputText label="Location:" inputName="location" defaultValue={user.location || ''} />
+            <RequiredInfo />
+            <FormInputText label="First Name:" inputName="firstName" defaultValue={user.firstName || ''} required={true} />
+            <FormInputText label="Last Name:" inputName="lastName" defaultValue={user.lastName || ''} required={true} />
+            <FormInputText label="Location:" inputName="location" defaultValue={user.location || ''} required={true} />
             <FormInputText label="Email:" inputName="email" inputType="email" defaultValue={user.email || ''} isDisabled={true} />
             <FormInputText label="Alternative Email:" inputName="emailAlt" inputType="email" defaultValue={user.emailAlt || ''} />
             <FormInputText label="Phone Number:" inputName="phoneNumber" defaultValue={user.phoneNumber || ''} />

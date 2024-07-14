@@ -31,11 +31,13 @@ export default function FormSectionEducation(props: Props) {
                     label="Institution:"
                     inputName={"[education" + props.index + "]institution"}
                     defaultValue={props.education.institution as string}
+                    required={true}
                 />
                 <FormInputText
                     label="Major / Credential:"
                     inputName={"[education" + props.index + "]major"}
                     defaultValue={props.education.major as string}
+                    required={true}
                 />
                 <FormInputText
                     label="Minor:"

@@ -42,27 +42,34 @@ export default function FormSectionJob(props: Props) {
                     label="Employer:"
                     inputName={ "[job" + props.index + "]employer"  }
                     defaultValue={props.job.employer}
+                    required={true}
                 />
                 <FormInputText
                     label="Title:"
                     inputName={ "[job" + props.index + "]title"  }
                     defaultValue={props.job.title as string}
+                    required={true}
                 />
                 <FormInputText
                     label="Location:"
                     inputName={ "[job" + props.index + "]location" }
                     defaultValue={props.job.location}
+                    required={true}
                 />
                 <FormSelect
                     options={['On-premises', 'Hybrid', 'Remote']}
                     inputName={ "[job" + props.index + "]attendanceModel" }
                     defaultValue={props.job.attendanceModel}
                     label="Location Type:"
+                    required={true}
                 />
                 <FormInputText
                     label="Start Date:"
                     inputName={ "[job" + props.index + "]startDate" }
                     defaultValue={props.job.startDate}
+                    required={true}
+                    pattern="\d{1,2}/\d{4}"
+                    placeholder="Ex: 2/2024 or 11/2024"
                 />
                 {stillEmployed
                     ?
@@ -72,6 +79,8 @@ export default function FormSectionJob(props: Props) {
                             label="End Date:"
                             inputName={ "[job" + props.index + "]endDate" }
                             defaultValue={endDate}
+                            required={true}
+                            placeholder="Ex: 2/2024 or 11/2024"
                         />
                 }
                 <FormInputCheckbox

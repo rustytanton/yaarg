@@ -8,6 +8,7 @@ import { handleFormChange } from './actions'
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { JobDTO, JobDTOs } from "../../_data/job"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
+import RequiredInfo from "@/app/_lib/components/form/RequiredInfo"
 
 type Props = {
     jobs: JobDTOs
@@ -29,6 +30,7 @@ export default function JobForm(props: Props) {
         <form action={formAction}>
             <FormMessage message={state.message} />
             <p className="mb-10">You will enter experiences for these jobs later when you build a resume</p>
+            <RequiredInfo />
             {state.jobs.length > 0 ?
                 state.jobs.map((job: JobDTO, index: number) => {
                     return (

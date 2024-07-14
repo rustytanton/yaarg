@@ -21,7 +21,7 @@ export default function ResumeSummary({ resume }: Props) {
                         name='summary'
                         onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault(); }}
                     >{resume?.summary}</TextareaAutosize>
-                    <div className="flex">
+                    <div className="flex gap-2">
                         <FormButton buttonText="Save" isSubmit={true} />
                         <FormButton buttonText="Cancel" onClick={() => { setEditSummary(false) }} />
                     </div>
@@ -34,7 +34,10 @@ export default function ResumeSummary({ resume }: Props) {
             <BodySection>
                 <div>
                     {resume?.summary}
-                    &nbsp;|&nbsp;<a className="text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>Edit</a>
+                    {resume?.summary ? <>&nbsp;|&nbsp;</> : '' }
+                    <a className="text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>
+                        {resume?.summary ? 'Edit' : 'Add a summary' }
+                    </a>
                 </div>
                 <ResumeSummarySugggestions resume={resume} />
             </BodySection>

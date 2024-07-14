@@ -1,3 +1,5 @@
+import RequiredCharacter from "./form/RequiredCharacter"
+
 type Props = {
     defaultValue?: string
     inputName?: string
@@ -7,6 +9,7 @@ type Props = {
     pattern?: string | undefined
     placeholder?: string | undefined
     value?: string
+    required?: boolean
 }
 
 export default function FormInputText({
@@ -17,10 +20,14 @@ export default function FormInputText({
     isDisabled = false,
     pattern = undefined,
     placeholder = '',
-    value = undefined }: Props) {
+    value = undefined,
+    required = false }: Props) {
     return (
         <label className="pt-2 pb-2 flex">
-            <span className="w-48">{label}</span> 
+            <span className="w-48">
+                {label}
+                {required ? <RequiredCharacter /> : ''}
+            </span>            
             <input 
                 className="block text-black flex-1 rounded p-1"
                 type={inputType}
@@ -30,6 +37,7 @@ export default function FormInputText({
                 disabled={isDisabled}
                 pattern={pattern}
                 placeholder={placeholder}
+                required={required}
             />
         </label>
     )

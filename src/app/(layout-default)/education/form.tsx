@@ -8,6 +8,7 @@ import FormButton from '@/app/_lib/components/FormButton'
 import { EducationFormState } from './types'
 import { EducationDTO, EducationDTOs } from '../../_data/education'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
+import RequiredInfo from '@/app/_lib/components/form/RequiredInfo'
 
 const initialState: EducationFormState = {
     addSection: false,
@@ -29,6 +30,7 @@ export default function EducationForm(props: Props) {
         <form action={formAction} className="p-10">
             <FormMessage message={state?.message} />
             <p className="mb-10">Note: You can use this section for credentials too (examples: SCM, PMP, etc)</p>
+            <RequiredInfo />
             {state.educations.length > 0 ? state.educations.map((education: EducationDTO, index: number) => {
                 return (
                     <FormSectionEducation key={'education-' + index} index={index} education={education} />

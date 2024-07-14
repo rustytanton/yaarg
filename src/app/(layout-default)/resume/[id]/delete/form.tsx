@@ -6,6 +6,7 @@ import { useFormState } from "react-dom"
 import { ResumeFormDeleteState } from "./types"
 import FormMessage from "@/app/_lib/components/FormMessage"
 import Link from "next/link"
+import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 
 type Props = {
     id: string
@@ -25,10 +26,10 @@ export default function ResumeDeleteForm(props: Props) {
         return (
             <form action={formAction}>
                 <h2>Are you sure you want to delete Resume {props.id}?</h2>
-                <div className="flex items-center">
+                <ActionsCentered>
                     <FormButton buttonText="Yes" isSubmit={true}  />
                     <FormButton buttonText="No" href="/resumes"  />
-                </div>
+                </ActionsCentered>
                 <input type="hidden" name="resumeId" value={props.id} />
             </form>
         )

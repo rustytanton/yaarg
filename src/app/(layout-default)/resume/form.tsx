@@ -9,6 +9,7 @@ import FormMessage from "@/app/_lib/components/FormMessage"
 import FormInputText from "@/app/_lib/components/FormInputText"
 import BodySection from "@/app/_lib/components/BodySection"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
+import RequiredInfo from "@/app/_lib/components/form/RequiredInfo"
 
 const initialState: ResumeFormNewState = {
     message: '',
@@ -23,14 +24,15 @@ export default function ResumeFormNew() {
     return (
         <form action={formAction} className="p-10 w-3/4">
             <FormMessage message={state.message} />
+            <RequiredInfo />
             <BodySection>
-                <FormInputText label='Employer' inputName="employer" />
+                <FormInputText label='Employer' inputName="employer" required={true} />
             </BodySection>
             <BodySection>
                 <FormTextarea inputName='summary' label='Enter a summary to appear at the top of your resume:' />
             </BodySection>
             <BodySection>
-                <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' />
+                <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' required={true} />
             </BodySection>
             <ActionsCentered>
                 <FormButton buttonText="Next" isSubmit={true} pendingMessage="Extracting skills with ChatGPT..." />
