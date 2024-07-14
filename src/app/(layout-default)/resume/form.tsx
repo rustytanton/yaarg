@@ -8,6 +8,7 @@ import { ResumeFormNewState } from './types'
 import FormMessage from "@/app/_lib/components/FormMessage"
 import FormInputText from "@/app/_lib/components/FormInputText"
 import BodySection from "@/app/_lib/components/BodySection"
+import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 
 const initialState: ResumeFormNewState = {
     message: '',
@@ -30,8 +31,10 @@ export default function ResumeFormNew() {
             </BodySection>
             <BodySection>
                 <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' />
-                <FormButton buttonText="Next" isSubmit={true} pendingMessage="Extracting skills with ChatGPT..." />
             </BodySection>
+            <ActionsCentered>
+                <FormButton buttonText="Next" isSubmit={true} pendingMessage="Extracting skills with ChatGPT..." />
+            </ActionsCentered>
         </form>
     )
 }

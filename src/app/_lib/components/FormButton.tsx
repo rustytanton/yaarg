@@ -24,7 +24,7 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
     } else if (href) {
         return (
             <Link
-                className="m-2 p-1 bg-gray-200 text-black block"
+                className="pt-2 pb-2 pr-4 pl-4 bg-gray-200 text-black block rounded"
                 href={href}
                 onClick={onClick}
                 target={target}
@@ -35,7 +35,7 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
     } else {
         return (
             <button
-                className="m-2 p-1 bg-gray-200 text-black block"
+                className="pt-2 pb-2 pr-4 pl-4 bg-gray-200 text-black block rounded"
                 type={isSubmit ? 'submit' : 'button'}
                 onClick={onClick}
             >

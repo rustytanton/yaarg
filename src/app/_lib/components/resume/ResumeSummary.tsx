@@ -17,7 +17,7 @@ export default function ResumeSummary({ resume }: Props) {
             <BodySection>
                 <div>
                     <TextareaAutosize
-                        className="p-2 w-full h-10 outline-0 resize-none"
+                        className="p-2 w-full h-10 resize-none outline-0 border-2 border-slate-200"
                         name='summary'
                         onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault(); }}
                     >{resume?.summary}</TextareaAutosize>

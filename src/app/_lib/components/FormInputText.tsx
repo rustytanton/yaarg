@@ -19,10 +19,10 @@ export default function FormInputText({
     placeholder = '',
     value = undefined }: Props) {
     return (
-        <label className="p-2 flex">
+        <label className="pt-2 pb-2 flex">
             <span className="w-48">{label}</span> 
             <input 
-                className="block text-black flex-1"
+                className="block text-black flex-1 rounded p-1"
                 type={inputType}
                 name={inputName}
                 defaultValue={defaultValue || ''}

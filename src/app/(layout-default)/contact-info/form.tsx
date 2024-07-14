@@ -7,6 +7,7 @@ import FormInputText from '@/app/_lib/components/FormInputText'
 import FormButton from '@/app/_lib/components/FormButton'
 import { ContactInfoFormState } from './types'
 import { UserDTO } from '../../_data/user'
+import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
 
 const initialState: ContactInfoFormState = {
     message: ''
@@ -35,7 +36,9 @@ export default function ContactInfoForm(props: Props) {
             <FormInputText label="LinkedIn URL:" inputName="linkedIn" defaultValue={user.linkedIn || ''} />
             <FormInputText label="Github URL:" inputName="github" defaultValue={user.github || ''} />
             <input type="hidden" name="userId" value={user.id} />
-            <FormButton buttonText="Submit" isSubmit={true} />
+            <ActionsCentered>
+                <FormButton buttonText="Submit" isSubmit={true} />
+            </ActionsCentered>
         </form>
     )
 }

@@ -7,6 +7,7 @@ import { useFormState } from "react-dom"
 import { handleFormChange } from './actions'
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { JobDTO, JobDTOs } from "../../_data/job"
+import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 
 type Props = {
     jobs: JobDTOs
@@ -38,7 +39,10 @@ export default function JobForm(props: Props) {
                 <div className="p-5">No jobs entered yet</div>
             }
             <FormButton buttonText="Add Another Section" onClick={() => { state.addSection = true }} isSubmit={true} />
-            <FormButton buttonText="Submit" isSubmit={true} />
+            
+            <ActionsCentered>
+                <FormButton buttonText="Submit" isSubmit={true} />
+            </ActionsCentered>
         </form>
     )
 }

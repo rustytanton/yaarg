@@ -7,6 +7,7 @@ import FormSectionEducation from '@/app/_lib/components/FormSectionEducation'
 import FormButton from '@/app/_lib/components/FormButton'
 import { EducationFormState } from './types'
 import { EducationDTO, EducationDTOs } from '../../_data/education'
+import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
 
 const initialState: EducationFormState = {
     addSection: false,
@@ -27,16 +28,16 @@ export default function EducationForm(props: Props) {
     return (
         <form action={formAction} className="p-10">
             <FormMessage message={state?.message} />
-            <p>Note: You can use this section for credentials too (examples: SCM, PMP, etc)</p>
+            <p className="mb-10">Note: You can use this section for credentials too (examples: SCM, PMP, etc)</p>
             {state.educations.length > 0 ? state.educations.map((education: EducationDTO, index: number) => {
                 return (
-                    <>
-                        <FormSectionEducation key={'education-' + index} index={index} education={education} />
-                    </>
+                    <FormSectionEducation key={'education-' + index} index={index} education={education} />
                 )
             }) : 'No education sections added yet'}
             <FormButton buttonText="Add Another Section" onClick={() => { state.addSection = true }} isSubmit={true} />
-            <FormButton buttonText="Submit" isSubmit={true} />
+            <ActionsCentered>
+                <FormButton buttonText="Submit" isSubmit={true} />
+            </ActionsCentered>
         </form>
     )
 }
