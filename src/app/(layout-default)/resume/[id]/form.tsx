@@ -22,6 +22,7 @@ import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
 import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
+import { redirect } from "next/navigation"
 
 type Props = {
     resume: ResumeDTO
@@ -40,8 +41,15 @@ export default function ResumeForm(props: Props) {
 
     const [suggestions, setSuggestions] = useState(false)
 
+    async function formActionWrapper(formData: FormData) {
+        await formAction(formData)
+
+        // @todo this is slightly hacky
+        redirect('/resume/' + state.resume?.id + '?' + new Date().getTime())
+    }
+
     return (
-        <form action={formAction}>
+        <form action={formActionWrapper}>
             <BodySection>
                 <Heading1>Resume - {state.resume?.employer}</Heading1>
             </BodySection>
