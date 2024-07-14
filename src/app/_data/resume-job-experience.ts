@@ -1,7 +1,7 @@
 import { ResumeJobExperience } from "@prisma/client";
 import prisma from "../db";
 import { getResumeJobExperienceSkills, ResumeJobExperienceSkillDTOs } from "./resume-job-experience-skill";
-import { getResumeJobExperienceSugggestion, getResumeJobExperienceSugggestions, ResumeJobExperienceSugggestionDTOs } from "./resume-job-experience-suggestion";
+import { getResumeJobExperienceSugggestions, ResumeJobExperienceSugggestionDTOs } from "./resume-job-experience-suggestion";
 
 export type ResumeJobExperienceEntity = ResumeJobExperience
 export type ResumeJobExperienceEntities = ResumeJobExperienceEntity[]
@@ -64,6 +64,27 @@ export async function createResumeJobExperience(experience: ResumeJobExperienceD
         data: {
             ...entity,
             id: undefined
+        }
+    })
+    return await ResumeJobExperienceEntityToDTO(result)
+}
+
+export async function deleteResumeJobExperience(experienceId: number) {
+    await prisma.resumeJobExperience.delete({
+        where: {
+            id: experienceId
+        }
+    })
+}
+
+export async function updateResumeJobExperience(experience: ResumeJobExperienceDTO) {
+    const entity = ResumeJobExperienceDTOtoEntity(experience)
+    const result = await prisma.resumeJobExperience.update({
+        where: {
+            id: entity.id
+        },
+        data: {
+            ...entity
         }
     })
     return await ResumeJobExperienceEntityToDTO(result)

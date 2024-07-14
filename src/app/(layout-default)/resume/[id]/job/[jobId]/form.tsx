@@ -9,6 +9,9 @@ import FormTextareaBullet from "@/app/_lib/components/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { useState } from "react"
 import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
+import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"
+import { ResumeJobExperienceSugggestionDTOs } from "@/app/_data/resume-job-experience-suggestion"
+import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 
 type Props = {
     jobExperiences?: ResumeJobExperienceDTOs,
@@ -45,6 +48,8 @@ export default function FormResumeJob(props: Props) {
                             contentId={experience.id}
                             defaultValue={experience.content}
                         />
+                        {experience.suggestions && experience.suggestions.length > 0 ? <div className="mt-5 text-sm text-red-500">AI Suggestions:</div> : ''}
+                        <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestionDTOs} />
                     </li>
                 )
             })}
@@ -56,7 +61,9 @@ export default function FormResumeJob(props: Props) {
             <div>
                 <input type="hidden" name="jobId" value={props.jobId} />
                 <input type="hidden" name="resumeId" value={props.resumeId} />
-                <FormButton onClick={() => { setAddExperience(false) }} isSubmit={true} buttonText="Save"></FormButton>
+                <ActionsCentered>
+                    <FormButton onClick={() => { setAddExperience(false) }} isSubmit={true} buttonText="Save"></FormButton>
+                </ActionsCentered>
             </div>
         </form>
     )
