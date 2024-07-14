@@ -49,4 +49,8 @@ a {
   width: 5px;
 }
 
+.list-disc-offsettop li li::before {
+  display: none;
+}
+
 
