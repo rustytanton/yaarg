@@ -5,12 +5,22 @@ import { ResumeFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from "./actions"
 import FormButton from "@/app/_lib/components/FormButton"
-import Link from "next/link"
 import { useState } from "react"
-import TextareaAutosize from 'react-textarea-autosize'
 import FormSkillsList from "@/app/_lib/components/FormSkillsList"
 import Heading3 from "@/app/_lib/components/Heading3"
 import ShowHideText from "@/app/_lib/components/ShowHideText"
+import BodySection from "@/app/_lib/components/BodySection"
+import ResumeContainer from "@/app/_lib/components/resume/ResumeContainer"
+import ResumeHeader from "@/app/_lib/components/resume/ResumeHeader"
+import { UserDTO } from "@/app/_data/user"
+import { JobDTOs } from "@/app/_data/job"
+import ResumeSummary from "@/app/_lib/components/resume/ResumeSummary"
+import ResumeWorkExperience from "@/app/_lib/components/resume/ResumeWorkExperience"
+import ResumeEducation from "@/app/_lib/components/resume/ResumeEducation"
+import { EducationDTOs } from "@/app/_data/education"
+import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
+import Heading1 from "@/app/_lib/components/headings/Heading1"
+import BodyPre from "@/app/_lib/components/body/BodyPre"
 
 type Props = {
     resume: ResumeDTO
@@ -28,125 +38,33 @@ export default function ResumeForm(props: Props) {
     })
 
     const [suggestions, setSuggestions] = useState(false)
-    const [editSummary, setEditSummary] = useState(false)
 
     return (
         <form action={formAction}>
-            <div className="mb-10">
-                <h1 className="text-4xl">Resume - {state.resume?.employer}</h1>
-            </div>
-            <div className="mb-10">
+            <BodySection>
+                <Heading1>Resume - {state.resume?.employer}</Heading1>
+            </BodySection>
+            <BodySection>
                 <Heading3>Job Description</Heading3>
                 <ShowHideText isHidden={true}>
-                    <div className="bg-slate-800 p-10 whitespace-pre-wrap">
-                        {state.resume?.jobDescription?.text}
-                    </div>
+                    <BodyPre>{state.resume?.jobDescription?.text}</BodyPre>
                 </ShowHideText>
-            </div>
-            <div className="mb-10">
+            </BodySection>
+            <BodySection>
                 <Heading3>Skills Mentioned in Job Description</Heading3>
-                <p className="text-sm mb-5">You can see how many skills are mentioned in your resume by loading AI suggestions below</p>
+                <BodyParagraphSmall>You can see how many skills are mentioned in your resume by loading AI suggestions below</BodyParagraphSmall>
                 <FormSkillsList skills={state.resume?.jobDescription?.skills} />
-            </div>
+            </BodySection>
             <div className="flex justify-center items-center mb-5">
                 <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
                 <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
             </div>
-            <div className="bg-white text-black p-10 mb-5 w-full">
-                <h1 className="text-4xl mb-2">{state.resume?.user?.firstName} {state.resume?.user?.lastName}</h1>
-                <div className="mb-5">
-                    <div className="text-sm">
-                        {state.resume?.user?.phoneNumber} |&nbsp;
-                        {state.resume?.user?.email} |&nbsp;
-                        {state.resume?.user?.location}
-                    </div>
-                    <div className="text-sm pt-2">
-                        <div>{state.resume?.user?.linkedIn}</div>
-                        <div>{state.resume?.user?.github}</div>
-                    </div>
-                </div>
-                <div className="mb-10">
-                    {editSummary
-                        ?
-                            <>
-                                <TextareaAutosize
-                                    className="p-2 w-full h-10 outline-0 resize-none"
-                                    name='summary'
-                                    onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault(); }}
-                                >{state.resume?.summary}</TextareaAutosize>
-                                <div className="flex">
-                                    <FormButton buttonText="Save" isSubmit={true} />
-                                    <FormButton buttonText="Cancel" onClick={() => { setEditSummary(false) }} />
-                                </div>
-                            </>
-                        :
-                            <div>
-                                {state.resume?.summary}
-                                &nbsp;|&nbsp;<a className="text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>Edit</a>
-                            </div>
-                    }
-                    {state.resume?.summarySuggestions && state.resume?.summarySuggestions.length > 0
-                        ?
-                            <ul className="list-disc pl-5 text-red-500 text-sm">
-                                {state.resume?.summarySuggestions.map((suggestion, suggestionIndex) => {
-                                    return (
-                                        <li key={suggestionIndex}>{suggestion.suggestion}</li>
-                                    )
-                                })}
-                            </ul>
-                        :
-                            ''
-                    }
-                </div>
-                <div className="mb-10">
-                    <h2 className="text-2xl mb-5">Work Experience</h2>
-                    {state.resume?.jobs?.map((job, jobIndex) => {
-                        return (
-                            <div key={jobIndex} className="mb-5 pl-5">
-                                <div className="flex items-center">
-                                    <h3 className="text-xl">{job.employer}</h3>&nbsp;|&nbsp;
-                                    <Link className="text-sm" href={ '/resume/' + state.resume?.id + '/job/' + job.id  }>Edit</Link>
-                                </div>
-                                <div className="text-sm">
-                                    {job.location} | {job.startDate} - {job.stillWorksHere ? 'present' : job.endDate}
-                                </div>
-                                <ul className="list-disc pl-5">
-                                {job.experiences?.map((experience, experienceIndex) => {
-                                    return (
-                                        <li key={experienceIndex}>
-                                            <div>{experience.content}</div>
-                                            {(experience.suggestions && experience.suggestions.length > 0)
-                                                ?
-                                                    <ul className="list-disc pl-5 text-red-500 text-sm">
-                                                        {experience.suggestions.map((suggestion, suggestionIndex) => {
-                                                            return (
-                                                                <li key={suggestionIndex}>{suggestion.suggestion}</li>
-                                                            )
-                                                        })}
-                                                    </ul>
-                                                :
-                                                    ''
-                                            }
-                                        </li>
-                                    )
-                                })}
-                                </ul>
-                            </div>
-                        )
-                    })}
-                </div>
-
-                <h2 className="text-2xl">Education</h2>
-                {state.resume?.educations?.map((education, educationIndex) => {
-                    return (
-                        <div key={educationIndex} className="mb-5 pl-5">
-                            <h3 className="text-xl">{education.institution}</h3>
-                            <div>{education.startDate} - {education.endDate}</div>
-                            <div>{education.major}</div>
-                        </div>
-                    )
-                })}
-            </div>
+            <ResumeContainer>
+                <ResumeHeader user={state.resume?.user as UserDTO} />
+                <ResumeSummary resume={state.resume as ResumeDTO} />
+                <ResumeWorkExperience jobs={state.resume?.jobs as JobDTOs} resumeId={Number(state.resume?.id)} />
+                <ResumeEducation educations={state.resume?.educations as EducationDTOs} />
+            </ResumeContainer>
             {suggestions ? <input name="suggestions" type="hidden" value="true" /> : '' }
         </form>
     )

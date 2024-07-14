@@ -7,6 +7,7 @@ import { handleFormChange } from './actions'
 import { ResumeFormNewState } from './types'
 import FormMessage from "@/app/_lib/components/FormMessage"
 import FormInputText from "@/app/_lib/components/FormInputText"
+import BodySection from "@/app/_lib/components/BodySection"
 
 const initialState: ResumeFormNewState = {
     message: '',
@@ -21,12 +22,16 @@ export default function ResumeFormNew() {
     return (
         <form action={formAction} className="p-10 w-3/4">
             <FormMessage message={state.message} />
-            <div className="pb-10">
+            <BodySection>
                 <FormInputText label='Employer' inputName="employer" />
-            </div>
-            <FormTextarea inputName='summary' label='Enter a summary to appear at the top of your resume:' />
-            <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' />
-            <FormButton buttonText="Next" isSubmit={true} pendingMessage="Extracting skills with ChatGPT..." />
+            </BodySection>
+            <BodySection>
+                <FormTextarea inputName='summary' label='Enter a summary to appear at the top of your resume:' />
+            </BodySection>
+            <BodySection>
+                <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' />
+                <FormButton buttonText="Next" isSubmit={true} pendingMessage="Extracting skills with ChatGPT..." />
+            </BodySection>
         </form>
     )
 }
