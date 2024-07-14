@@ -3,7 +3,7 @@ import Resend from 'next-auth/providers/resend'
 
 export default { 
     providers: [Resend({
-        from: process.env.RESEND_REPLAY_EMAIL
+        from: process.env.RESEND_REPLY_EMAIL
     })],
     callbacks: {
         jwt({ token, user }) {
