@@ -21,6 +21,7 @@ import { EducationDTOs } from "@/app/_data/education"
 import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
+import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
 
 type Props = {
     resume: ResumeDTO
@@ -55,10 +56,10 @@ export default function ResumeForm(props: Props) {
                 <BodyParagraphSmall>You can see how many skills are mentioned in your resume by loading AI suggestions below</BodyParagraphSmall>
                 <FormSkillsList skills={state.resume?.jobDescription?.skills} />
             </BodySection>
-            <div className="flex justify-center items-center mb-5">
+            <ResumeButtons>
                 <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
                 <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
-            </div>
+            </ResumeButtons>
             <ResumeContainer>
                 <ResumeHeader user={state.resume?.user as UserDTO} />
                 <ResumeSummary resume={state.resume as ResumeDTO} />
