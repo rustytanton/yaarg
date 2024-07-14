@@ -1,6 +1,6 @@
 'use server';
 
-import { getEducations } from '../_data/education';
+import { getEducations } from '../../_data/education';
 import { auth } from '@/app/auth';
 import EducationForm from './form';
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage';

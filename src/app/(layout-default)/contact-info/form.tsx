@@ -6,7 +6,7 @@ import FormMessage from '@/app/_lib/components/FormMessage'
 import FormInputText from '@/app/_lib/components/FormInputText'
 import FormButton from '@/app/_lib/components/FormButton'
 import { ContactInfoFormState } from './types'
-import { UserDTO } from '../_data/user'
+import { UserDTO } from '../../_data/user'
 
 const initialState: ContactInfoFormState = {
     message: ''

@@ -1,7 +1,7 @@
 'use server'
 
-import { getUser } from '../_data/user';
-import { auth } from '../auth';
+import { getUser } from '../../_data/user';
+import { auth } from '../../auth';
 import ContactInfoForm from './form';
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage';
 

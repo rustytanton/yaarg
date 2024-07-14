@@ -8,10 +8,11 @@ type Props = {
     onClick?: any
     pendingMessage?: string,
     href?: string
+    target?: string
 }
 
 
-export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '', href = '' }: Props) {
+export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '', href = '', target = '' }: Props) {
     const { pending } = useFormStatus()
 
     if (isSubmit && pending) {
@@ -26,6 +27,7 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
                 className="m-2 p-1 bg-gray-200 text-black block"
                 href={href}
                 onClick={onClick}
+                target={target}
             >
                 {buttonText}
             </Link>

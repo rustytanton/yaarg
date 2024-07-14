@@ -1,7 +1,7 @@
 'use server'
 
-import { updateUser } from "../_data/user";
-import { auth } from "../auth";
+import { updateUser } from "../../_data/user";
+import { auth } from "../../auth";
 import { ContactInfoFormState } from './types'
 
 export async function handleFormChange(prevState: ContactInfoFormState, formData: FormData): Promise<ContactInfoFormState> {

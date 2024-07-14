@@ -2,7 +2,7 @@
 
 import { auth } from '@/app/auth'
 import JobForm from './form'
-import { getJobs } from '../_data/job'
+import { getJobs } from '../../_data/job'
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage';
 
 export default async function JobsPage() {

@@ -6,7 +6,7 @@ import FormMessage from '@/app/_lib/components/FormMessage'
 import FormSectionEducation from '@/app/_lib/components/FormSectionEducation'
 import FormButton from '@/app/_lib/components/FormButton'
 import { EducationFormState } from './types'
-import { EducationDTO, EducationDTOs } from '../_data/education'
+import { EducationDTO, EducationDTOs } from '../../_data/education'
 
 const initialState: EducationFormState = {
     addSection: false,

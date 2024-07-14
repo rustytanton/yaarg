@@ -6,7 +6,7 @@ import { JobFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from './actions'
 import FormMessage from "@/app/_lib/components/FormMessage"
-import { JobDTOs } from "../_data/job"
+import { JobDTO, JobDTOs } from "../../_data/job"
 
 type Props = {
     jobs: JobDTOs
@@ -29,7 +29,7 @@ export default function JobForm(props: Props) {
             <FormMessage message={state.message} />
             <p className="mb-10">You will enter experiences for these jobs later when you build a resume</p>
             {state.jobs.length > 0 ?
-                state.jobs.map((job, index) => {
+                state.jobs.map((job: JobDTO, index: number) => {
                     return (
                         <FormSectionJob key={ 'job' + index } index={index} job={job} />
                     )

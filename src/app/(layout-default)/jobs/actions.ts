@@ -5,7 +5,7 @@ import { JobFormState } from './types'
 import { deleteIds, fieldGroups } from '@/app/_lib/util/form'
 import { revalidatePath } from 'next/cache'
 import { parseMMYYYY } from '@/app/_lib/util/dates'
-import { JobDTO, JobDTOs, createJob, deleteJob, updateJob, userOwnsJob } from '../_data/job'
+import { JobDTO, JobDTOs, createJob, deleteJob, updateJob, userOwnsJob } from '../../_data/job'
 
 export async function handleFormChange(prevState: JobFormState, formData: FormData): Promise<JobFormState> {
     const session = await auth()

@@ -45,11 +45,12 @@ export default function ResumeForm(props: Props) {
             </div>
             <div className="mb-10">
                 <Heading3>Skills Mentioned in Job Description</Heading3>
-                <p className="text-sm mb-5">You can see how many skills are mentioned in your resume by loading AI suggesitons below</p>
+                <p className="text-sm mb-5">You can see how many skills are mentioned in your resume by loading AI suggestions below</p>
                 <FormSkillsList skills={state.resume?.jobDescription?.skills} />
             </div>
             <div className="flex justify-center items-center mb-5">
                 <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
+                <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
             </div>
             <div className="bg-white text-black p-10 mb-5 w-full">
                 <h1 className="text-4xl mb-2">{state.resume?.user?.firstName} {state.resume?.user?.lastName}</h1>

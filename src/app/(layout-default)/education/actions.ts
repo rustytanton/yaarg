@@ -4,7 +4,7 @@ import { EducationFormState } from './types'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/app/auth'
 import { fieldGroups, deleteIds } from '@/app/_lib/util/form'
-import { EducationDTO, EducationDTOs, createEducation, userOwnsEducation, updateEducation, deleteEducation } from '../_data/education'
+import { EducationDTO, EducationDTOs, createEducation, userOwnsEducation, updateEducation, deleteEducation } from '../../_data/education'
 
 export async function handleFormChange(prevState: EducationFormState, formData: FormData): Promise<EducationFormState> {
     const session = await auth()
