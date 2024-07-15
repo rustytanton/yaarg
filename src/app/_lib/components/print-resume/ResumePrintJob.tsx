@@ -1,7 +1,7 @@
-import { JobDTO } from "@/app/_data/job"
+import { Job } from "@/app/_data/job"
 
 type Props = {
-    job: JobDTO
+    job: Job
 }
 
 export default function ResumePrintJob({ job }: Props) {

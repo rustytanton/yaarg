@@ -1,12 +1,12 @@
-import { Job } from '@prisma/client'
+import { Job as _JobEntity } from '@prisma/client'
 import { parseMMYYYY } from '../_lib/util/dates'
 import prisma from '../db'
-import { ResumeJobExperienceDTOs } from './resume-job-experience'
+import { ResumeJobExperiences } from './resume-job-experience'
 
-export type JobEntity = Job
+export type JobEntity = _JobEntity
 export type JobEntities = JobEntity[]
 
-export type JobDTO = {
+export type Job = {
     id?: number | undefined
     userId: string
     employer: string
@@ -18,26 +18,26 @@ export type JobDTO = {
     endDateParsed: Date
     attendanceModel: string
     stillWorksHere: boolean
-    experiences?: ResumeJobExperienceDTOs
+    experiences?: ResumeJobExperiences
 }
 
-export type JobDTOs = JobDTO[]
+export type Jobs = Job[]
 
-export function JobDTOtoEntity(dto: JobDTO): JobEntity {
+export function JobModeltoEntity(model: Job): JobEntity {
     return {
-        id: dto.id || 0,
-        userId: dto.userId,
-        employer: dto.employer,
-        title: dto.title,
-        location: dto.location,
-        startDate: dto.startDate,
-        endDate: dto.endDate,
-        attendanceModel: dto.attendanceModel,
-        stillWorksHere: dto.stillWorksHere
+        id: model.id || 0,
+        userId: model.userId,
+        employer: model.employer,
+        title: model.title,
+        location: model.location,
+        startDate: model.startDate,
+        endDate: model.endDate,
+        attendanceModel: model.attendanceModel,
+        stillWorksHere: model.stillWorksHere
     }
 }
 
-export function JobEntitytoDTO(entity: JobEntity): JobDTO {
+export function JobEntitytoModel(entity: JobEntity): Job {
     return {
         id: entity.id || undefined,
         userId: entity.userId as string,
@@ -53,22 +53,22 @@ export function JobEntitytoDTO(entity: JobEntity): JobDTO {
     }
 }
 
-export async function getJob(jobId: number): Promise<JobDTO> {
+export async function getJob(jobId: number): Promise<Job> {
     const entity = await prisma.job.findFirst({
         where: {
             id: jobId
         }
     }) as JobEntity
-    return JobEntitytoDTO(entity)
+    return JobEntitytoModel(entity)
 }
 
-export async function getJobs(userId: string): Promise<JobDTOs> {
+export async function getJobs(userId: string): Promise<Jobs> {
     const entities = await prisma.job.findMany({
         where: {
             userId: userId
         }
     })
-    return entities.map(entity => JobEntitytoDTO(entity)).sort((a, b) => {
+    return entities.map(entity => JobEntitytoModel(entity)).sort((a, b) => {
         if (a.startDateParsed === b.startDateParsed) {
             return 0
         } else {
@@ -77,8 +77,8 @@ export async function getJobs(userId: string): Promise<JobDTOs> {
     })
 }
 
-export async function updateJob(job: JobDTO) {
-    const entity = JobDTOtoEntity(job)
+export async function updateJob(job: Job) {
+    const entity = JobModeltoEntity(job)
     await prisma.job.update({
         where: {
             id: job.id
@@ -89,21 +89,21 @@ export async function updateJob(job: JobDTO) {
     })
 }
 
-export async function updateJobs(jobs: JobDTOs) {
-    for (const dto of jobs) {
-        await updateJob(dto)
+export async function updateJobs(jobs: Jobs) {
+    for (const job of jobs) {
+        await updateJob(job)
     }
 }
 
-export async function createJob(job: JobDTO) {
-    const entity = JobDTOtoEntity(job)
+export async function createJob(job: Job) {
+    const entity = JobModeltoEntity(job)
     const result = await prisma.job.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return JobEntitytoDTO(result)
+    return JobEntitytoModel(result)
 }
 
 export async function deleteJob(jobId: number) {

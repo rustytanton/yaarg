@@ -1,43 +1,43 @@
-import { JobDescriptionSkill } from "@prisma/client";
+import { JobDescriptionSkill as _JobDescriptionSkillEntity } from "@prisma/client";
 import prisma from "../db";
 
-export type JobDescriptionSkillEntity = JobDescriptionSkill
+export type JobDescriptionSkillEntity = _JobDescriptionSkillEntity
 export type JobDescriptionSkillEntities = JobDescriptionSkillEntity[]
 
-export type JobDescriptionSkillDTO = {
+export type JobDescriptionSkill = {
     id?: number | undefined
     jobDescriptionId: number
     skill: string
     mentions: number,
     usedInResume: boolean
 }
-export type JobDescriptionSkillDTOs = JobDescriptionSkillDTO[]
+export type JobDescriptionSkills = JobDescriptionSkill[]
 
-export function JobDescriptionSkillDTOtoEntity(dto: JobDescriptionSkillDTO): JobDescriptionSkillEntity {
-    return dto as JobDescriptionSkillEntity
+export function JobDescriptionSkillModeltoEntity(model: JobDescriptionSkill): JobDescriptionSkillEntity {
+    return model as JobDescriptionSkillEntity
 }
 
-export function JobDescriptionSkillEntityToDTO(entity: JobDescriptionSkillEntity): JobDescriptionSkillDTO {
-    return entity as JobDescriptionSkillDTO
+export function JobDescriptionSkillEntityToModel(entity: JobDescriptionSkillEntity): JobDescriptionSkill {
+    return entity as JobDescriptionSkill
 }
 
-export async function createJobDescriptionSkill(dto: JobDescriptionSkillDTO) {
-    const entity = JobDescriptionSkillDTOtoEntity(dto)
+export async function createJobDescriptionSkill(model: JobDescriptionSkill) {
+    const entity = JobDescriptionSkillModeltoEntity(model)
     const result = await prisma.jobDescriptionSkill.create({
         data: {
             ...entity
         }
     })
-    return JobDescriptionSkillEntityToDTO(result)
+    return JobDescriptionSkillEntityToModel(result)
 }
 
-export async function getJobDescriptionSkills(jobDescriptionId: number): Promise<JobDescriptionSkillDTOs> {
+export async function getJobDescriptionSkills(jobDescriptionId: number): Promise<JobDescriptionSkills> {
     const entities = await prisma.jobDescriptionSkill.findMany({
         where: {
             jobDescriptionId: jobDescriptionId
         }
     })
-    return entities.map(skill => JobDescriptionSkillEntityToDTO(skill))
+    return entities.map(skill => JobDescriptionSkillEntityToModel(skill))
 }
 
 export async function setJobDescriptionSkillUsedBySkillName(jobDescriptionId: number, skillName: string) {

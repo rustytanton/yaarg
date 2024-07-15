@@ -1,26 +1,26 @@
-import { ResumeJobExperienceSugggestion } from "@prisma/client";
+import { ResumeJobExperienceSugggestion as _ResumeJobExperienceSugggestionEntity } from "@prisma/client";
 import prisma from "../db";
 
-export type ResumeJobExperienceSugggestionEntity = ResumeJobExperienceSugggestion
+export type ResumeJobExperienceSugggestionEntity = _ResumeJobExperienceSugggestionEntity
 export type ResumeJobExperienceSugggestionEntities = ResumeJobExperienceSugggestionEntity[]
 
-export type ResumeJobExperienceSugggestionDTO = {
+export type ResumeJobExperienceSugggestion = {
     id?: number
     jobExperienceId: number
     suggestion: string
 }
-export type ResumeJobExperienceSugggestionDTOs = ResumeJobExperienceSugggestionDTO[]
+export type ResumeJobExperienceSugggestions = ResumeJobExperienceSugggestion[]
 
-export function ResumeJobExperienceSugggestionDTOtoEntity(
-    dto: ResumeJobExperienceSugggestionDTO
+export function ResumeJobExperienceSugggestionModeltoEntity(
+    model: ResumeJobExperienceSugggestion
 ): ResumeJobExperienceSugggestionEntity {
-    return dto as ResumeJobExperienceSugggestionEntity
+    return model as ResumeJobExperienceSugggestionEntity
 }
 
-export function ResumeJobExperienceSugggestionEntityToDTO(
+export function ResumeJobExperienceSugggestionEntityToModel(
     entity: ResumeJobExperienceSugggestionEntity
-): ResumeJobExperienceSugggestionDTO {
-    return entity as ResumeJobExperienceSugggestionDTO
+): ResumeJobExperienceSugggestion {
+    return entity as ResumeJobExperienceSugggestion
 }
 
 export async function getResumeJobExperienceSugggestion(suggestionId: number) {
@@ -29,7 +29,7 @@ export async function getResumeJobExperienceSugggestion(suggestionId: number) {
             id: suggestionId
         }
     }) as ResumeJobExperienceSugggestionEntity
-    return ResumeJobExperienceSugggestionEntityToDTO(result)
+    return ResumeJobExperienceSugggestionEntityToModel(result)
 }
 
 export async function getResumeJobExperienceSugggestions(experienceId: number) {
@@ -38,20 +38,20 @@ export async function getResumeJobExperienceSugggestions(experienceId: number) {
             jobExperienceId: experienceId
         }
     }) as ResumeJobExperienceSugggestionEntities
-    return result.map(suggestion => ResumeJobExperienceSugggestionEntityToDTO(suggestion))
+    return result.map(suggestion => ResumeJobExperienceSugggestionEntityToModel(suggestion))
 }
 
 export async function createResumeJobExperienceSugggestion(
-    suggestion: ResumeJobExperienceSugggestionDTO
+    suggestion: ResumeJobExperienceSugggestion
 ) {
-    const entity = ResumeJobExperienceSugggestionDTOtoEntity(suggestion)
+    const entity = ResumeJobExperienceSugggestionModeltoEntity(suggestion)
     const result = await prisma.resumeJobExperienceSugggestion.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return ResumeJobExperienceSugggestionEntityToDTO(result)
+    return ResumeJobExperienceSugggestionEntityToModel(result)
 }
 
 export async function deleteResumeJobExperienceSuggestion(suggestionId: number) {

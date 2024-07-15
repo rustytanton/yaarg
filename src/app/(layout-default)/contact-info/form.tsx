@@ -6,7 +6,7 @@ import FormMessage from '@/app/_lib/components/FormMessage'
 import FormInputText from '@/app/_lib/components/FormInputText'
 import FormButton from '@/app/_lib/components/FormButton'
 import { ContactInfoFormState } from './types'
-import { UserDTO } from '../../_data/user'
+import { User } from '../../_data/user'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
 import RequiredInfo from '@/app/_lib/components/form/RequiredInfo'
 
@@ -15,7 +15,7 @@ const initialState: ContactInfoFormState = {
 }
 
 type Props = {
-    user: UserDTO
+    user: User
 }
 
 export default function ContactInfoForm(props: Props) {

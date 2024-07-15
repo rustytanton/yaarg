@@ -1,7 +1,7 @@
-import { ResumeDTO } from "@/app/_data/resume"
+import { Resume } from "@/app/_data/resume"
 
 type Props = {
-    resume: ResumeDTO
+    resume: Resume
 }
 
 export default function ResumeSummarySugggestions({ resume }: Props) {

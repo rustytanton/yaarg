@@ -1,29 +1,29 @@
-import { Resume } from "@prisma/client"
-import { getJobDescription, JobDescriptionDTO } from "./job-description"
+import { Resume as _ResumeEntity } from "@prisma/client"
+import { getJobDescription, JobDescription } from "./job-description"
 import prisma from "../db"
-import { getResumeJobExperiences, ResumeJobExperienceDTOs } from "./resume-job-experience"
-import { getJobs, JobDTOs } from "./job"
-import { getUser, UserDTO } from "./user"
-import { EducationDTOs, getEducations } from "./education"
-import { getResumeSummarySuggestions, ResumeSummarySuggestionDTOs } from "./resume-summary-suggestion"
+import { getResumeJobExperiences } from "./resume-job-experience"
+import { getJobs, Jobs } from "./job"
+import { getUser, User } from "./user"
+import { Educations, getEducations } from "./education"
+import { getResumeSummarySuggestions, ResumeSummarySuggestions } from "./resume-summary-suggestion"
 
-export type ResumeEntity = Resume
+export type ResumeEntity = _ResumeEntity
 export type ResumeEntities = ResumeEntity[]
 
-export type ResumeDTO = {
+export type Resume = {
     id?: number | undefined
     userId: string
     employer: string
-    jobs?: JobDTOs
-    jobDescription?: JobDescriptionDTO
-    user?: UserDTO
-    educations?: EducationDTOs
+    jobs?: Jobs
+    jobDescription?: JobDescription
+    user?: User
+    educations?: Educations
     summary: string,
-    summarySuggestions?: ResumeSummarySuggestionDTOs
+    summarySuggestions?: ResumeSummarySuggestions
 }
-export type ResumeDTOs = ResumeDTO[]
+export type Resumes = Resume[]
 
-export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO> {
+export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume> {
     const jd = await getJobDescription(entity.jobDescriptionId)
     const jobs = await getJobs(entity.userId)
     const user = await getUser(entity.userId)
@@ -45,19 +45,19 @@ export async function ResumeEntityToDTO(entity: ResumeEntity): Promise<ResumeDTO
     }
 }
 
-export async function ResumeDTOtoEntity(dto: ResumeDTO): Promise<ResumeEntity> {
+export async function ResumeModeltoEntity(model: Resume): Promise<ResumeEntity> {
     const entityPrevious = await prisma.resume.findFirst({
         where: {
-            id: dto.id
+            id: model.id
         }
     })
     return {
-        id: dto.id || 0,
-        userId: dto.userId,
+        id: model.id || 0,
+        userId: model.userId,
         createdAt: entityPrevious?.createdAt as Date,
-        employer: dto.employer,
-        jobDescriptionId: dto?.jobDescription?.id || 0,
-        summary: dto.summary
+        employer: model.employer,
+        jobDescriptionId: model?.jobDescription?.id || 0,
+        summary: model.summary
     }
 }
 
@@ -67,35 +67,35 @@ export async function getResume(resumeId: number) {
             id: resumeId
         }
     })
-    return await ResumeEntityToDTO(entity as ResumeEntity)
+    return await ResumeEntityToModel(entity as ResumeEntity)
 }
 
-export async function getResumes(userId: string): Promise<ResumeDTOs> {
+export async function getResumes(userId: string): Promise<Resumes> {
     const entities = await prisma.resume.findMany({
         where: {
             userId: userId
         }
     })
-    const dtos: ResumeDTOs = []
+    const resumes: Resumes = []
     for (const entity of entities) {
-        dtos.push(await ResumeEntityToDTO(entity))
+        resumes.push(await ResumeEntityToModel(entity))
     }
-    return dtos
+    return resumes
 }
 
-export async function createResume(resume: ResumeDTO) {
-    const entity = await ResumeDTOtoEntity(resume)
+export async function createResume(resume: Resume) {
+    const entity = await ResumeModeltoEntity(resume)
     const result = await prisma.resume.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return ResumeEntityToDTO(result)
+    return ResumeEntityToModel(result)
 }
 
-export async function updateResume(resume: ResumeDTO) {
-    const entity = await ResumeDTOtoEntity(resume)
+export async function updateResume(resume: Resume) {
+    const entity = await ResumeModeltoEntity(resume)
     await prisma.resume.update({
         where: {
             id: entity.id

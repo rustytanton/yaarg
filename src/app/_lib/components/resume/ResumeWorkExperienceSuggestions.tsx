@@ -1,7 +1,7 @@
-import { ResumeJobExperienceSugggestionDTOs } from "@/app/_data/resume-job-experience-suggestion"
+import { ResumeJobExperienceSugggestions } from "@/app/_data/resume-job-experience-suggestion"
 
 type Props = {
-    suggestions: ResumeJobExperienceSugggestionDTOs
+    suggestions: ResumeJobExperienceSugggestions
 }
 
 export default function ResumeWorkExperienceSuggestions({suggestions}: Props) {

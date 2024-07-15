@@ -1,4 +1,4 @@
-import { ResumeDTO } from "@/app/_data/resume"
+import { Resume } from "@/app/_data/resume"
 import { useState } from "react"
 import TextareaAutosize from 'react-textarea-autosize'
 import FormButton from "../FormButton"
@@ -6,7 +6,7 @@ import ResumeSummarySugggestions from "./ResumeSummarySuggestions"
 import BodySection from "../BodySection"
 
 type Props = {
-    resume: ResumeDTO
+    resume: Resume
 }
 
 export default function ResumeSummary({ resume }: Props) {

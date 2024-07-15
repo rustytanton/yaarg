@@ -1,28 +1,28 @@
-import { JobDescription } from "@prisma/client";
+import { JobDescription as _JobDescriptionEntity } from "@prisma/client";
 import prisma from "../db";
-import { getJobDescriptionSkills, JobDescriptionSkillDTOs } from "./job-description-skill";
+import { getJobDescriptionSkills, JobDescriptionSkills } from "./job-description-skill";
 
-export type JobDescriptionEntity = JobDescription
+export type JobDescriptionEntity = _JobDescriptionEntity
 
-export type JobDescriptionDTO = {
+export type JobDescription = {
     id?: number | undefined
     userId: string
     text: string
-    skills?: JobDescriptionSkillDTOs
+    skills?: JobDescriptionSkills
 }
 
-export async function JobDescriptionEntityToDTO(entity: JobDescriptionEntity): Promise<JobDescriptionDTO> {
+export async function JobDescriptionEntityToModel(entity: JobDescriptionEntity): Promise<JobDescription> {
     return {
         ...entity,
         skills: await getJobDescriptionSkills(entity.id)
     }
 }
 
-export function JobDescriptionDTOtoEntity(dto: JobDescriptionDTO): JobDescriptionEntity {
+export function JobDescriptionModeltoEntity(model: JobDescription): JobDescriptionEntity {
     return {
-        id: dto.id || 0,
-        userId: dto.userId,
-        text: dto.text
+        id: model.id || 0,
+        userId: model.userId,
+        text: model.text
     }
 }
 
@@ -32,18 +32,18 @@ export async function getJobDescription(jobDescriptionId: number) {
             id: jobDescriptionId
         }
     })
-    return await JobDescriptionEntityToDTO(entity as JobDescriptionEntity)
+    return await JobDescriptionEntityToModel(entity as JobDescriptionEntity)
 }
 
-export async function createJobDescription(jobDescription: JobDescriptionDTO) {
-    const entity = JobDescriptionDTOtoEntity(jobDescription)
+export async function createJobDescription(jobDescription: JobDescription) {
+    const entity = JobDescriptionModeltoEntity(jobDescription)
     const result = await prisma.jobDescription.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return await JobDescriptionEntityToDTO(result)
+    return await JobDescriptionEntityToModel(result)
 }
 
 export async function userOwnsJobDescription(jobDescriptionId: number, userId: string) {

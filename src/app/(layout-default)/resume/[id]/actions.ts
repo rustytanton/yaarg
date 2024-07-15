@@ -2,11 +2,11 @@
 
 import { ChatGptSuggestionsrPromptBullet, getBulletAnalysis } from "@/app/_lib/chatgpt/assistant-suggestions"
 import { ResumeFormState } from "./types"
-import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills, ResumeJobExperienceSkillDTOs } from "@/app/_data/resume-job-experience-skill"
+import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from "@/app/_data/resume-job-experience-skill"
 import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
 import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
-import { ResumeDTO, updateResume, userOwnsResume } from "@/app/_data/resume"
+import { Resume, updateResume, userOwnsResume } from "@/app/_data/resume"
 import { auth } from "@/app/auth"
 import { resetJobDescriptionSkillsUsedField, setJobDescriptionSkillUsedBySkillName } from "@/app/_data/job-description-skill"
 
@@ -34,7 +34,7 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
             resume: {
                 ...prevState.resume,
                 summary: summary
-            } as ResumeDTO
+            } as Resume
         }
     }
 

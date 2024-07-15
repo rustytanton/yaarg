@@ -3,8 +3,8 @@
 import { ResumeJobFormState } from "./types";
 import { deleteIds, fieldGroups } from "@/app/_lib/util/form";
 import {
-    ResumeJobExperienceDTO,
-    ResumeJobExperienceDTOs,
+    ResumeJobExperience,
+    ResumeJobExperiences,
     deleteResumeJobExperience,
     updateResumeJobExperience,
     createResumeJobExperience
@@ -15,7 +15,7 @@ import { auth } from "@/app/auth";
 export async function handleFormChange(prevState: ResumeJobFormState, formData: FormData) {
     if (formData.get('addExperience') === 'true') {
         const experiences = prevState?.experiences || []
-        experiences.push({} as ResumeJobExperienceDTO)
+        experiences.push({} as ResumeJobExperience)
         return {
             ...prevState,
             addExperience: false,
@@ -23,7 +23,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         }
     } else {
         const deletes = deleteIds(formData)
-        const experiences: ResumeJobExperienceDTOs = []
+        const experiences: ResumeJobExperiences = []
         const groups = fieldGroups(formData, 'experience')
         const jobId = Number(formData.get('jobId'))
         const resumeId = Number(formData.get('resumeId'))

@@ -1,11 +1,11 @@
 'use client'
 
 import { useFormStatus } from 'react-dom'
-import { JobDescriptionSkillDTOs } from '@/app/_data/job-description-skill'
+import { JobDescriptionSkills } from '@/app/_data/job-description-skill'
 import IconCheckCircle from '@/app/_icons/check-circle'
 
 type Props = {
-    skills?: JobDescriptionSkillDTOs
+    skills?: JobDescriptionSkills
 }
 
 export default function FormSkillsList(props: Props) {

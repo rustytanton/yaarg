@@ -3,19 +3,13 @@
 import BodyHeader from "@/app/_lib/components/BodyHeading"
 import BodySection from "@/app/_lib/components/BodySection"
 import FormSkillsList from "@/app/_lib/components/FormSkillsList"
-import Heading2 from "@/app/_lib/components/Heading2"
 import Heading3 from "@/app/_lib/components/Heading3"
-import ShowHideText from "@/app/_lib/components/ShowHideText"
-// import { getJobDescriptionSkillsByJobDescriptionId } from "@/app/_lib/job-description-skill/crud"
-// import { getJobById } from "@/app/_lib/job/crud"
-// import { getResumeById } from "@/app/_lib/resume/crud"
 import Link from "next/link"
 import FormResumeJob from "./form"
-// import { getExperiences } from "@/app/_lib/resume-job-experience/crud"
 import { auth } from "@/app/auth"
 import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
 import { getResume } from "@/app/_data/resume"
-import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 
 export default async function ResumeJobPage({ params }:{ params: { id: string, jobId: string } }) {
@@ -47,7 +41,7 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
                 </BodySection>
     
                 <BodySection>
-                    <FormResumeJob jobExperiences={job?.experiences as ResumeJobExperienceDTOs} resumeId={Number(params.id)} jobId={Number(params.jobId)} />
+                    <FormResumeJob jobExperiences={job?.experiences as ResumeJobExperiences} resumeId={Number(params.id)} jobId={Number(params.jobId)} />
                 </BodySection>
     
                 <BodySection>

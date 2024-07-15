@@ -3,11 +3,11 @@ import FormInputCheckbox from "./FormInputCheckbox";
 import FormSelect from "./FormSelect"
 import { useState } from "react";
 import FormButton from "./FormButton";
-import { JobDTO } from "@/app/_data/job";
+import { Job } from "@/app/_data/job";
 
 type Props = {
     index: number
-    job: JobDTO
+    job: Job
 }
 
 export default function FormSectionJob(props: Props) {

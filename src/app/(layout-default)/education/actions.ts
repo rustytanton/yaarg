@@ -4,7 +4,7 @@ import { EducationFormState } from './types'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/app/auth'
 import { fieldGroups, deleteIds } from '@/app/_lib/util/form'
-import { EducationDTO, EducationDTOs, createEducation, userOwnsEducation, updateEducation, deleteEducation } from '../../_data/education'
+import { Education, Educations, createEducation, userOwnsEducation, updateEducation, deleteEducation } from '../../_data/education'
 
 export async function handleFormChange(prevState: EducationFormState, formData: FormData): Promise<EducationFormState> {
     const session = await auth()
@@ -12,11 +12,11 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
         if (prevState.addSection) {
             return {
                 addSection: false,
-                educations: prevState.educations.concat([{} as EducationDTO]),
+                educations: prevState.educations.concat([{} as Education]),
                 message: 'Added new education section'
             }
         } else {
-            let educations: EducationDTOs = []
+            let educations: Educations = []
             let messages: string[] = []
             let deletes = deleteIds(formData)
             let groups = fieldGroups(formData, 'education')
@@ -29,7 +29,7 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
             }
             
             for (const group of groups) {
-                let education: EducationDTO = {
+                let education: Education = {
                     userId: session.user.id as string,
                     id: Number(formData.get(group + 'id')) || undefined,
                     institution: formData.get(group + 'institution')?.toString() || '',

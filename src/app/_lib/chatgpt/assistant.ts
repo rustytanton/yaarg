@@ -1,4 +1,4 @@
-import { ChatGptAssistantDTO, createChatGptAssistant, getChatGptAssistant } from "@/app/_data/chatgpt-assistant";
+import { ChatGptAssistant, createChatGptAssistant, getChatGptAssistant } from "@/app/_data/chatgpt-assistant";
 import { auth } from "@/app/auth";
 import OpenAI from 'openai'
 
@@ -8,7 +8,7 @@ export type assistantProperties = {
     model: string
 }
 
-export async function assistant(props: assistantProperties): Promise<ChatGptAssistantDTO | null> {
+export async function assistant(props: assistantProperties): Promise<ChatGptAssistant | null> {
     const session = await auth()
     const openai = new OpenAI()
 

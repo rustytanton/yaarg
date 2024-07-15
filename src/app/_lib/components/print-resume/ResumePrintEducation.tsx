@@ -1,7 +1,7 @@
-import { EducationDTO } from "@/app/_data/education"
+import { Education } from "@/app/_data/education"
 
 type Props = {
-    education: EducationDTO
+    education: Education
 }
 
 export default function ResumePrintEducation({ education }: Props) {

@@ -1,8 +1,8 @@
 import ResumeTitle from "./ResumeTitle"
-import { UserDTO } from "@/app/_data/user"
+import { User } from "@/app/_data/user"
 
 type Props = {
-    user: UserDTO
+    user: User
 }
 
 export default function ResumeHeader({ user }: Props) {

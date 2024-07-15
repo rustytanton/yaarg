@@ -5,7 +5,7 @@ import { JobFormState } from './types'
 import { deleteIds, fieldGroups } from '@/app/_lib/util/form'
 import { revalidatePath } from 'next/cache'
 import { parseMMYYYY } from '@/app/_lib/util/dates'
-import { JobDTO, JobDTOs, createJob, deleteJob, updateJob, userOwnsJob } from '../../_data/job'
+import { Job, Jobs, createJob, deleteJob, updateJob, userOwnsJob } from '../../_data/job'
 
 export async function handleFormChange(prevState: JobFormState, formData: FormData): Promise<JobFormState> {
     const session = await auth()
@@ -13,11 +13,11 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
         if (prevState.addSection) {
             return {
                 addSection: false,
-                jobs: prevState.jobs.concat([{} as JobDTO]),
+                jobs: prevState.jobs.concat([{} as Job]),
                 message: 'Added new job section'
             }
         } else {
-            let jobs: JobDTOs = []
+            let jobs: Jobs = []
             let messages: string[] = []
             let deletes = deleteIds(formData)
             let groups = fieldGroups(formData, 'job')
@@ -32,7 +32,7 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
             }
 
             for (const group of groups) {
-                let job: JobDTO = {
+                let job: Job = {
                     userId: session.user.id as string,
                     id: Number(formData.get(group + 'id')) || 0,
                     employer: formData.get(group + 'employer') as string,

@@ -8,13 +8,13 @@ import { useFormState } from "react-dom"
 import FormTextareaBullet from "@/app/_lib/components/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/FormMessage"
 import { useState } from "react"
-import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"
-import { ResumeJobExperienceSugggestionDTOs } from "@/app/_data/resume-job-experience-suggestion"
+import { ResumeJobExperienceSugggestions } from "@/app/_data/resume-job-experience-suggestion"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 
 type Props = {
-    jobExperiences?: ResumeJobExperienceDTOs,
+    jobExperiences?: ResumeJobExperiences,
     resumeId: number,
     jobId: number
 }
@@ -49,7 +49,7 @@ export default function FormResumeJob(props: Props) {
                             defaultValue={experience.content}
                         />
                         {experience.suggestions && experience.suggestions.length > 0 ? <div className="mt-5 text-sm text-red-500">AI Suggestions:</div> : ''}
-                        <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestionDTOs} />
+                        <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestions} />
                     </li>
                 )
             })}

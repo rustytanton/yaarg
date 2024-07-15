@@ -1,7 +1,7 @@
-import { UserDTO } from "@/app/_data/user"
+import { User } from "@/app/_data/user"
 
 type Props = {
-    user: UserDTO | undefined
+    user: User | undefined
 }
 
 export default function ResumePrintHeader({ user }: Props) {

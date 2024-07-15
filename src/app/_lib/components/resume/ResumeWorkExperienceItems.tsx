@@ -1,9 +1,9 @@
-import { ResumeJobExperienceDTOs } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "./ResumeWorkExperienceSuggestions"
-import { ResumeJobExperienceSugggestionDTOs } from "@/app/_data/resume-job-experience-suggestion"
+import { ResumeJobExperienceSugggestions } from "@/app/_data/resume-job-experience-suggestion"
 
 type Props = {
-    experiences: ResumeJobExperienceDTOs
+    experiences: ResumeJobExperiences
 }
 
 export default function ResumeWorkExperienceItems({ experiences }: Props) {
@@ -14,7 +14,7 @@ export default function ResumeWorkExperienceItems({ experiences }: Props) {
                     return (
                         <li key={experienceIndex}>
                             <div>{experience.content}</div>
-                            <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestionDTOs} />
+                            <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestions} />
                         </li>
                     )
                 })}

@@ -1,22 +1,22 @@
-import { ResumeSummarySuggestion } from "@prisma/client"
+import { ResumeSummarySuggestion as _ResumeSummarySuggestionEntity } from "@prisma/client"
 import prisma from '../db'
 
-export type ResumeSummarySuggestionEntity = ResumeSummarySuggestion
+export type ResumeSummarySuggestionEntity = _ResumeSummarySuggestionEntity
 export type ResumeSummarySuggestionEntities = ResumeSummarySuggestionEntity[]
 
-export type ResumeSummarySuggestionDTO = {
+export type ResumeSummarySuggestion = {
     id?: number,
     resumeId: number,
     suggestion: string
 }
-export type ResumeSummarySuggestionDTOs = ResumeSummarySuggestionDTO[]
+export type ResumeSummarySuggestions = ResumeSummarySuggestion[]
 
-export function ResumeSummarySuggestionDTOtoEntity(dto: ResumeSummarySuggestionDTO) {
-    return dto as ResumeSummarySuggestionEntity
+export function ResumeSummarySuggestionModeltoEntity(model: ResumeSummarySuggestion) {
+    return model as ResumeSummarySuggestionEntity
 }
 
-export function ResumeSummarySuggestionEntityToDTO(entity: ResumeSummarySuggestionEntity) {
-    return entity as ResumeSummarySuggestionDTO
+export function ResumeSummarySuggestionEntityToModel(entity: ResumeSummarySuggestionEntity) {
+    return entity as ResumeSummarySuggestion
 }
 
 export async function getResumeSummarySuggestion(suggestionId: number) {
@@ -25,7 +25,7 @@ export async function getResumeSummarySuggestion(suggestionId: number) {
             id: suggestionId
         }
     }) as ResumeSummarySuggestionEntity
-    return ResumeSummarySuggestionEntityToDTO(entity)
+    return ResumeSummarySuggestionEntityToModel(entity)
 }
 
 export async function getResumeSummarySuggestions(resumeId: number) {
@@ -34,18 +34,18 @@ export async function getResumeSummarySuggestions(resumeId: number) {
             resumeId: resumeId
         }
     })
-    return entities.map(entity => ResumeSummarySuggestionEntityToDTO(entity))
+    return entities.map(entity => ResumeSummarySuggestionEntityToModel(entity))
 }
 
-export async function createResumeSummarySuggestion(suggestion: ResumeSummarySuggestionDTO) {
-    const entity = ResumeSummarySuggestionDTOtoEntity(suggestion)
+export async function createResumeSummarySuggestion(suggestion: ResumeSummarySuggestion) {
+    const entity = ResumeSummarySuggestionModeltoEntity(suggestion)
     const result = await prisma.resumeSummarySuggestion.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return ResumeSummarySuggestionEntityToDTO(result)
+    return ResumeSummarySuggestionEntityToModel(result)
 }
 
 export async function deleteResumeSummarySuggestion(suggestionId: number) {

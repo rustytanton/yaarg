@@ -1,9 +1,9 @@
-import { EducationDTOs } from "@/app/_data/education"
+import { Educations } from "@/app/_data/education"
 import ResumeHeading3 from "./ResumeHeading3"
 import ResumeSubheading from "./ResumeSubheading"
 
 type Props = {
-    educations: EducationDTOs
+    educations: Educations
 }
 
 export default function ResumeEducation({ educations }: Props) {

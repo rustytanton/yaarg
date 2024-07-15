@@ -1,10 +1,10 @@
-import { Education } from "@prisma/client"
+import { Education as _EducationEntity } from "@prisma/client"
 import prisma from "../db"
 
-export type EducationEntity = Education
+export type EducationEntity = _EducationEntity
 export type EducationEntities = EducationEntity[]
 
-export type EducationDTO = {
+export type Education = {
     id?: number
     userId: string
     institution?: string
@@ -15,47 +15,47 @@ export type EducationDTO = {
     graduated?: boolean
     gpa?: string
 }
-export type EducationDTOs = EducationDTO[]
+export type Educations = Education[]
 
-export function EducationDTOtoEntity(dto: EducationDTO): EducationEntity {
-    return dto as EducationEntity
+export function EducationModeltoEntity(model: Education): EducationEntity {
+    return model as EducationEntity
 }
 
-export function EducationEntityToDTO(entity: EducationEntity): EducationDTO {
-    return entity as EducationDTO
+export function EducationEntityToModel(entity: EducationEntity): Education {
+    return entity as Education
 }
 
-export async function getEducation(educationId: number): Promise<EducationDTO> {
+export async function getEducation(educationId: number): Promise<Education> {
     const entity = await prisma.education.findFirst({
         where: {
             id: educationId
         }
     }) as EducationEntity
-    return EducationEntityToDTO(entity)
+    return EducationEntityToModel(entity)
 }
 
-export async function getEducations(userId: string): Promise<EducationDTOs> {
+export async function getEducations(userId: string): Promise<Educations> {
     const entities = await prisma.education.findMany({
         where: {
             userId: userId
         }
     }) as EducationEntities
-    return entities.map(entity => EducationEntityToDTO(entity))
+    return entities.map(entity => EducationEntityToModel(entity))
 }
 
-export async function createEducation(education: EducationDTO): Promise<EducationDTO> {
-    const entity = EducationDTOtoEntity(education)
+export async function createEducation(education: Education): Promise<Education> {
+    const entity = EducationModeltoEntity(education)
     const result = await prisma.education.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return EducationEntityToDTO(result)
+    return EducationEntityToModel(result)
 }
 
-export async function updateEducation(education: EducationDTO): Promise<EducationDTO> {
-    const entity = EducationDTOtoEntity(education)
+export async function updateEducation(education: Education): Promise<Education> {
+    const entity = EducationModeltoEntity(education)
     const result = await prisma.education.update({
         where: {
             id: entity.id
@@ -64,7 +64,7 @@ export async function updateEducation(education: EducationDTO): Promise<Educatio
             ...entity
         }
     })
-    return EducationEntityToDTO(result)
+    return EducationEntityToModel(result)
 }
 
 export async function deleteEducation(educationId: number) {

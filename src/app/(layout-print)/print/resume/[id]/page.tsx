@@ -5,6 +5,8 @@ import ResumePrintHeader from '@/app/_lib/components/print-resume/ResumePrintHea
 import ResumePrintSummary from '@/app/_lib/components/print-resume/ResumePrintSummary'
 import ResumePrintJob from '@/app/_lib/components/print-resume/ResumePrintJob'
 import ResumePrintEducation from '@/app/_lib/components/print-resume/ResumePrintEducation'
+import { Key } from 'react'
+import { Education } from '@/app/_data/education'
 
 export default async function ResumePrintPage({ params }:{ params: { id: string } }) {
     const resume = await getResume(Number(params.id))
@@ -20,7 +22,7 @@ export default async function ResumePrintPage({ params }:{ params: { id: string 
                 )
             })}
             <h2 className="text-2xl mb-5">Education</h2>
-            {resume.educations?.map((education, educationIndex) => {
+            {resume.educations?.map((education: Education, educationIndex: number) => {
                 return (
                     <ResumePrintEducation key={educationIndex} education={education} />
                 )

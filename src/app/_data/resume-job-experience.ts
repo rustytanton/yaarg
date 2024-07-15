@@ -1,22 +1,22 @@
-import { ResumeJobExperience } from "@prisma/client";
+import { ResumeJobExperience as _ResumeJobExperienceEntity } from "@prisma/client";
 import prisma from "../db";
-import { getResumeJobExperienceSkills, ResumeJobExperienceSkillDTOs } from "./resume-job-experience-skill";
-import { getResumeJobExperienceSugggestions, ResumeJobExperienceSugggestionDTOs } from "./resume-job-experience-suggestion";
+import { getResumeJobExperienceSkills, ResumeJobExperienceSkills } from "./resume-job-experience-skill";
+import { getResumeJobExperienceSugggestions, ResumeJobExperienceSugggestions } from "./resume-job-experience-suggestion";
 
-export type ResumeJobExperienceEntity = ResumeJobExperience
+export type ResumeJobExperienceEntity = _ResumeJobExperienceEntity
 export type ResumeJobExperienceEntities = ResumeJobExperienceEntity[]
 
-export type ResumeJobExperienceDTO = {
+export type ResumeJobExperience = {
     id?: number | undefined
     jobId: number
     resumeId: number
     content: string
-    skills?: ResumeJobExperienceSkillDTOs
-    suggestions?: ResumeJobExperienceSugggestionDTOs
+    skills?: ResumeJobExperienceSkills
+    suggestions?: ResumeJobExperienceSugggestions
 }
-export type ResumeJobExperienceDTOs = ResumeJobExperienceDTO[]
+export type ResumeJobExperiences = ResumeJobExperience[]
 
-export async function ResumeJobExperienceEntityToDTO(entity: ResumeJobExperienceEntity) {
+export async function ResumeJobExperienceEntityToModel(entity: ResumeJobExperienceEntity) {
     const skills = await getResumeJobExperienceSkills(Number(entity.id))
     const suggestions = await getResumeJobExperienceSugggestions(Number(entity.id))
     return {
@@ -26,12 +26,12 @@ export async function ResumeJobExperienceEntityToDTO(entity: ResumeJobExperience
     }
 }
 
-export function ResumeJobExperienceDTOtoEntity(dto: ResumeJobExperienceDTO) {
+export function ResumeJobExperienceModeltoEntity(model: ResumeJobExperience) {
     return {
-        id: dto.id,
-        jobId: Number(dto.id),
-        resumeId: dto.resumeId,
-        content: dto.content
+        id: model.id,
+        jobId: Number(model.id),
+        resumeId: model.resumeId,
+        content: model.content
     }
 }
 
@@ -41,32 +41,32 @@ export async function getResumeJobExperience(experienceId: number) {
             id: experienceId
         }
     }) as ResumeJobExperienceEntity
-    return ResumeJobExperienceEntityToDTO(entity)
+    return ResumeJobExperienceEntityToModel(entity)
 }
 
-export async function getResumeJobExperiences(resumeId: number, jobId: number): Promise<ResumeJobExperienceDTOs> {
+export async function getResumeJobExperiences(resumeId: number, jobId: number): Promise<ResumeJobExperiences> {
     const entities = await prisma.resumeJobExperience.findMany({
         where: {
             jobId: jobId,
             resumeId: resumeId
         }
     }) as ResumeJobExperienceEntities
-    const result: ResumeJobExperienceDTOs = []
+    const result: ResumeJobExperiences = []
     for (const entity of entities) {
-        result.push(await ResumeJobExperienceEntityToDTO(entity))
+        result.push(await ResumeJobExperienceEntityToModel(entity))
     }
     return result
 }
 
-export async function createResumeJobExperience(experience: ResumeJobExperienceDTO): Promise<ResumeJobExperienceDTO> {
-    const entity = ResumeJobExperienceDTOtoEntity(experience)
+export async function createResumeJobExperience(experience: ResumeJobExperience): Promise<ResumeJobExperience> {
+    const entity = ResumeJobExperienceModeltoEntity(experience)
     const result = await prisma.resumeJobExperience.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return await ResumeJobExperienceEntityToDTO(result)
+    return await ResumeJobExperienceEntityToModel(result)
 }
 
 export async function deleteResumeJobExperience(experienceId: number) {
@@ -77,8 +77,8 @@ export async function deleteResumeJobExperience(experienceId: number) {
     })
 }
 
-export async function updateResumeJobExperience(experience: ResumeJobExperienceDTO) {
-    const entity = ResumeJobExperienceDTOtoEntity(experience)
+export async function updateResumeJobExperience(experience: ResumeJobExperience) {
+    const entity = ResumeJobExperienceModeltoEntity(experience)
     const result = await prisma.resumeJobExperience.update({
         where: {
             id: entity.id
@@ -87,5 +87,5 @@ export async function updateResumeJobExperience(experience: ResumeJobExperienceD
             ...entity
         }
     })
-    return await ResumeJobExperienceEntityToDTO(result)
+    return await ResumeJobExperienceEntityToModel(result)
 }

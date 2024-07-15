@@ -6,12 +6,12 @@ import { JobFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from './actions'
 import FormMessage from "@/app/_lib/components/FormMessage"
-import { JobDTO, JobDTOs } from "../../_data/job"
+import { Job, Jobs } from "../../_data/job"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import RequiredInfo from "@/app/_lib/components/form/RequiredInfo"
 
 type Props = {
-    jobs: JobDTOs
+    jobs: Jobs
 }
 
 const initialState: JobFormState = {
@@ -32,7 +32,7 @@ export default function JobForm(props: Props) {
             <p className="mb-10">You will enter experiences for these jobs later when you build a resume</p>
             <RequiredInfo />
             {state.jobs.length > 0 ?
-                state.jobs.map((job: JobDTO, index: number) => {
+                state.jobs.map((job: Job, index: number) => {
                     return (
                         <FormSectionJob key={ 'job' + index } index={index} job={job} />
                     )

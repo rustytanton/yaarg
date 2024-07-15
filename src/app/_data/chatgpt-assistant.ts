@@ -1,10 +1,10 @@
-import { ChatGptAssistant } from "@prisma/client";
+import { ChatGptAssistant as _ChatGptAssistantEntity } from "@prisma/client";
 import prisma from "../db";
 
-export type ChatGptAssistantEntity = ChatGptAssistant
+export type ChatGptAssistantEntity = _ChatGptAssistantEntity
 
-export type ChatGptAssistantDTO = {
-    id?: number | undefined
+export type ChatGptAssistant = {
+    id?: number
     userId: string
     externalId: string
     name: string
@@ -12,12 +12,12 @@ export type ChatGptAssistantDTO = {
     model: string
 }
 
-export function ChatGptAssistantEntityToDTO(entity: ChatGptAssistantEntity): ChatGptAssistantDTO {
-    return entity as ChatGptAssistantDTO
+export function ChatGptAssistantEntityToModel(entity: ChatGptAssistantEntity): ChatGptAssistant {
+    return entity as ChatGptAssistant
 }
 
-export function ChatGptAssistantDTOtoEntity(dto: ChatGptAssistantDTO): ChatGptAssistantEntity {
-    return dto as ChatGptAssistantEntity
+export function ChatGptAssistantModeltoEntity(model: ChatGptAssistant): ChatGptAssistantEntity {
+    return model as ChatGptAssistantEntity
 }
 
 export async function getChatGptAssistant(userId: string, assistantName: string) {
@@ -27,16 +27,16 @@ export async function getChatGptAssistant(userId: string, assistantName: string)
             userId: userId
         }
     })
-    return ChatGptAssistantEntityToDTO(entity as ChatGptAssistantEntity)
+    return ChatGptAssistantEntityToModel(entity as ChatGptAssistantEntity)
 }
 
-export async function createChatGptAssistant(assistant: ChatGptAssistantDTO): Promise<ChatGptAssistantDTO> {
-    const entity = ChatGptAssistantDTOtoEntity(assistant)
+export async function createChatGptAssistant(assistant: ChatGptAssistant): Promise<ChatGptAssistant> {
+    const entity = ChatGptAssistantModeltoEntity(assistant)
     const result = await prisma.chatGptAssistant.create({
         data: {
             ...entity,
             id: undefined
         }
     })
-    return ChatGptAssistantEntityToDTO(result)
+    return ChatGptAssistantEntityToModel(result)
 }

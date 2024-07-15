@@ -1,6 +1,6 @@
 'use client'
 
-import { ResumeDTO } from "@/app/_data/resume"
+import { Resume } from "@/app/_data/resume"
 import { ResumeFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from "./actions"
@@ -12,12 +12,12 @@ import ShowHideText from "@/app/_lib/components/ShowHideText"
 import BodySection from "@/app/_lib/components/BodySection"
 import ResumeContainer from "@/app/_lib/components/resume/ResumeContainer"
 import ResumeHeader from "@/app/_lib/components/resume/ResumeHeader"
-import { UserDTO } from "@/app/_data/user"
-import { JobDTOs } from "@/app/_data/job"
+import { User } from "@/app/_data/user"
+import { Jobs } from "@/app/_data/job"
 import ResumeSummary from "@/app/_lib/components/resume/ResumeSummary"
 import ResumeWorkExperience from "@/app/_lib/components/resume/ResumeWorkExperience"
 import ResumeEducation from "@/app/_lib/components/resume/ResumeEducation"
-import { EducationDTOs } from "@/app/_data/education"
+import { Educations } from "@/app/_data/education"
 import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
@@ -25,7 +25,7 @@ import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
 import { redirect } from "next/navigation"
 
 type Props = {
-    resume: ResumeDTO
+    resume: Resume
 }
 
 const initialState: ResumeFormState = {
@@ -69,10 +69,10 @@ export default function ResumeForm(props: Props) {
                 <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
             </ResumeButtons>
             <ResumeContainer>
-                <ResumeHeader user={state.resume?.user as UserDTO} />
-                <ResumeSummary resume={state.resume as ResumeDTO} />
-                <ResumeWorkExperience jobs={state.resume?.jobs as JobDTOs} resumeId={Number(state.resume?.id)} />
-                <ResumeEducation educations={state.resume?.educations as EducationDTOs} />
+                <ResumeHeader user={state.resume?.user as User} />
+                <ResumeSummary resume={state.resume as Resume} />
+                <ResumeWorkExperience jobs={state.resume?.jobs as Jobs} resumeId={Number(state.resume?.id)} />
+                <ResumeEducation educations={state.resume?.educations as Educations} />
             </ResumeContainer>
             {suggestions ? <input name="suggestions" type="hidden" value="true" /> : '' }
         </form>

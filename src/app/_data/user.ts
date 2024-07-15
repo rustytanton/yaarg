@@ -1,10 +1,10 @@
-import { User } from '@prisma/client'
+import { User as _UserEntity } from '@prisma/client'
 import prisma from '../db'
 
 
-type UserEntity = User
+type UserEntity = _UserEntity
 
-export type UserDTO = {
+export type User = {
     id: string,
     firstName: string,
     lastName: string,
@@ -17,7 +17,7 @@ export type UserDTO = {
     website: string
 }
 
-export function UserEntityToDTO(entity: UserEntity): UserDTO {
+export function UserEntityToModel(entity: UserEntity): User {
     return {
         id: entity.id,
         firstName: entity.firstName as string,
@@ -32,28 +32,28 @@ export function UserEntityToDTO(entity: UserEntity): UserDTO {
     }
 }
 
-export async function UserDTOToEntity(dto: UserDTO): Promise<UserEntity> {
+export async function UserModelToEntity(model: User): Promise<UserEntity> {
     const entityPrevious = await prisma.user.findFirst({
         where: {
-            id: dto.id
+            id: model.id
         }
     })
     return {
-        id: dto.id,
-        name: dto.firstName + ' ' + dto.lastName,
-        firstName: dto.firstName,
-        lastName: dto.lastName,
+        id: model.id,
+        name: model.firstName + ' ' + model.lastName,
+        firstName: model.firstName,
+        lastName: model.lastName,
         createdAt: entityPrevious?.createdAt as Date,
         updatedAt: new Date(),
         email: entityPrevious?.email as string,
-        emailAlt: dto.emailAlt,
+        emailAlt: model.emailAlt,
         emailVerified: entityPrevious?.emailVerified || null,
-        github: dto.github,
+        github: model.github,
         image: entityPrevious?.image as string,
-        linkedIn: dto.linkedIn,
-        location: dto.location,
-        phoneNumber: dto.phoneNumber,   
-        website: dto.website
+        linkedIn: model.linkedIn,
+        location: model.location,
+        phoneNumber: model.phoneNumber,   
+        website: model.website
     }
 }
 
@@ -63,11 +63,11 @@ export async function getUser(userId: string) {
             id: userId
         }
     })
-    return UserEntityToDTO(user as UserEntity)
+    return UserEntityToModel(user as UserEntity)
 }
 
-export async function updateUser(user: UserDTO) {
-    const entity = await UserDTOToEntity(user)
+export async function updateUser(user: User) {
+    const entity = await UserModelToEntity(user)
     await prisma.user.update({
         where: {
             id: entity.id
