@@ -11,6 +11,7 @@ import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
 import { getResume } from "@/app/_data/resume"
 import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
+import { Job } from "@/app/_data/job"
 
 export default async function ResumeJobPage({ params }:{ params: { id: string, jobId: string } }) {
 
@@ -31,17 +32,20 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
             <div className="w-3/4">
                 <BodyHeader>
                     <Heading1>Resume - {resume.employer}</Heading1>
-                    <div className="mt-5 mb-2">Editing experience for job <strong>{job?.employer}</strong></div>
                     <Link href={ "/resume/" + params.id }>Back to Resume</Link>
                 </BodyHeader>
     
                 <BodySection>
+                    <FormResumeJob
+                        jobExperiences={job?.experiences as ResumeJobExperiences}
+                        resumeId={Number(params.id)}
+                        job={job as Job}
+                    />
+                </BodySection>
+
+                <BodySection>
                     <Heading3>Skills Mentioned in Job Description</Heading3>
                     <FormSkillsList skills={resume?.jobDescription?.skills} />
-                </BodySection>
-    
-                <BodySection>
-                    <FormResumeJob jobExperiences={job?.experiences as ResumeJobExperiences} resumeId={Number(params.id)} jobId={Number(params.jobId)} />
                 </BodySection>
     
                 <BodySection>

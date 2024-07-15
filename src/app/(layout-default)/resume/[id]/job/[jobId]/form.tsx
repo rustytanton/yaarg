@@ -1,7 +1,7 @@
 'use client'
 
 import FormButton from "@/app/_lib/components/FormButton"
-import Heading3 from "@/app/_lib/components/Heading3"
+import Heading2 from "@/app/_lib/components/Heading2"
 import { ResumeJobFormState } from "./types"
 import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
@@ -12,11 +12,12 @@ import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"
 import { ResumeJobExperienceSugggestions } from "@/app/_data/resume-job-experience-suggestion"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
+import { Job } from "@/app/_data/job"
 
 type Props = {
     jobExperiences?: ResumeJobExperiences,
     resumeId: number,
-    jobId: number
+    job: Job
 }
 
 const initialState: ResumeJobFormState = {
@@ -37,7 +38,7 @@ export default function FormResumeJob(props: Props) {
 
     return (
         <form action={formAction}>
-            <Heading3>Experience</Heading3>
+            <Heading2>Experience - {props.job.employer}</Heading2>
             <FormMessage message={state.message} />
             <ul className="list-outside list-disc-offsettop">
             {state.experiences?.map((experience, index) => {
@@ -59,7 +60,7 @@ export default function FormResumeJob(props: Props) {
                 <input type="hidden" name="addExperience" value={addExperience.toString()} />
             </div>
             <div>
-                <input type="hidden" name="jobId" value={props.jobId} />
+                <input type="hidden" name="jobId" value={props.job.id} />
                 <input type="hidden" name="resumeId" value={props.resumeId} />
                 <ActionsCentered>
                     <FormButton onClick={() => { setAddExperience(false) }} isSubmit={true} buttonText="Save"></FormButton>

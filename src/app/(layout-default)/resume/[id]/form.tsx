@@ -53,17 +53,6 @@ export default function ResumeForm(props: Props) {
             <BodySection>
                 <Heading1>Resume - {state.resume?.employer}</Heading1>
             </BodySection>
-            <BodySection>
-                <Heading3>Job Description</Heading3>
-                <ShowHideText isHidden={true}>
-                    <BodyPre>{state.resume?.jobDescription?.text}</BodyPre>
-                </ShowHideText>
-            </BodySection>
-            <BodySection>
-                <Heading3>Skills Mentioned in Job Description</Heading3>
-                <BodyParagraphSmall>You can see how many skills are mentioned in your resume by loading AI suggestions below</BodyParagraphSmall>
-                <FormSkillsList skills={state.resume?.jobDescription?.skills} />
-            </BodySection>
             <ResumeButtons>
                 <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
                 <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
@@ -74,6 +63,21 @@ export default function ResumeForm(props: Props) {
                 <ResumeWorkExperience jobs={state.resume?.jobs as Jobs} resumeId={Number(state.resume?.id)} />
                 <ResumeEducation educations={state.resume?.educations as Educations} />
             </ResumeContainer>
+            <BodySection>
+                <Heading3>Job Description</Heading3>
+                <ShowHideText isHidden={true}>
+                    <BodyPre>{state.resume?.jobDescription?.text}</BodyPre>
+                </ShowHideText>
+            </BodySection>
+            <BodySection>
+                <Heading3>Skills Mentioned in Job Description</Heading3>
+                <BodyParagraphSmall>
+                    The skills below were mentioned in the job description.
+                    After you ask for AI suggestions, any you mentioned in your resume
+                    will be highlgighted in green.
+                </BodyParagraphSmall>
+                <FormSkillsList skills={state.resume?.jobDescription?.skills} />
+            </BodySection>
             {suggestions ? <input name="suggestions" type="hidden" value="true" /> : '' }
         </form>
     )
