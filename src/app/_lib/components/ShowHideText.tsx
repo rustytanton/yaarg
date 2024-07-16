@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import FormButton from "./FormButton"
+import FormButton from "@/app/_lib/components/form/FormButton"
 
 type Props = {
     children: any,

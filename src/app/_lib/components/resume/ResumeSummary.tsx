@@ -1,7 +1,7 @@
 import { Resume } from "@/app/_data/resume"
 import { useState } from "react"
 import TextareaAutosize from 'react-textarea-autosize'
-import FormButton from "../FormButton"
+import FormButton from "@/app/_lib/components/form/FormButton"
 import ResumeSummarySugggestions from "./ResumeSummarySuggestions"
 import BodySection from "../BodySection"
 

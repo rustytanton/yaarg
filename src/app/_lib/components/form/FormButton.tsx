@@ -1,5 +1,5 @@
 import { useFormStatus } from 'react-dom'
-import Spinner from './Spinner'
+import Spinner from '@/app/_lib/components/Spinner'
 import Link from 'next/link'
 
 type Props = {

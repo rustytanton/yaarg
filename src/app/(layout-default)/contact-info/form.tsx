@@ -2,9 +2,9 @@
 
 import { useFormState } from 'react-dom'
 import { handleFormChange } from './actions'
-import FormMessage from '@/app/_lib/components/FormMessage'
-import FormInputText from '@/app/_lib/components/FormInputText'
-import FormButton from '@/app/_lib/components/FormButton'
+import FormMessage from '@/app/_lib/components/form/FormMessage'
+import FormInputText from '@/app/_lib/components/form/FormInputText'
+import FormButton from '@/app/_lib/components/form/FormButton'
 import { ContactInfoFormState } from './types'
 import { User } from '../../_data/user'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'

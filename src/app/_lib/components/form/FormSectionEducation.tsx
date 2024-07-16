@@ -1,7 +1,7 @@
-import FormInputText from './FormInputText'
-import FormInputCheckbox from './FormInputCheckbox'
+import FormInputText from '@/app/_lib/components/form/FormInputText'
+import FormInputCheckbox from '@/app/_lib/components/form/FormInputCheckbox'
 import { useState } from 'react'
-import FormButton from './FormButton'
+import FormButton from '@/app/_lib/components/form/FormButton'
 import { Education } from '@/app/_data/education'
 
 type Props = {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-import FormButton from './FormButton'
+import FormButton from '@/app/_lib/components/form/FormButton'
 
 type Props = {
     defaultValue?: string

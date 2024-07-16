@@ -1,4 +1,4 @@
-import RequiredCharacter from "./form/RequiredCharacter"
+import RequiredCharacter from "@/app/_lib/components/form/RequiredCharacter"
 
 type Props = {
     label?: string

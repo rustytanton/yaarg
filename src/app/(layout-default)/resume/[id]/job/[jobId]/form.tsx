@@ -1,12 +1,12 @@
 'use client'
 
-import FormButton from "@/app/_lib/components/FormButton"
+import FormButton from "@/app/_lib/components/form/FormButton"
 import Heading2 from "@/app/_lib/components/Heading2"
 import { ResumeJobFormState } from "./types"
 import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
-import FormTextareaBullet from "@/app/_lib/components/FormTextareaBullet"
-import FormMessage from "@/app/_lib/components/FormMessage"
+import FormTextareaBullet from "@/app/_lib/components/form/FormTextareaBullet"
+import FormMessage from "@/app/_lib/components/form/FormMessage"
 import { useState } from "react"
 import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"

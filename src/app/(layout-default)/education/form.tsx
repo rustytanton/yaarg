@@ -2,9 +2,9 @@
 
 import { useFormState } from 'react-dom'
 import { handleFormChange } from './actions'
-import FormMessage from '@/app/_lib/components/FormMessage'
-import FormSectionEducation from '@/app/_lib/components/FormSectionEducation'
-import FormButton from '@/app/_lib/components/FormButton'
+import FormMessage from '@/app/_lib/components/form/FormMessage'
+import FormSectionEducation from '@/app/_lib/components/form/FormSectionEducation'
+import FormButton from '@/app/_lib/components/form/FormButton'
 import { EducationFormState } from './types'
 import { Education, Educations } from '../../_data/education'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
