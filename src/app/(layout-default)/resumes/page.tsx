@@ -15,7 +15,6 @@ export default async function ResumesPage() {
                 <table>
                     <thead>
                         <tr>
-                            <th className="text-left">Resume</th>
                             <th className="text-left">Employer</th>
                             <th></th>
                             <th></th>
@@ -25,9 +24,6 @@ export default async function ResumesPage() {
                     {resumes.map((resume, index) => {
                         return (
                             <tr key={index}>
-                                <td className="pr-5">
-                                    Resume {resume.id}
-                                </td>
                                 <td className="pr-10">
                                     {resume.employer}
                                 </td>
