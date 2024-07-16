@@ -29,9 +29,6 @@ export default function ResumeFormNew() {
                 <FormInputText label='Employer' inputName="employer" required={true} />
             </BodySection>
             <BodySection>
-                <FormTextarea inputName='summary' label='Enter a summary to appear at the top of your resume:' />
-            </BodySection>
-            <BodySection>
                 <FormTextarea inputName='prompt' label='Paste in the description from the job you want to apply for:' required={true} />
             </BodySection>
             <ActionsCentered>
