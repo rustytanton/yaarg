@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom'
 import { JobDescriptionSkills } from '@/app/_data/job-description-skill'
-import IconCheckCircle from '@/app/_icons/check-circle'
+import IconCheckCircle from '@/app/_lib/components/icons/IconCheckCircle'
 
 type Props = {
     skills?: JobDescriptionSkills
