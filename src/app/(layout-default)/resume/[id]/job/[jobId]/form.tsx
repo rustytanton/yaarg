@@ -1,7 +1,7 @@
 'use client'
 
 import FormButton from "@/app/_lib/components/form/FormButton"
-import Heading2 from "@/app/_lib/components/Heading2"
+import Heading2 from "@/app/_lib/components/headings/Heading2"
 import { ResumeJobFormState } from "./types"
 import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
