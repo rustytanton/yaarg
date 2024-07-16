@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css";
 import SiteHeader from '@/app/_lib/components/SiteHeader'
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +23,7 @@ export default async function RootLayout({
         <main className="w-3/4 flex flex-col items-center">
           {children}
         </main>
+        <SpeedInsights />
       </body>
     </html>
   );
