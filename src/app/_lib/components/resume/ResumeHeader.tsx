@@ -17,8 +17,8 @@ export default function ResumeHeader({ user }: Props) {
                     {user.emailAlt ? <span className="pr-2 pl-2 first:pl-0">{user.emailAlt}</span> : ''}
                 </div>
                 <div className="text-sm pt-2">
-                    <div>{user.linkedIn}</div>
-                    <div>{user.github}</div>
+                    <div className="break-words">{user.linkedIn}</div>
+                    <div className="break-words">{user.github}</div>
                 </div>
             </div>
         </header>

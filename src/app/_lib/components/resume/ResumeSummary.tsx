@@ -34,8 +34,8 @@ export default function ResumeSummary({ resume }: Props) {
             <BodySection>
                 <div>
                     {resume?.summary}
-                    {resume?.summary ? <>&nbsp;|&nbsp;</> : '' }
-                    <a className="text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>
+                    {resume?.summary ? <span className="hidden md:inline">&nbsp;|&nbsp;</span> : '' }
+                    <a className="block md:inline text-sm" href='' onClick={(e) => { e.preventDefault(); setEditSummary(true) } }>
                         {resume?.summary ? 'Edit' : 'Add a summary' }
                     </a>
                 </div>

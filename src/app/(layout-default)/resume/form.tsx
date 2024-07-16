@@ -22,7 +22,7 @@ export default function ResumeFormNew() {
     })
 
     return (
-        <form action={formAction} className="p-10 w-3/4">
+        <form action={formAction} className="w-3/4 md:w-full">
             <FormMessage message={state.message} />
             <RequiredInfo />
             <BodySection>

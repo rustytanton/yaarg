@@ -20,7 +20,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className + " flex flex-col items-center"}>
         <SiteHeader />
-        <main className="w-3/4 flex flex-col items-center">
+        <main className="m:w-3/4 flex flex-col items-center">
           {children}
         </main>
       </body>

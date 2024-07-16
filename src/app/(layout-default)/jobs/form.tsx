@@ -27,7 +27,7 @@ export default function JobForm(props: Props) {
     })
 
     return (
-        <form action={formAction}>
+        <form action={formAction} className="w-3/4">
             <FormMessage message={state.message} />
             <p className="mb-10">You will enter experiences for these jobs later when you build a resume</p>
             <RequiredInfo />

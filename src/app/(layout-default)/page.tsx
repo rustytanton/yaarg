@@ -6,7 +6,7 @@ export default async function Home() {
 
   if (session && session.user) {
     return (
-      <section className="p-10">
+      <section className="m:p-10">
         <p>I want to:</p>
         <ul>
           <li>
@@ -29,7 +29,7 @@ export default async function Home() {
     )
   } else {
     return (
-      <div className="p-10 w-1/2">
+      <div className="p-10 md:w-1/2">
         <p className="pb-5">Welcome! After you sign in with a valid email address, you can use this tool to build resumes for jobs.</p>
         <p className="pb-5">As you create more resumes, the tool will use experience and other information you&apos;ve entered into past resumes to suggest experience bullet points customized for the job you&apos;re applying for.</p>
       </div>

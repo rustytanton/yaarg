@@ -23,13 +23,13 @@ export default function FormInputText({
     value = undefined,
     required = false }: Props) {
     return (
-        <label className="pt-2 pb-2 flex">
+        <label className="pt-2 pb-2 md:flex">
             <span className="w-48">
                 {label}
                 {required ? <RequiredCharacter /> : ''}
             </span>            
             <input 
-                className="block text-black flex-1 rounded p-1"
+                className="block text-black flex-1 rounded p-1 mb-5 md:mb-2 w-full"
                 type={inputType}
                 name={inputName}
                 defaultValue={defaultValue || ''}

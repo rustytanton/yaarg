@@ -10,13 +10,13 @@ export default function ResumeButtons({ children }: Props) {
 
     if (pending) {
         return (
-            <div className="flex justify-center items-center mb-5 gap-2">
+            <div className="flex justify-center items-center mb-5 gap-2 flex-col md:flex-row">
                 <Spinner /> Loading...
             </div>
         )
     } else {
         return (
-            <div className="flex justify-center items-center mb-5 gap-2">
+            <div className="flex justify-center items-center mb-5 gap-2 flex-col md:flex-row">
                 {children}                
             </div>
         )
