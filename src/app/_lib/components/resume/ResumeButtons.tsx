@@ -11,7 +11,7 @@ export default function ResumeButtons({ children }: Props) {
     if (pending) {
         return (
             <div className="flex justify-center items-center mb-5 gap-2">
-                <Spinner /> Loading ChatGPT Suggestions...
+                <Spinner /> Loading...
             </div>
         )
     } else {

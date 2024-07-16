@@ -11,9 +11,11 @@ import { auth } from "@/app/auth"
 import { resetJobDescriptionSkillsUsedField, setJobDescriptionSkillUsedBySkillName } from "@/app/_data/job-description-skill"
 import { createResumeJobExperience, getUniqueResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import { fuzzyMatch } from "fuzzbunny"
+import { ResumeSubmitTypes } from "./types"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
     const summary = formData.get('summary') as string
+    const submitType = formData.get('submitType') as string
     const session = await auth()
 
     if (await !userOwnsResume(Number(prevState.resume?.id), session?.user?.id as string)) {
@@ -22,8 +24,9 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
 
     if (summary) {
         await handFormChangeUpdateSummary(prevState, summary)
-    } else {
+    } else if (submitType === ResumeSubmitTypes.CHATGPT_SUGGESTIONS) {
         await handleFormChangeChatGptSuggestions(prevState)
+    } else if (submitType === ResumeSubmitTypes.POPULATE_PAST_EXPERIENCES) {
         await handleFormChangeSuggestionsFromPrevious(prevState)
     }
 

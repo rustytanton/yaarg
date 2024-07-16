@@ -5,3 +5,8 @@ export type ResumeFormState = {
     message: string
     loadSuggestions: boolean
 }
+
+export enum ResumeSubmitTypes {
+    CHATGPT_SUGGESTIONS = "chatGptSuggestions",
+    POPULATE_PAST_EXPERIENCES = "pastExperience"
+}

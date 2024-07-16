@@ -22,6 +22,7 @@ import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
 import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
+import { ResumeSubmitTypes } from './types'
 
 type Props = {
     resume: Resume,
@@ -39,8 +40,15 @@ export default function ResumeForm(props: Props) {
         resume: props.resume
     })
 
+    const [submitType, setSubmitType] = useState("")
+
+    async function formActionWrapper(formData: FormData) {
+        await formAction(formData)
+        setSubmitType("")
+    }
+
     return (
-        <form action={formAction}>
+        <form action={formActionWrapper}>
             <BodySection>
                 <Heading1>Resume - {state.resume?.employer}</Heading1>
             </BodySection>
@@ -56,10 +64,27 @@ export default function ResumeForm(props: Props) {
                     ''
             }
             <ResumeButtons>
+                {props.resumeCount > 1
+                    ?
+                        <FormButton
+                            buttonText="Populate Experience from Past Resumes"
+                            isSubmit={true}
+                            onClick={() => {
+                                setSubmitType(
+                                    ResumeSubmitTypes.POPULATE_PAST_EXPERIENCES
+                                )
+                            }}
+                        />
+                    : ''
+                }
                 <FormButton
                     buttonText="Load ChatGPT Suggestions"
                     isSubmit={true}
-                    pendingMessage="Analyzing with ChatGPT, this could take a few moments..."
+                    onClick={() => {
+                        setSubmitType(
+                            ResumeSubmitTypes.CHATGPT_SUGGESTIONS
+                        )
+                    }}
                 />
                 <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
             </ResumeButtons>
@@ -84,6 +109,7 @@ export default function ResumeForm(props: Props) {
                 </BodyParagraphSmall>
                 <FormSkillsList skills={state.resume?.jobDescription?.skills} />
             </BodySection>
+            <input type="hidden" name="submitType" value={submitType} />
         </form>
     )
 }
