@@ -4,7 +4,7 @@ import { Jobs } from "@/app/_data/job"
 import ResumeWorkExperienceItems from "./ResumeWorkExperienceItems"
 import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeHeading3 from "./ResumeHeading3"
-import BodySection from "../BodySection"
+import BodySection from "@/app/_lib/components/body/BodySection"
 
 type Props = {
     jobs: Jobs,

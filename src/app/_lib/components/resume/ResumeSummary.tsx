@@ -3,7 +3,7 @@ import { useState } from "react"
 import TextareaAutosize from 'react-textarea-autosize'
 import FormButton from "@/app/_lib/components/form/FormButton"
 import ResumeSummarySugggestions from "./ResumeSummarySuggestions"
-import BodySection from "../BodySection"
+import BodySection from "@/app/_lib/components/body/BodySection"
 
 type Props = {
     resume: Resume

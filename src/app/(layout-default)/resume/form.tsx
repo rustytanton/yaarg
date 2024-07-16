@@ -7,7 +7,7 @@ import { handleFormChange } from './actions'
 import { ResumeFormNewState } from './types'
 import FormMessage from "@/app/_lib/components/form/FormMessage"
 import FormInputText from "@/app/_lib/components/form/FormInputText"
-import BodySection from "@/app/_lib/components/BodySection"
+import BodySection from "@/app/_lib/components/body/BodySection"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import RequiredInfo from "@/app/_lib/components/form/RequiredInfo"
 

@@ -1,7 +1,7 @@
 'use server'
 
-import BodyHeader from "@/app/_lib/components/BodyHeading"
-import BodySection from "@/app/_lib/components/BodySection"
+import BodyHeader from "@/app/_lib/components/body/BodyHeading"
+import BodySection from "@/app/_lib/components/body/BodySection"
 import FormSkillsList from "@/app/_lib/components/form/FormSkillsList"
 import Heading3 from "@/app/_lib/components/headings/Heading3"
 import Link from "next/link"
