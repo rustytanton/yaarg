@@ -118,3 +118,12 @@ export async function userOwnsResume(resumeId: number, userId: string) {
     const entity = await getResume(resumeId)
     return entity?.userId === userId
 }
+
+type userResumeCountResult = {
+    count: string    
+}
+
+export async function userResumeCount(userId: string): Promise<number> {
+    const result: userResumeCountResult[] = await prisma.$queryRaw`SELECT COUNT(*) FROM "Resume" WHERE "userId" = ${userId}`
+    return Number(result[0].count)
+}

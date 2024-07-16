@@ -5,7 +5,7 @@ type Props = {
 }
 
 export default function ResumeWorkExperienceSuggestions({suggestions}: Props) {
-    if (suggestions.length) {
+    if (suggestions?.length) {
         return (
             <ul className="list-disc pl-5 text-red-500 text-sm">
                 {suggestions.map((suggestion, suggestionIndex) => {

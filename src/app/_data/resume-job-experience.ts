@@ -29,7 +29,7 @@ export async function ResumeJobExperienceEntityToModel(entity: ResumeJobExperien
 export function ResumeJobExperienceModeltoEntity(model: ResumeJobExperience) {
     return {
         id: model.id,
-        jobId: Number(model.id),
+        jobId: Number(model.jobId),
         resumeId: model.resumeId,
         content: model.content
     }
@@ -77,6 +77,23 @@ export async function deleteResumeJobExperience(experienceId: number) {
     })
 }
 
+export async function deleteResumeJobExperiences(jobId: number) {
+    await prisma.resumeJobExperience.deleteMany({
+        where: {
+            jobId: jobId
+        }
+    })
+}
+
+export async function deleteResumeJobExperiencesFromResume(jobId: number, resumeId: number) {
+    await prisma.resumeJobExperience.deleteMany({
+        where: {
+            jobId: jobId,
+            resumeId: resumeId
+        }
+    })
+}
+
 export async function updateResumeJobExperience(experience: ResumeJobExperience) {
     const entity = ResumeJobExperienceModeltoEntity(experience)
     const result = await prisma.resumeJobExperience.update({
@@ -88,4 +105,19 @@ export async function updateResumeJobExperience(experience: ResumeJobExperience)
         }
     })
     return await ResumeJobExperienceEntityToModel(result)
+}
+
+type uniqueResumeJobExperiencesResult = {
+    id: string
+}
+
+export async function getUniqueResumeJobExperiences(jobId: number): Promise<ResumeJobExperiences> {
+    let resultIds: uniqueResumeJobExperiencesResult[] = await prisma.$queryRaw`
+        SELECT DISTINCT ON (content) id FROM "ResumeJobExperience" WHERE "jobId" = ${jobId}
+    `
+    const results: ResumeJobExperiences = []
+    for (const resultId of resultIds) {
+        results.push(await getResumeJobExperience(Number(resultId.id)))
+    }
+    return results
 }

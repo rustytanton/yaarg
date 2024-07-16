@@ -22,10 +22,10 @@ import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
 import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
-import { redirect } from "next/navigation"
 
 type Props = {
-    resume: Resume
+    resume: Resume,
+    resumeCount: number
 }
 
 const initialState: ResumeFormState = {
@@ -34,27 +34,33 @@ const initialState: ResumeFormState = {
 }
 
 export default function ResumeForm(props: Props) {
-    const [state, formAction] = useFormState(handleFormChange, {
+    const [state, formAction, third] = useFormState(handleFormChange, {
         ...initialState,
         resume: props.resume
     })
 
-    const [suggestions, setSuggestions] = useState(false)
-
-    async function formActionWrapper(formData: FormData) {
-        await formAction(formData)
-
-        // @todo this is slightly hacky
-        redirect('/resume/' + state.resume?.id + '?' + new Date().getTime())
-    }
-
     return (
-        <form action={formActionWrapper}>
+        <form action={formAction}>
             <BodySection>
                 <Heading1>Resume - {state.resume?.employer}</Heading1>
             </BodySection>
+            {props.resumeCount < 2
+                ?
+                    <BodyParagraphSmall>
+                        Since this is your first resume, you will need to enter experience
+                        manually by clicking the &quot;Edit&quot; link next to each job title.
+                        After you have added experience to one resume, you will have the option
+                        on future resumes to populate experience based on past resumes.
+                    </BodyParagraphSmall>
+                :
+                    ''
+            }
             <ResumeButtons>
-                <FormButton onClick={() => { setSuggestions(true) }} buttonText="Load AI Suggestions" isSubmit={true} pendingMessage="Analyzing with ChatGPT, this could take a few moments..." />
+                <FormButton
+                    buttonText="Load ChatGPT Suggestions"
+                    isSubmit={true}
+                    pendingMessage="Analyzing with ChatGPT, this could take a few moments..."
+                />
                 <FormButton href={"/print/resume/" + state.resume?.id} buttonText="Print" target="_blank" />
             </ResumeButtons>
             <ResumeContainer>
@@ -78,7 +84,6 @@ export default function ResumeForm(props: Props) {
                 </BodyParagraphSmall>
                 <FormSkillsList skills={state.resume?.jobDescription?.skills} />
             </BodySection>
-            {suggestions ? <input name="suggestions" type="hidden" value="true" /> : '' }
         </form>
     )
 }

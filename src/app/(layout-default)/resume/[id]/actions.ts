@@ -6,90 +6,122 @@ import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from 
 import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
 import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
-import { Resume, updateResume, userOwnsResume } from "@/app/_data/resume"
+import { getResume, updateResume, userOwnsResume } from "@/app/_data/resume"
 import { auth } from "@/app/auth"
 import { resetJobDescriptionSkillsUsedField, setJobDescriptionSkillUsedBySkillName } from "@/app/_data/job-description-skill"
+import { createResumeJobExperience, getUniqueResumeJobExperiences } from "@/app/_data/resume-job-experience"
+import { fuzzyMatch } from "fuzzbunny"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
-    const loadSuggestions = formData.get('suggestions')
     const summary = formData.get('summary') as string
-
     const session = await auth()
 
     if (await !userOwnsResume(Number(prevState.resume?.id), session?.user?.id as string)) {
         throw new Error('User does not own resume, cannot make edits')
     }
 
-    if (summary && session && session.user && loadSuggestions !== 'true') {
-        await updateResume({
-            ...prevState.resume,
-            userId: prevState.resume?.userId as string,
-            employer: prevState.resume?.employer as string,
-            summary: summary
-        })
-
-        return {
-            ...prevState,
-            loadSuggestions: false,
-            resume: {
-                ...prevState.resume,
-                summary: summary
-            } as Resume
-        }
+    if (summary) {
+        await handFormChangeUpdateSummary(prevState, summary)
+    } else {
+        await handleFormChangeChatGptSuggestions(prevState)
+        await handleFormChangeSuggestionsFromPrevious(prevState)
     }
 
-    if (loadSuggestions === 'true' && prevState.resume?.jobs) {
-        const bullets: ChatGptSuggestionsrPromptBullet[] = []
-        const skills: string[] = prevState.resume?.jobDescription?.skills?.map(skill => skill.skill) || []
-        for (const job of prevState.resume?.jobs) {
-            if (job.experiences) {
-                for (const experience of job.experiences) {
-                    bullets.push({
-                        bulletId: Number(experience.id),
-                        bulletText: experience.content
-                    })
-                }
-            }
-        }
-        const suggestions = await getBulletAnalysis(JSON.stringify({
-            summary: prevState.resume?.summary,
-            skills: skills,
-            bullets: bullets
-        }))
+    // refresh resume content after updates
+    revalidatePath('/resume/' + Number(prevState.resume?.id))
+    const resumeUpdated = await getResume(Number(prevState.resume?.id))
 
-        await resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
+    return {
+        loadSuggestions: false,
+        resume: resumeUpdated,
+        message: ''
+    }
+}
 
-        for (const suggestion of Array.from(suggestions.result)) {
-            await deleteResumeJobExperienceSkills(suggestion.bulletId)
-            for (const skill of suggestion.skillsUsed) {
-                await createResumeJobExperienceSkill({
-                    jobExperienceId: suggestion.bulletId,
-                    skill: skill
-                })
-                await setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
-            }
+async function handFormChangeUpdateSummary(prevState: ResumeFormState, summary: string) {
+    await updateResume({
+        ...prevState.resume,
+        userId: prevState.resume?.userId as string,
+        employer: prevState.resume?.employer as string,
+        summary: summary
+    })  
+}
 
-            await deleteResumeJobExperienceSuggestions(suggestion.bulletId)
-            for (const item of suggestion.qualitySuggestions) {
-                await createResumeJobExperienceSugggestion({
-                    jobExperienceId: suggestion.bulletId,
-                    suggestion: item
+async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): Promise<void> {
+    const bullets: ChatGptSuggestionsrPromptBullet[] = []
+    const skills: string[] = prevState.resume?.jobDescription?.skills?.map(skill => skill.skill) || []
+
+    if (!prevState.resume?.jobs) {
+        return
+    }
+
+    for (const job of prevState.resume.jobs) {
+        if (job.experiences) {
+            for (const experience of job.experiences) {
+                bullets.push({
+                    bulletId: Number(experience.id),
+                    bulletText: experience.content
                 })
             }
         }
+    }
+    const suggestions = await getBulletAnalysis(JSON.stringify({
+        summary: prevState.resume?.summary,
+        skills: skills,
+        bullets: bullets
+    }))
 
-        await deleteResumeSummarySuggestions(Number(prevState.resume.id))
-        for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
-            await createResumeSummarySuggestion({
-                resumeId: Number(prevState.resume.id),
-                suggestion: summarySuggestion
+    await resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
+
+    for (const suggestion of Array.from(suggestions.result)) {
+        await deleteResumeJobExperienceSkills(suggestion.bulletId)
+        for (const skill of suggestion.skillsUsed) {
+            await createResumeJobExperienceSkill({
+                jobExperienceId: suggestion.bulletId,
+                skill: skill
+            })
+            await setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
+        }
+
+        await deleteResumeJobExperienceSuggestions(suggestion.bulletId)
+        for (const item of suggestion.qualitySuggestions) {
+            await createResumeJobExperienceSugggestion({
+                jobExperienceId: suggestion.bulletId,
+                suggestion: item
             })
         }
-
-        revalidatePath('/resume/' + prevState.resume.id)
     }
-    return {
-        ...prevState,
-        loadSuggestions: false
+
+    await deleteResumeSummarySuggestions(Number(prevState.resume.id))
+    for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
+        await createResumeSummarySuggestion({
+            resumeId: Number(prevState.resume.id),
+            suggestion: summarySuggestion
+        })
+    }
+}
+
+async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormState): Promise<void> {
+    if (!prevState.resume?.jobs) {
+        return
+    }
+    for (const job of prevState.resume?.jobs) {
+        const suggestions = await getUniqueResumeJobExperiences(Number(job.id))
+        const oldContents: string[] = job.experiences?.map(experience => experience.content) || []
+        for (const suggestion of suggestions) {
+            const fuzzyMatches = 
+                oldContents.map(
+                    oldContent => fuzzyMatch(suggestion.content, oldContent)
+                ).filter(item => {
+                    return (item !== null)
+                })
+            
+            if (fuzzyMatches.length === 0) {
+                await createResumeJobExperience({
+                    ...suggestion,
+                    resumeId: Number(prevState.resume.id)
+                })
+            }
+        }
     }
 }
