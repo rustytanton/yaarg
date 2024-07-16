@@ -15,7 +15,7 @@ export default function FormSkillsList(props: Props) {
         return (
             <div className="flex flex-wrap">
                 {props?.skills?.map((pair, index) => {
-                    return <>
+                    return <div key={index}>
                         {pair.usedInResume
                             ?
                                 <span className="rounded-md bg-green-400 text-white pr-2 pl-2 mr-2 mb-2 flex" key={index}>
@@ -26,7 +26,7 @@ export default function FormSkillsList(props: Props) {
                                     <strong>{pair.skill}</strong> ({pair.mentions})
                                 </span>
                         }
-                    </>
+                    </div>
                 })}
             </div>
         )
