@@ -42,12 +42,16 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
 }
 
 async function handFormChangeUpdateSummary(prevState: ResumeFormState, summary: string) {
+    if (!prevState.resume) {
+        return
+    }
     await updateResume({
         ...prevState.resume,
         userId: prevState.resume?.userId as string,
         employer: prevState.resume?.employer as string,
         summary: summary
-    })  
+    })
+    await deleteResumeSummarySuggestions(Number(prevState.resume.id))
 }
 
 async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): Promise<void> {

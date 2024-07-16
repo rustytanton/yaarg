@@ -7,10 +7,13 @@ import {
     ResumeJobExperiences,
     deleteResumeJobExperience,
     updateResumeJobExperience,
-    createResumeJobExperience
+    createResumeJobExperience,
+    getResumeJobExperience
 } from "@/app/_data/resume-job-experience";
 import { userOwnsResume } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
+import { revalidatePath } from "next/cache";
+import { deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion";
 
 export async function handleFormChange(prevState: ResumeJobFormState, formData: FormData) {
     if (formData.get('addExperience') === 'true') {
@@ -43,14 +46,18 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
             const content = formData.get(group + 'content') as string
             const experienceId = Number(formData.get(group + 'content_contentId')) 
             if (experienceId) {
-                const experience = await updateResumeJobExperience({
-                    id: experienceId,
-                    jobId: jobId,
-                    resumeId: resumeId,
-                    content: content
-                })
-                experiences.push(experience)
-                messages.push('Updated ' + experience.id.toString())
+                const experiencePrevious = await getResumeJobExperience(experienceId)
+                if (experiencePrevious.content !== content) {
+                    const experience = await updateResumeJobExperience({
+                        id: experienceId,
+                        jobId: jobId,
+                        resumeId: resumeId,
+                        content: content
+                    })
+                    await deleteResumeJobExperienceSuggestions(experienceId)
+                    experiences.push(experience)
+                    messages.push('Updated ' + experience.id.toString())
+                }                
             } else {
                 const experience = await createResumeJobExperience({
                     jobId: jobId,
@@ -61,6 +68,8 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                 messages.push('Created ' + experience.id as string)
             }
         }
+
+        revalidatePath('/resume/' + Number(resumeId))
 
         return {
             ...prevState,
