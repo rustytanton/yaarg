@@ -25,6 +25,8 @@ import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
 import { ResumeSubmitTypes } from './types'
 import { useEffect } from "react"
 import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
+import { ResumeShowOnFirst } from "@/app/_lib/components/resume/ResumeShowOnFirst"
+import { ResumeShowOnMoreThanOne } from "@/app/_lib/components/resume/ResumeShowOnMoreThanOne"
 
 type Props = {
     resume: Resume,
@@ -86,31 +88,26 @@ export default function ResumeForm(props: Props) {
             <BodySection>
                 <Heading1>Resume - {state.resume?.employer}</Heading1>
             </BodySection>
-            {props.resumeCount < 2
-                ?
-                    <BodyParagraphSmall>
-                        Since this is your first resume, you will need to enter experience
-                        manually by clicking the &quot;Edit&quot; link next to each job title.
-                        After you have added experience to one resume, you will have the option
-                        on future resumes to populate experience based on past resumes.
-                    </BodyParagraphSmall>
-                :
-                    ''
-            }
+            <ResumeShowOnFirst resumeCount={props.resumeCount}>
+                <BodyParagraphSmall>
+                    Since this is your first resume, you will need to enter experience
+                    manually by clicking the &quot;Edit&quot; link next to each job title.
+                    After you have added experience to one resume, you will have the option
+                    on future resumes to populate experience based on past resumes.
+                </BodyParagraphSmall>
+            </ResumeShowOnFirst>
             <ResumeButtons asyncJobs={state.resume.chatGptAsyncJobs}>
-                {props.resumeCount > 1
-                    ?
-                        <FormButton
-                            buttonText="Populate Experience from Past Resumes"
-                            isSubmit={true}
-                            onClick={() => {
-                                setSubmitType(
-                                    ResumeSubmitTypes.POPULATE_PAST_EXPERIENCES
-                                )
-                            }}
-                        />
-                    : ''
-                }
+                <ResumeShowOnMoreThanOne resumeCount={props.resumeCount}>
+                    <FormButton
+                        buttonText="Populate Experience from Past Resumes"
+                        isSubmit={true}
+                        onClick={() => {
+                            setSubmitType(
+                                ResumeSubmitTypes.POPULATE_PAST_EXPERIENCES
+                            )
+                        }}
+                    />
+                </ResumeShowOnMoreThanOne>
                 <FormButton
                     buttonText="Load ChatGPT Suggestions"
                     isSubmit={true}
