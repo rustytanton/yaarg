@@ -9,10 +9,11 @@ type Props = {
     pendingMessage?: string,
     href?: string
     target?: string
+    id?: string
 }
 
 
-export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '', href = '', target = '' }: Props) {
+export default function FormButton ({ buttonText = 'Button', isSubmit = false, onClick = () => {}, pendingMessage = '', href = '', target = '', id = '' }: Props) {
     const { pending } = useFormStatus()
 
     if (isSubmit && pending) {
@@ -28,6 +29,7 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
                 href={href}
                 onClick={onClick}
                 target={target}
+                id={id}
             >
                 {buttonText}
             </Link>
@@ -38,6 +40,7 @@ export default function FormButton ({ buttonText = 'Button', isSubmit = false, o
                 className="pt-2 pb-2 pr-4 pl-4 bg-gray-200 text-black block rounded"
                 type={isSubmit ? 'submit' : 'button'}
                 onClick={onClick}
+                id={id}
             >
                 {buttonText}
             </button>

@@ -30,6 +30,15 @@ export async function getChatGptAssistant(userId: string, assistantName: string)
     return ChatGptAssistantEntityToModel(entity as ChatGptAssistantEntity)
 }
 
+export async function getChatGptAssistantById(assistantId: number) {
+    const entity = await prisma.chatGptAssistant.findFirst({
+        where: {
+            id: assistantId
+        }
+    })
+    return ChatGptAssistantEntityToModel(entity as ChatGptAssistantEntity)
+}
+
 export async function createChatGptAssistant(assistant: ChatGptAssistant): Promise<ChatGptAssistant> {
     const entity = ChatGptAssistantModeltoEntity(assistant)
     const result = await prisma.chatGptAssistant.create({

@@ -6,6 +6,7 @@ import { getJobs, Jobs } from "./job"
 import { getUser, User } from "./user"
 import { Educations, getEducations } from "./education"
 import { getResumeSummarySuggestions, ResumeSummarySuggestions } from "./resume-summary-suggestion"
+import { ChatGptAsyncJobs, getChatGptAsyncJobs } from "./chatgpt-async-job"
 
 export type ResumeEntity = _ResumeEntity
 export type ResumeEntities = ResumeEntity[]
@@ -20,6 +21,7 @@ export type Resume = {
     educations?: Educations
     summary: string,
     summarySuggestions?: ResumeSummarySuggestions
+    chatGptAsyncJobs?: ChatGptAsyncJobs
 }
 export type Resumes = Resume[]
 
@@ -29,6 +31,7 @@ export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume>
     const user = await getUser(entity.userId)
     const educations = await getEducations(entity.userId)
     const summarySuggestions = await getResumeSummarySuggestions(entity.id)
+    const chatGptAsyncJobs = await getChatGptAsyncJobs(entity.id)
     for (let i = 0; i < jobs.length; i++) {
         jobs[i].experiences = await getResumeJobExperiences(entity.id, Number(jobs[i].id)) || []
     }
@@ -41,7 +44,8 @@ export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume>
         jobDescription: jd,
         user: user,
         educations: educations,
-        summarySuggestions: summarySuggestions
+        summarySuggestions: summarySuggestions,
+        chatGptAsyncJobs: chatGptAsyncJobs
     }
 }
 

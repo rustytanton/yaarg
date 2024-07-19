@@ -1,6 +1,6 @@
 'use server'
 
-import { ChatGptSuggestionsrPromptBullet, getBulletAnalysis } from "@/app/_lib/chatgpt/assistant-suggestions"
+import { ChatGptSuggestionsrPromptBullet, getBulletAnalysisAsync, getBulletAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions"
 import { ResumeFormState } from "./types"
 import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from "@/app/_data/resume-job-experience-skill"
 import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
@@ -12,6 +12,8 @@ import { resetJobDescriptionSkillsUsedField, setJobDescriptionSkillUsedBySkillNa
 import { createResumeJobExperience, getUniqueResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import { fuzzyMatch } from "fuzzbunny"
 import { ResumeSubmitTypes } from "./types"
+import { deleteChatGptAsyncJob } from "@/app/_data/chatgpt-async-job"
+import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
     const summary = formData.get('summary') as string
@@ -28,6 +30,8 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
         await handleFormChangeChatGptSuggestions(prevState)
     } else if (submitType === ResumeSubmitTypes.POPULATE_PAST_EXPERIENCES) {
         await handleFormChangeSuggestionsFromPrevious(prevState)
+    } else if (submitType === ResumeSubmitTypes.CHATGPT_ASYNC_JOB) {
+        await handleFormChangeChatGptAsyncJob(prevState)
     }
 
     // refresh resume content after updates
@@ -72,40 +76,11 @@ async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): P
             }
         }
     }
-    const suggestions = await getBulletAnalysis(JSON.stringify({
+    const job = await getBulletAnalysisAsync(JSON.stringify({
         summary: prevState.resume?.summary,
         skills: skills,
         bullets: bullets
-    }))
-
-    await resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
-
-    for (const suggestion of Array.from(suggestions.result)) {
-        await deleteResumeJobExperienceSkills(suggestion.bulletId)
-        for (const skill of suggestion.skillsUsed) {
-            await createResumeJobExperienceSkill({
-                jobExperienceId: suggestion.bulletId,
-                skill: skill
-            })
-            await setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
-        }
-
-        await deleteResumeJobExperienceSuggestions(suggestion.bulletId)
-        for (const item of suggestion.qualitySuggestions) {
-            await createResumeJobExperienceSugggestion({
-                jobExperienceId: suggestion.bulletId,
-                suggestion: item
-            })
-        }
-    }
-
-    await deleteResumeSummarySuggestions(Number(prevState.resume.id))
-    for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
-        await createResumeSummarySuggestion({
-            resumeId: Number(prevState.resume.id),
-            suggestion: summarySuggestion
-        })
-    }
+    }), prevState.resume?.id as number)
 }
 
 async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormState): Promise<void> {
@@ -129,6 +104,52 @@ async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormStat
                     resumeId: Number(prevState.resume.id)
                 })
             }
+        }
+    }
+}
+
+async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
+    if (prevState.resume?.chatGptAsyncJobs && prevState.resume.chatGptAsyncJobs.length > 0) {
+        const job = prevState.resume.chatGptAsyncJobs[0]
+
+        try {
+            const suggestions = await getBulletAnalysisAsyncResult(job)
+            if (suggestions.status === chatGptAsyncJobStatuses.COMPLETE) {
+                await resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
+                
+                for (const suggestion of Array.from(suggestions.result)) {
+                    await deleteResumeJobExperienceSkills(suggestion.bulletId)
+                    for (const skill of suggestion.skillsUsed) {
+                        await createResumeJobExperienceSkill({
+                            jobExperienceId: suggestion.bulletId,
+                            skill: skill
+                        })
+                        await setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
+                    }
+        
+                    await deleteResumeJobExperienceSuggestions(suggestion.bulletId)
+                    for (const item of suggestion.qualitySuggestions) {
+                        await createResumeJobExperienceSugggestion({
+                            jobExperienceId: suggestion.bulletId,
+                            suggestion: item
+                        })
+                    }
+                }
+    
+                await deleteResumeSummarySuggestions(Number(prevState.resume.id))
+                for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
+                    await createResumeSummarySuggestion({
+                        resumeId: Number(prevState.resume.id),
+                        suggestion: summarySuggestion
+                    })
+                }
+    
+                await deleteChatGptAsyncJob(Number(job.id))
+            }
+        } catch(err) {
+            // @todo Sometimes ChatGPT does not return valid JSON, should add UI elements to tell the user. Deleting the job at least restores the page buttons and makes it quit polling.
+            console.error(err)
+            await deleteChatGptAsyncJob(Number(job.id))
         }
     }
 }

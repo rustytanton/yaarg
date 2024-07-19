@@ -1,8 +1,9 @@
 import { MessageContent } from "openai/resources/beta/threads/messages.mjs";
-import { assistant, assistantProperties, assistantMessage } from "./assistant";
+import { assistant, assistantProperties, assistantMessage, assistantMessageAsync, assistantMessageAsyncResult } from "./assistant";
+import { ChatGptAsyncJob } from "@/app/_data/chatgpt-async-job";
 
 export const assistantSuggestions: assistantProperties = {
-    name: 'YAARG skills suggestions v1',
+    name: 'YAARG skills suggestions v5',
     instructions: `
 You will be prompted with a JSON object with the following structure:
 {
@@ -66,7 +67,8 @@ export type ChatGptSuggestionsResultItem = {
 
 export type ChatGptSuggestionsResult = {
     summaryQualitySuggestions: string[],
-    result: ChatGptSuggestionsResultItem[]
+    result: ChatGptSuggestionsResultItem[],
+    status: string
 }
 
 export async function getBulletAnalysis(prompt: string): Promise<ChatGptSuggestionsResult> {
@@ -80,4 +82,26 @@ export async function getBulletAnalysis(prompt: string): Promise<ChatGptSuggesti
         }
     }
     return {} as ChatGptSuggestionsResult
+}
+
+export async function getBulletAnalysisAsync(prompt: string, resumeId: number) {
+    const _assistant = await assistant(assistantSuggestions)
+    if (_assistant) {
+        return await assistantMessageAsync(_assistant, resumeId, prompt)
+    } else {
+        throw new Error('No assistant found')
+    }
+}
+
+export async function getBulletAnalysisAsyncResult(job: ChatGptAsyncJob) {
+    const jobResult = await assistantMessageAsyncResult(job)
+    if (jobResult.messages) {
+        const result = jobResult.messages.data[0].content[0] as SuggestionsMessageContent
+        const json = JSON.parse(result.text.value) as ChatGptSuggestionsResult
+        json.status = jobResult.status
+        return json
+    }
+    return {
+        status: jobResult.status
+    } as ChatGptSuggestionsResult
 }

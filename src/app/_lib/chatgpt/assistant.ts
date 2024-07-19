@@ -1,11 +1,21 @@
-import { ChatGptAssistant, createChatGptAssistant, getChatGptAssistant } from "@/app/_data/chatgpt-assistant";
+import { ChatGptAssistant, createChatGptAssistant, getChatGptAssistant, getChatGptAssistantById } from "@/app/_data/chatgpt-assistant";
+import { ChatGptAsyncJob, createChatGptAsyncJob } from "@/app/_data/chatgpt-async-job";
+import { userOwnsResume } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import OpenAI from 'openai'
+import { ChatGptSuggestionsResult } from "./assistant-suggestions";
 
 export type assistantProperties = {
     name: string
     instructions: string
     model: string
+}
+
+export enum chatGptAsyncJobStatuses {
+    CANCELLED = 'cancelled',
+    COMPLETE = 'complete',
+    FAILED = 'failed',
+    UNKNOWN = 'unknown'
 }
 
 export async function assistant(props: assistantProperties): Promise<ChatGptAssistant | null> {
@@ -21,6 +31,7 @@ export async function assistant(props: assistantProperties): Promise<ChatGptAssi
                 name: props.name,
                 instructions: props.instructions,
                 model: props.model,
+                tools: [{ type: 'code_interpreter' }]
             })
             const assistantLocal = await createChatGptAssistant({
                 userId: session.user.id as string,
@@ -59,5 +70,60 @@ export async function assistantMessage(assistantId: string, prompt: string) {
         const messages = await openai.beta.threads.messages.list(thread.id)
 
         return messages
+    }
+}
+
+export async function assistantMessageAsync(assistant: ChatGptAssistant, resumeId: number, prompt: string): Promise<ChatGptAsyncJob> {
+    const session = await auth()
+    const openai = new OpenAI()
+
+    if (session && session.user) {
+        const thread = await openai.beta.threads.create()
+
+        const message = await openai.beta.threads.messages.create(thread.id, {
+            role: "user",
+            content: prompt
+        })
+
+        const run = await openai.beta.threads.runs.create(thread.id, {
+            assistant_id: assistant.externalId,
+        })
+
+        return await createChatGptAsyncJob({
+            assistantId: Number(assistant.id),
+            resumeId: resumeId,
+            runId: run.id,
+            threadId: thread.id            
+        })
+    } else {
+        throw new Error('No user session')
+    }
+}
+
+export type assistantMessageAsyncResult = {
+    status: string
+    messages?: OpenAI.Beta.Threads.Messages.MessagesPage
+}
+
+export async function assistantMessageAsyncResult(job: ChatGptAsyncJob) {
+    const session = await auth()
+    const openai = new OpenAI()
+    let result: assistantMessageAsyncResult = {
+        status: chatGptAsyncJobStatuses.UNKNOWN
+    }
+
+    if (await userOwnsResume(job.resumeId, session?.user?.id as string)) {
+        const run = await openai.beta.threads.runs.retrieve(job.threadId, job.runId)
+        if (run.completed_at) {
+            result.messages = await openai.beta.threads.messages.list(job.threadId)
+            result.status = chatGptAsyncJobStatuses.COMPLETE
+        } else if (run.cancelled_at) {
+            result.status = chatGptAsyncJobStatuses.CANCELLED
+        } else if (run.failed_at) {
+            result.status = chatGptAsyncJobStatuses.FAILED
+        }
+        return result
+    } else {
+        throw new Error('User does not own resume')
     }
 }

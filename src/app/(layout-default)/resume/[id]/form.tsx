@@ -23,6 +23,8 @@ import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
 import ResumeButtons from "@/app/_lib/components/resume/ResumeButtons"
 import { ResumeSubmitTypes } from './types'
+import { useEffect } from "react"
+import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
 
 type Props = {
     resume: Resume,
@@ -47,8 +49,40 @@ export default function ResumeForm(props: Props) {
         setSubmitType("")
     }
 
+    useEffect(() => {
+        const checkInterval = setInterval(() => {
+            if (!state.resume.chatGptAsyncJobs) {
+                return
+            }
+
+            for (const asyncJob of state.resume.chatGptAsyncJobs) {
+                fetch('/api/chatgpt-async-job/' + asyncJob.id)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === chatGptAsyncJobStatuses.COMPLETE) {
+                            // @todo this seems hacky                          
+                            const resumeForm = document.getElementById("resumeForm") as HTMLFormElement
+                            if (resumeForm) {
+                                const formData = new FormData(resumeForm)
+                                formData.set('submitType', ResumeSubmitTypes.CHATGPT_ASYNC_JOB)
+                                formAction(formData)
+                            }
+                        } else if (data.status === chatGptAsyncJobStatuses.CANCELLED) {
+                            console.log('cancelled')
+                        } else if (data.status === chatGptAsyncJobStatuses.FAILED) {
+                            console.log('failed')
+                        }
+                    })
+            }
+        }, 2500)
+
+        return () => {
+            clearInterval(checkInterval)
+        }
+    }, [formAction, state.resume.chatGptAsyncJobs])
+
     return (
-        <form action={formActionWrapper}>
+        <form action={formActionWrapper} id="resumeForm">
             <BodySection>
                 <Heading1>Resume - {state.resume?.employer}</Heading1>
             </BodySection>
@@ -63,7 +97,7 @@ export default function ResumeForm(props: Props) {
                 :
                     ''
             }
-            <ResumeButtons>
+            <ResumeButtons asyncJobs={state.resume.chatGptAsyncJobs}>
                 {props.resumeCount > 1
                     ?
                         <FormButton
@@ -80,6 +114,7 @@ export default function ResumeForm(props: Props) {
                 <FormButton
                     buttonText="Load ChatGPT Suggestions"
                     isSubmit={true}
+                    id="resumeFormSubmit"
                     onClick={() => {
                         setSubmitType(
                             ResumeSubmitTypes.CHATGPT_SUGGESTIONS

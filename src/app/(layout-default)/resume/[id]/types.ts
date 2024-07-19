@@ -7,6 +7,7 @@ export type ResumeFormState = {
 }
 
 export enum ResumeSubmitTypes {
+    CHATGPT_ASYNC_JOB = "chatGptAsyncJob",
     CHATGPT_SUGGESTIONS = "chatGptSuggestions",
     POPULATE_PAST_EXPERIENCES = "pastExperience"
 }
