@@ -1,5 +1,5 @@
 import { ChatGptAssistant as _ChatGptAssistantEntity } from "@prisma/client";
-import { BaseEntity, BaseModel, BaseRepository, BaseService, IMapper, IRepository, PrismaFootprint } from './_base'
+import { BaseRepository, BaseService, IMapper } from './_base'
 import prisma from "../db";
 
 export type ChatGptAssistantEntity = _ChatGptAssistantEntity
@@ -13,14 +13,6 @@ export type ChatGptAssistant = {
     model: string
 }
 
-interface IChatGptAssistantRepository<
-    Model extends BaseModel,
-    Entity extends BaseEntity,
-    PrismaModel extends PrismaFootprint<Entity>
-> extends IRepository<Model, Entity, PrismaModel> {
-    getAssistantByNameAndUserId(assistantName: string, userId: string): Promise<Model | null>
-}
-
 export class MapperChatGptAssistant implements IMapper<ChatGptAssistant, ChatGptAssistantEntity> {
     async toEntity(model: ChatGptAssistant): Promise<ChatGptAssistantEntity> {
         return model as ChatGptAssistantEntity
@@ -30,7 +22,7 @@ export class MapperChatGptAssistant implements IMapper<ChatGptAssistant, ChatGpt
     }
 }
 
-export class ChatGptAssistantRepository extends BaseRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> implements IChatGptAssistantRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> {
+export class ChatGptAssistantRepository extends BaseRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> {
     constructor(
         mapper: IMapper<ChatGptAssistant, ChatGptAssistantEntity> = new MapperChatGptAssistant(),
         prismaModel: typeof prisma.chatGptAssistant = prisma.chatGptAssistant
@@ -50,10 +42,10 @@ export class ChatGptAssistantRepository extends BaseRepository<ChatGptAssistant,
 }
 
 export class ChatGptAssistantService extends BaseService<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> {
-    repo: IChatGptAssistantRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant>
+    repo: ChatGptAssistantRepository
     
     constructor(
-        repo: IChatGptAssistantRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> = new ChatGptAssistantRepository()
+        repo: ChatGptAssistantRepository = new ChatGptAssistantRepository()
     ) {
         super(repo)
         this.repo = repo

@@ -1,6 +1,6 @@
 import { ChatGptAsyncJob as _ChatGptAsyncJobEntity } from "@prisma/client";
 import prisma from "../db";
-import { BaseEntity, BaseModel, BaseRepository, BaseService, IMapper, IRepository, PrismaFootprint } from "./_base";
+import { BaseRepository, BaseService, IMapper } from "./_base";
 
 export type ChatGptAsyncJobEntity = _ChatGptAsyncJobEntity
 
@@ -14,14 +14,6 @@ export type ChatGptAsyncJob = {
 }
 export type ChatGptAsyncJobs = ChatGptAsyncJob[]
 
-export interface IChatGptAssistantRepository<
-    Model extends BaseModel,
-    Entity extends BaseEntity,
-    PrismaModel extends PrismaFootprint<Entity>
-> extends IRepository<Model, Entity, PrismaModel> {
-    getJobsByResumeId(resumeIdId: number): Promise<Model[] | null>
-}
-
 
 export class MapperChatGptAsyncJob implements IMapper<ChatGptAsyncJob, ChatGptAsyncJobEntity> {
     async toEntity(model: ChatGptAsyncJob): Promise<ChatGptAsyncJobEntity> {
@@ -32,7 +24,7 @@ export class MapperChatGptAsyncJob implements IMapper<ChatGptAsyncJob, ChatGptAs
     }
 }
 
-export class ChatGptAsyncJobRepository extends BaseRepository<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> implements IChatGptAssistantRepository<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> {
+export class ChatGptAsyncJobRepository extends BaseRepository<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> {
     constructor(
         mapper: IMapper<ChatGptAsyncJob, ChatGptAsyncJobEntity> = new MapperChatGptAsyncJob(),
         prismaModel: typeof prisma.chatGptAsyncJob = prisma.chatGptAsyncJob
@@ -55,10 +47,10 @@ export class ChatGptAsyncJobRepository extends BaseRepository<ChatGptAsyncJob, C
 }
 
 export class ChatGptAsyncJobService extends BaseService<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> {
-    repo: IChatGptAssistantRepository<ChatGptAsyncJob, ChatGptAsyncJob, typeof prisma.chatGptAsyncJob>
+    repo: ChatGptAsyncJobRepository
     
     constructor(
-        repo: IChatGptAssistantRepository<ChatGptAsyncJob, ChatGptAsyncJob, typeof prisma.chatGptAsyncJob> = new ChatGptAsyncJobRepository()
+        repo: ChatGptAsyncJobRepository = new ChatGptAsyncJobRepository()
     ) {
         super(repo)
         this.repo = repo
