@@ -36,6 +36,7 @@ model User {
   jobs            Job[]
   assistants      ChatGptAssistant[]
   jobDescriptions JobDescription[]
+  jobDescriptionSkills  JobDescriptionSkill[]
   resumes         Resume[]
 }
 
@@ -146,12 +147,14 @@ model Resume {
 
 model JobDescriptionSkill {
   id               Int    @id @default(autoincrement())
+  userId           String
   jobDescriptionId Int
   skill            String
   mentions         Int
   usedInResume     Boolean @default(false)
 
   jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ResumeJobExperience {
