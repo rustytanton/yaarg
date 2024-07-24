@@ -1,53 +1,52 @@
 import { JobDescription as _JobDescriptionEntity } from "@prisma/client";
 import prisma from "../db";
 import { JobDescriptionSkill, JobDescriptionSkillService } from "./job-description-skill";
+import { BaseRepository, BaseService, IMapper } from "./_base";
 
 export type JobDescriptionEntity = _JobDescriptionEntity
 
 export type JobDescription = {
-    id?: number | undefined
+    id: number
     userId: string
     text: string
     skills?: JobDescriptionSkill[]
 }
 
-export async function JobDescriptionEntityToModel(entity: JobDescriptionEntity): Promise<JobDescription> {
-    const jdService = new JobDescriptionSkillService()
-    return {
-        ...entity,
-        skills: await jdService.getSkillsByJobDescriptionId(entity.id) as JobDescriptionSkill[]
-    }
-}
+export class MapperJobDescription implements IMapper<JobDescription, JobDescriptionEntity> {
+    jdSkillService: JobDescriptionSkillService
 
-export function JobDescriptionModeltoEntity(model: JobDescription): JobDescriptionEntity {
-    return {
-        id: model.id || 0,
-        userId: model.userId,
-        text: model.text
+    constructor(jdSkillService: JobDescriptionSkillService = new JobDescriptionSkillService()) {
+        this.jdSkillService = jdSkillService
     }
-}
 
-export async function getJobDescription(jobDescriptionId: number) {
-    const entity = await prisma.jobDescription.findFirst({
-        where: {
-            id: jobDescriptionId
+    async toEntity(model: JobDescription): Promise<JobDescriptionEntity> {
+        return {
+            id: model.id,
+            userId: model.userId,
+            text: model.text
         }
-    })
-    return await JobDescriptionEntityToModel(entity as JobDescriptionEntity)
-}
-
-export async function createJobDescription(jobDescription: JobDescription) {
-    const entity = JobDescriptionModeltoEntity(jobDescription)
-    const result = await prisma.jobDescription.create({
-        data: {
+    }
+    async toModel(entity: JobDescriptionEntity): Promise<JobDescription> {
+        return {
             ...entity,
-            id: undefined
+            skills: await this.jdSkillService.getSkillsByJobDescriptionId(entity.id) || []
         }
-    })
-    return await JobDescriptionEntityToModel(result)
+    }
 }
 
-export async function userOwnsJobDescription(jobDescriptionId: number, userId: string) {
-    const entity = await getJobDescription(jobDescriptionId)
-    return entity.userId === userId
+export class JobDescriptionRepository extends BaseRepository<JobDescription, JobDescriptionEntity, typeof prisma.jobDescription> {
+    constructor(
+        mapper: MapperJobDescription = new MapperJobDescription(),
+        prismaModel: typeof prisma.jobDescription = prisma.jobDescription
+    ) {
+        super(mapper, prismaModel)
+    }
+}
+
+export class JobDescriptionService extends BaseService<JobDescription, JobDescriptionEntity, typeof prisma.jobDescription> {
+    constructor(
+        repo: JobDescriptionRepository = new JobDescriptionRepository()
+    ) {
+        super(repo)
+    }
 }

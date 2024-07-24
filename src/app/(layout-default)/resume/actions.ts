@@ -4,7 +4,7 @@ import { ResumeFormNewState } from './types'
 import { auth } from '@/app/auth'
 import { redirect } from 'next/navigation'
 import { getSkills } from '@/app/_lib/chatgpt/assistant-skills-extractor'
-import { createJobDescription } from '@/app/_data/job-description'
+import { JobDescription, JobDescriptionService } from '@/app/_data/job-description'
 import { JobDescriptionSkillService } from '@/app/_data/job-description-skill'
 import { createResume } from '@/app/_data/resume'
 
@@ -14,6 +14,7 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
         const employer = formData.get('employer') as string
         const prompt = formData.get('prompt') as string
         const summary = formData.get('summary') as string
+        const jdService = new JobDescriptionService()
         const jdSkillService = new JobDescriptionSkillService()
         
         if (!employer || !prompt) {
@@ -24,10 +25,11 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
         }
         
         const skills = await getSkills(prompt)
-        const jd = await createJobDescription({
+        const jd = await jdService.create({
+            id: 0,
             userId: session.user.id as string,
             text: prompt
-        })
+        }) as JobDescription
         const resume = await createResume({
             userId: session.user.id as string,
             employer: employer,
