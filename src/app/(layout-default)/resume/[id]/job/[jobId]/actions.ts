@@ -13,7 +13,7 @@ import {
 import { userOwnsResume } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import { revalidatePath } from "next/cache";
-import { deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion";
+import { ResumeJobExperienceSugggestionService } from "@/app/_data/resume-job-experience-suggestion";
 
 export async function handleFormChange(prevState: ResumeJobFormState, formData: FormData) {
     if (formData.get('addExperience') === 'true') {
@@ -32,6 +32,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         const resumeId = Number(formData.get('resumeId'))
         const messages: string[] = []
         const session = await auth()
+        const jeSuggestionService = new ResumeJobExperienceSugggestionService()
         
         if (!session?.user || !await userOwnsResume(resumeId, session.user.id as string)) {
             throw new Error('Current user does not have access to edit this resume')
@@ -55,7 +56,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                         resumeId: resumeId,
                         content: content
                     })
-                    await deleteResumeJobExperienceSuggestions(experienceId)
+                    await jeSuggestionService.delete(experienceId)
                     experiences.push(experience)
                     messages.push('Updated ' + experience.id.toString())
                 }                

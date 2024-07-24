@@ -5,7 +5,7 @@ import { ResumeFormState } from "./types"
 import { ResumeJobExperienceSkillService } from "@/app/_data/resume-job-experience-skill"
 import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
-import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
+import { ResumeJobExperienceSugggestionService } from "@/app/_data/resume-job-experience-suggestion"
 import { getResume, updateResume, userOwnsResume } from "@/app/_data/resume"
 import { auth } from "@/app/auth"
 import { JobDescriptionSkillService } from "@/app/_data/job-description-skill"
@@ -114,6 +114,7 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
         const chatGptJobService = new ChatGptAsyncJobService()
         const jdSkillService = new JobDescriptionSkillService()
         const jdResumeJobExpSkillsService = new ResumeJobExperienceSkillService()
+        const jeSuggestionService = new ResumeJobExperienceSugggestionService()
         const session = await auth()
 
         try {
@@ -133,9 +134,11 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
                         await jdSkillService.setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
                     }
         
-                    await deleteResumeJobExperienceSuggestions(suggestion.bulletId)
+                    await jeSuggestionService.delete(suggestion.bulletId)
                     for (const item of suggestion.qualitySuggestions) {
-                        await createResumeJobExperienceSugggestion({
+                        await jeSuggestionService.create({
+                            id: 0,
+                            userId: session?.user?.id as string,
                             jobExperienceId: suggestion.bulletId,
                             suggestion: item
                         })

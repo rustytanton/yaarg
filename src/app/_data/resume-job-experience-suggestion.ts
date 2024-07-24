@@ -1,71 +1,70 @@
 import { ResumeJobExperienceSugggestion as _ResumeJobExperienceSugggestionEntity } from "@prisma/client";
 import prisma from "../db";
+import { BaseRepository, BaseService, IMapper } from "./_base";
 
 export type ResumeJobExperienceSugggestionEntity = _ResumeJobExperienceSugggestionEntity
-export type ResumeJobExperienceSugggestionEntities = ResumeJobExperienceSugggestionEntity[]
 
 export type ResumeJobExperienceSugggestion = {
-    id?: number
+    id: number
+    userId: string
     jobExperienceId: number
     suggestion: string
 }
-export type ResumeJobExperienceSugggestions = ResumeJobExperienceSugggestion[]
 
-export function ResumeJobExperienceSugggestionModeltoEntity(
-    model: ResumeJobExperienceSugggestion
-): ResumeJobExperienceSugggestionEntity {
-    return model as ResumeJobExperienceSugggestionEntity
+export class MapperResumeJobExperienceSugggestion implements IMapper<ResumeJobExperienceSugggestion, ResumeJobExperienceSugggestionEntity> {
+    async toEntity(model: ResumeJobExperienceSugggestion): Promise<ResumeJobExperienceSugggestionEntity> {
+        return model as ResumeJobExperienceSugggestionEntity
+    }
+    async toModel(entity: ResumeJobExperienceSugggestionEntity): Promise<ResumeJobExperienceSugggestion> {
+        return entity as ResumeJobExperienceSugggestion
+    }   
 }
 
-export function ResumeJobExperienceSugggestionEntityToModel(
-    entity: ResumeJobExperienceSugggestionEntity
-): ResumeJobExperienceSugggestion {
-    return entity as ResumeJobExperienceSugggestion
-}
+export class ResumeJobExperienceSugggestionRepository extends BaseRepository<ResumeJobExperienceSugggestion, ResumeJobExperienceSugggestionEntity, typeof prisma.resumeJobExperienceSugggestion> {
+    constructor(
+        mapper: MapperResumeJobExperienceSugggestion = new MapperResumeJobExperienceSugggestion(),
+        prismaModel: typeof prisma.resumeJobExperienceSugggestion = prisma.resumeJobExperienceSugggestion
+    ) {
+        super(mapper, prismaModel)
+    }
 
-export async function getResumeJobExperienceSugggestion(suggestionId: number) {
-    const result = await prisma.resumeJobExperienceSugggestion.findFirst({
-        where: {
-            id: suggestionId
+    async getSuggestionsByExperienceId(experienceId: number): Promise<ResumeJobExperienceSugggestion[]> {
+        const entities = await this.prismaModel.findMany({
+            where: {
+                jobExperienceId: experienceId
+            }
+        })
+        const results: ResumeJobExperienceSugggestion[] = []
+        for (const entity of entities) {
+            results.push(await this.mapper.toModel(entity))
         }
-    }) as ResumeJobExperienceSugggestionEntity
-    return ResumeJobExperienceSugggestionEntityToModel(result)
+        return results
+    }
+
+    async deleteSuggestionsByExperienceId(experienceId: number): Promise<void> {
+        await this.prismaModel.deleteMany({
+            where: {
+                jobExperienceId: experienceId
+            }
+        })
+    }
 }
 
-export async function getResumeJobExperienceSugggestions(experienceId: number) {
-    const result = await prisma.resumeJobExperienceSugggestion.findMany({
-        where: {
-            jobExperienceId: experienceId
-        }
-    }) as ResumeJobExperienceSugggestionEntities
-    return result.map(suggestion => ResumeJobExperienceSugggestionEntityToModel(suggestion))
-}
+export class ResumeJobExperienceSugggestionService extends BaseService<ResumeJobExperienceSugggestion, ResumeJobExperienceSugggestionEntity, typeof prisma.resumeJobExperienceSugggestion> {
+    repo: ResumeJobExperienceSugggestionRepository
+    
+    constructor(
+        repo: ResumeJobExperienceSugggestionRepository = new ResumeJobExperienceSugggestionRepository()
+    ) {
+        super(repo)
+        this.repo = repo
+    }
 
-export async function createResumeJobExperienceSugggestion(
-    suggestion: ResumeJobExperienceSugggestion
-) {
-    const entity = ResumeJobExperienceSugggestionModeltoEntity(suggestion)
-    const result = await prisma.resumeJobExperienceSugggestion.create({
-        data: {
-            ...entity,
-            id: undefined
-        }
-    })
-    return ResumeJobExperienceSugggestionEntityToModel(result)
-}
+    async getSuggestionsByExperienceId(experienceId: number): Promise<ResumeJobExperienceSugggestion[]> {
+        return await this.repo.getSuggestionsByExperienceId(experienceId)
+    }
 
-export async function deleteResumeJobExperienceSuggestion(suggestionId: number) {
-    await prisma.resumeJobExperienceSugggestion.delete({
-        where: {
-            id: suggestionId
-        }
-    })
-}
-
-export async function deleteResumeJobExperienceSuggestions(experienceId: number) {
-    await prisma.resumeJobExperienceSugggestion.deleteMany({
-        where: {
-            jobExperienceId: experienceId
-        }
-    })
+    async deleteSuggestionsByExperienceId(experienceId: number): Promise<void> {
+        await this.repo.deleteSuggestionsByExperienceId(experienceId)
+    }
 }

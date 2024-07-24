@@ -10,7 +10,7 @@ import FormMessage from "@/app/_lib/components/form/FormMessage"
 import { useState } from "react"
 import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"
-import { ResumeJobExperienceSugggestions } from "@/app/_data/resume-job-experience-suggestion"
+import { ResumeJobExperienceSugggestion } from "@/app/_data/resume-job-experience-suggestion"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import { Job } from "@/app/_data/job"
 
@@ -50,7 +50,7 @@ export default function FormResumeJob(props: Props) {
                             defaultValue={experience.content}
                         />
                         {experience.suggestions && experience.suggestions.length > 0 ? <div className="mt-5 text-sm text-red-500">AI Suggestions:</div> : ''}
-                        <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestions} />
+                        <ResumeWorkExperienceSuggestions suggestions={experience.suggestions as ResumeJobExperienceSugggestion[]} />
                     </li>
                 )
             })}
