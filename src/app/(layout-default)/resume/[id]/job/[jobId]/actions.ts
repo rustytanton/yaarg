@@ -50,6 +50,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                 if (experiencePrevious.content !== content) {
                     const experience = await updateResumeJobExperience({
                         id: experienceId,
+                        userId: session.user.id as string,
                         jobId: jobId,
                         resumeId: resumeId,
                         content: content
@@ -60,7 +61,9 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                 }                
             } else {
                 const experience = await createResumeJobExperience({
+                    id: 0,
                     jobId: jobId,
+                    userId: session.user.id as string,
                     resumeId: resumeId,
                     content: content
                 })

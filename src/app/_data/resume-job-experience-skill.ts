@@ -1,65 +1,70 @@
 import { ResumeJobExperienceSkill as _ResumeJobExperienceSkillEntity } from "@prisma/client";
 import prisma from "../db";
+import { BaseRepository, BaseService, IMapper } from "./_base";
 
 export type ResumeJobExperienceSkillEntity = _ResumeJobExperienceSkillEntity
-export type ResumeJobExperienceSkillEntities = ResumeJobExperienceSkillEntity[]
 
 export type ResumeJobExperienceSkill = {
-    id?: number
+    id: number
+    userId: string,
     jobExperienceId: number
     skill: string
 }
-export type ResumeJobExperienceSkills = ResumeJobExperienceSkill[]
 
-export function ResumeJobExperienceSkillModeltoEntity(model: ResumeJobExperienceSkill): ResumeJobExperienceSkillEntity {
-    return model as ResumeJobExperienceSkillEntity
+export class MapperResumeJobExperienceSkill implements IMapper<ResumeJobExperienceSkill, ResumeJobExperienceSkillEntity> {
+    async toEntity(model: ResumeJobExperienceSkill): Promise<ResumeJobExperienceSkillEntity> {
+        return model as ResumeJobExperienceSkillEntity
+    }
+    async toModel(entity: ResumeJobExperienceSkillEntity): Promise<ResumeJobExperienceSkill> {
+        return entity as ResumeJobExperienceSkill
+    }   
 }
 
-export function ResumeJobExperienceSkillEntityToModel(entity: ResumeJobExperienceSkillEntity): ResumeJobExperienceSkill {
-    return entity as ResumeJobExperienceSkill
-}
+export class ResumeJobExperienceSkillRepository extends BaseRepository<ResumeJobExperienceSkill, ResumeJobExperienceSkillEntity, typeof prisma.resumeJobExperienceSkill> {
+    constructor(
+        mapper: MapperResumeJobExperienceSkill = new MapperResumeJobExperienceSkill(),
+        prismaModel: typeof prisma.resumeJobExperienceSkill = prisma.resumeJobExperienceSkill
+    ) {
+        super(mapper, prismaModel)
+    }
 
-export async function getResumeJobExperienceSkill(skillId: number): Promise<ResumeJobExperienceSkill> {
-    const entity = await prisma.resumeJobExperienceSkill.findFirst({
-        where: {
-            id: skillId
+    async getSkillsByExperienceId(experienceId: number): Promise<ResumeJobExperienceSkill[]> {
+        const entities = await this.prismaModel.findMany({
+            where: {
+                jobExperienceId: experienceId
+            }
+        })
+        const results: ResumeJobExperienceSkill[] = []
+        for (const entity of entities) {
+            results.push(await this.mapper.toModel(entity))
         }
-    }) as ResumeJobExperienceSkillEntity
-    return ResumeJobExperienceSkillEntityToModel(entity)
+        return results
+    }
+
+    async deleteSkillsByExperienceId(experienceId: number): Promise<void> {
+        await this.prismaModel.deleteMany({
+            where: {
+                jobExperienceId: experienceId
+            }
+        })
+    }
 }
 
-export async function getResumeJobExperienceSkills(experienceId: number): Promise<ResumeJobExperienceSkills> {
-    const entities = await prisma.resumeJobExperienceSkill.findMany({
-        where: {
-            jobExperienceId: experienceId
-        }
-    })
-    return entities.map(entity => ResumeJobExperienceSkillEntityToModel(entity))
-}
+export class ResumeJobExperienceSkillService extends BaseService<ResumeJobExperienceSkill, ResumeJobExperienceSkillEntity, typeof prisma.resumeJobExperienceSkill> {
+    repo: ResumeJobExperienceSkillRepository
+    
+    constructor(
+        repo: ResumeJobExperienceSkillRepository = new ResumeJobExperienceSkillRepository()
+    ) {
+        super(repo)
+        this.repo = repo
+    }
 
-export async function createResumeJobExperienceSkill(experience: ResumeJobExperienceSkill): Promise<ResumeJobExperienceSkill> {
-    const entity = ResumeJobExperienceSkillModeltoEntity(experience)
-    const result = await prisma.resumeJobExperienceSkill.create({
-        data: {
-            ...entity,
-            id: undefined
-        }
-    })
-    return ResumeJobExperienceSkillEntityToModel(result)
-}
+    async getSkillsByExperienceId(experienceId: number): Promise<ResumeJobExperienceSkill[]> {
+        return await this.repo.getSkillsByExperienceId(experienceId)
+    }
 
-export async function deleteResumeJobExperienceSkill(skillId: number) {
-    await prisma.resumeJobExperienceSkill.delete({
-        where: {
-            id: skillId
-        }
-    })
-}
-
-export async function deleteResumeJobExperienceSkills(experienceId: number) {
-    await prisma.resumeJobExperienceSkill.deleteMany({
-        where: {
-            jobExperienceId: experienceId
-        }
-    })
+    async deleteSkillsByExperienceId(experienceId: number): Promise<void> {
+        await this.repo.deleteSkillsByExperienceId(experienceId)
+    }
 }

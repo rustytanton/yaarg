@@ -2,7 +2,7 @@
 
 import { ChatGptSuggestionsrPromptBullet, getBulletAnalysisAsync, getBulletAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions"
 import { ResumeFormState } from "./types"
-import { createResumeJobExperienceSkill, deleteResumeJobExperienceSkills } from "@/app/_data/resume-job-experience-skill"
+import { ResumeJobExperienceSkillService } from "@/app/_data/resume-job-experience-skill"
 import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
 import { createResumeJobExperienceSugggestion, deleteResumeJobExperienceSuggestions } from "@/app/_data/resume-job-experience-suggestion"
@@ -113,6 +113,8 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
         const job = prevState.resume.chatGptAsyncJobs[0]
         const chatGptJobService = new ChatGptAsyncJobService()
         const jdSkillService = new JobDescriptionSkillService()
+        const jdResumeJobExpSkillsService = new ResumeJobExperienceSkillService()
+        const session = await auth()
 
         try {
             const suggestions = await getBulletAnalysisAsyncResult(job)
@@ -120,9 +122,11 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
                 await jdSkillService.resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
                 
                 for (const suggestion of Array.from(suggestions.result)) {
-                    await deleteResumeJobExperienceSkills(suggestion.bulletId)
+                    await jdResumeJobExpSkillsService.delete(suggestion.bulletId)
                     for (const skill of suggestion.skillsUsed) {
-                        await createResumeJobExperienceSkill({
+                        await jdResumeJobExpSkillsService.create({
+                            id: 0,
+                            userId: session?.user?.id as string,
                             jobExperienceId: suggestion.bulletId,
                             skill: skill
                         })

@@ -1,23 +1,26 @@
 import { ResumeJobExperience as _ResumeJobExperienceEntity } from "@prisma/client";
 import prisma from "../db";
-import { getResumeJobExperienceSkills, ResumeJobExperienceSkills } from "./resume-job-experience-skill";
+import { ResumeJobExperienceSkill, ResumeJobExperienceSkillService } from "./resume-job-experience-skill";
 import { getResumeJobExperienceSugggestions, ResumeJobExperienceSugggestions } from "./resume-job-experience-suggestion";
+import { auth } from "../auth";
 
 export type ResumeJobExperienceEntity = _ResumeJobExperienceEntity
 export type ResumeJobExperienceEntities = ResumeJobExperienceEntity[]
 
 export type ResumeJobExperience = {
-    id?: number | undefined
+    id: number
+    userId: string
     jobId: number
     resumeId: number
     content: string
-    skills?: ResumeJobExperienceSkills
+    skills?: ResumeJobExperienceSkill[]
     suggestions?: ResumeJobExperienceSugggestions
 }
 export type ResumeJobExperiences = ResumeJobExperience[]
 
 export async function ResumeJobExperienceEntityToModel(entity: ResumeJobExperienceEntity) {
-    const skills = await getResumeJobExperienceSkills(Number(entity.id))
+    const skillsRepo = new ResumeJobExperienceSkillService()
+    const skills = await skillsRepo.getSkillsByExperienceId(Number(entity.id))
     const suggestions = await getResumeJobExperienceSugggestions(Number(entity.id))
     return {
         ...entity,
@@ -60,9 +63,11 @@ export async function getResumeJobExperiences(resumeId: number, jobId: number): 
 
 export async function createResumeJobExperience(experience: ResumeJobExperience): Promise<ResumeJobExperience> {
     const entity = ResumeJobExperienceModeltoEntity(experience)
+    const session = await auth()
     const result = await prisma.resumeJobExperience.create({
         data: {
             ...entity,
+            userId: session?.user?.id as string,
             id: undefined
         }
     })
