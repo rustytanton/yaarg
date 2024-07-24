@@ -1,11 +1,12 @@
 import { ChatGptAsyncJob as _ChatGptAsyncJobEntity } from "@prisma/client";
 import prisma from "../db";
+import { BaseEntity, BaseModel, BaseRepository, BaseService, IMapper, IRepository, PrismaFootprint } from "./_base";
 
 export type ChatGptAsyncJobEntity = _ChatGptAsyncJobEntity
-export type ChatGptAsyncJobEntities = ChatGptAsyncJobEntity[]
 
 export type ChatGptAsyncJob = {
-    id?: number
+    id: number
+    userId: string
     assistantId: number
     resumeId: number
     runId: string
@@ -13,46 +14,57 @@ export type ChatGptAsyncJob = {
 }
 export type ChatGptAsyncJobs = ChatGptAsyncJob[]
 
-export function ChatGptAsyncJobModelToEntity(model: ChatGptAsyncJob) {
-    return model as ChatGptAsyncJobEntity
+export interface IChatGptAssistantRepository<
+    Model extends BaseModel,
+    Entity extends BaseEntity,
+    PrismaModel extends PrismaFootprint<Entity>
+> extends IRepository<Model, Entity, PrismaModel> {
+    getJobsByResumeId(resumeIdId: number): Promise<Model[] | null>
 }
 
-export function ChatGptAsyncJobEntityToModel(entity: ChatGptAsyncJobEntity) {
-    return entity as ChatGptAsyncJob
+
+export class MapperChatGptAsyncJob implements IMapper<ChatGptAsyncJob, ChatGptAsyncJobEntity> {
+    async toEntity(model: ChatGptAsyncJob): Promise<ChatGptAsyncJobEntity> {
+        return model as ChatGptAsyncJobEntity
+    }
+    async toModel(entity: ChatGptAsyncJobEntity): Promise<ChatGptAsyncJob> {
+        return entity as ChatGptAsyncJob
+    }
 }
 
-export async function getChatGptAsyncJob(jobId: number) {
-    const entity = await prisma.chatGptAsyncJob.findFirst({
-        where: {
-            id: jobId
+export class ChatGptAsyncJobRepository extends BaseRepository<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> implements IChatGptAssistantRepository<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> {
+    constructor(
+        mapper: IMapper<ChatGptAsyncJob, ChatGptAsyncJobEntity> = new MapperChatGptAsyncJob(),
+        prismaModel: typeof prisma.chatGptAsyncJob = prisma.chatGptAsyncJob
+    ) {
+        super(mapper, prismaModel)
+    }
+
+    async getJobsByResumeId(resumeId: number): Promise<ChatGptAsyncJob[] | null> {
+        const entities = await this.prismaModel.findMany({
+            where: {
+                resumeId: resumeId
+            }
+        })
+        const results: ChatGptAsyncJob[] = []
+        for (const entity of entities) {
+            results.push(await this.mapper.toModel(entity))
         }
-    }) as ChatGptAsyncJobEntity
-    return ChatGptAsyncJobEntityToModel(entity)
+        return results
+    }
 }
 
-export async function getChatGptAsyncJobs(resumeId?: number): Promise<ChatGptAsyncJobs> {
-    const entities = await prisma.chatGptAsyncJob.findMany({
-        where: {
-            resumeId: resumeId
-        }
-    })
-    return entities.map(entity => ChatGptAsyncJobEntityToModel(entity))
-}
+export class ChatGptAsyncJobService extends BaseService<ChatGptAsyncJob, ChatGptAsyncJobEntity, typeof prisma.chatGptAsyncJob> {
+    repo: IChatGptAssistantRepository<ChatGptAsyncJob, ChatGptAsyncJob, typeof prisma.chatGptAsyncJob>
+    
+    constructor(
+        repo: IChatGptAssistantRepository<ChatGptAsyncJob, ChatGptAsyncJob, typeof prisma.chatGptAsyncJob> = new ChatGptAsyncJobRepository()
+    ) {
+        super(repo)
+        this.repo = repo
+    }
 
-export async function createChatGptAsyncJob(job: ChatGptAsyncJob) {
-    const entity = ChatGptAsyncJobModelToEntity(job)
-    const result = await prisma.chatGptAsyncJob.create({
-        data: {
-            ...entity
-        }
-    })
-    return ChatGptAsyncJobEntityToModel(result)
-}
-
-export async function deleteChatGptAsyncJob(jobId: number) {
-    await prisma.chatGptAsyncJob.delete({
-        where: {
-            id: jobId
-        }
-    })
+    async getJobsByResumeId(resumeId: number): Promise<ChatGptAsyncJob[] | null> {
+        return await this.repo.getJobsByResumeId(resumeId)
+    }
 }

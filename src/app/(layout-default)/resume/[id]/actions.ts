@@ -12,7 +12,7 @@ import { resetJobDescriptionSkillsUsedField, setJobDescriptionSkillUsedBySkillNa
 import { createResumeJobExperience, getUniqueResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import { fuzzyMatch } from "fuzzbunny"
 import { ResumeSubmitTypes } from "./types"
-import { deleteChatGptAsyncJob } from "@/app/_data/chatgpt-async-job"
+import { ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job"
 import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
@@ -111,6 +111,7 @@ async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormStat
 async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
     if (prevState.resume?.chatGptAsyncJobs && prevState.resume.chatGptAsyncJobs.length > 0) {
         const job = prevState.resume.chatGptAsyncJobs[0]
+        const service = new ChatGptAsyncJobService()
 
         try {
             const suggestions = await getBulletAnalysisAsyncResult(job)
@@ -144,12 +145,12 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
                     })
                 }
     
-                await deleteChatGptAsyncJob(Number(job.id))
+                await service.delete(Number(job.id))
             }
         } catch(err) {
             // @todo Sometimes ChatGPT does not return valid JSON, should add UI elements to tell the user. Deleting the job at least restores the page buttons and makes it quit polling.
             console.error(err)
-            await deleteChatGptAsyncJob(Number(job.id))
+            await service.delete(Number(job.id))
         }
     }
 }

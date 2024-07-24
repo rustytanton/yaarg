@@ -1,5 +1,5 @@
 import { ChatGptAssistant, ChatGptAssistantService } from "@/app/_data/chatgpt-assistant";
-import { ChatGptAsyncJob, createChatGptAsyncJob } from "@/app/_data/chatgpt-async-job";
+import { ChatGptAsyncJob, ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job";
 import { userOwnsResume } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import OpenAI from 'openai'
@@ -77,6 +77,7 @@ export async function assistantMessage(assistantId: string, prompt: string) {
 export async function assistantMessageAsync(assistant: ChatGptAssistant, resumeId: number, prompt: string): Promise<ChatGptAsyncJob> {
     const session = await auth()
     const openai = new OpenAI()
+    const service = new ChatGptAsyncJobService()
 
     if (session && session.user) {
         const thread = await openai.beta.threads.create()
@@ -90,12 +91,14 @@ export async function assistantMessageAsync(assistant: ChatGptAssistant, resumeI
             assistant_id: assistant.externalId,
         })
 
-        return await createChatGptAsyncJob({
+        return await service.create({
+            id: 0,
+            userId: session.user.id as string,
             assistantId: Number(assistant.id),
             resumeId: resumeId,
             runId: run.id,
             threadId: thread.id            
-        })
+        }) as ChatGptAsyncJob
     } else {
         throw new Error('No user session')
     }

@@ -31,6 +31,7 @@ model User {
   location        String?
   accounts        Account[]
   sessions        Session[]
+  chatGptAsyncJobs  ChatGptAsyncJob[]
   educations      Education[]
   jobs            Job[]
   assistants      ChatGptAssistant[]
@@ -191,11 +192,13 @@ model ResumeSummarySuggestion {
 
 model ChatGptAsyncJob {
   id               Int    @id @default(autoincrement())
+  userId           String
   assistantId      Int
   resumeId         Int
   runId            String
   threadId         String
 
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
   assistant ChatGptAssistant @relation(fields: [assistantId], references: [id], onDelete: Cascade)
 }

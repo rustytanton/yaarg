@@ -30,7 +30,7 @@ export class MapperChatGptAssistant implements IMapper<ChatGptAssistant, ChatGpt
     }
 }
 
-export class ChatGptAssistantRepository extends BaseRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> {
+export class ChatGptAssistantRepository extends BaseRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> implements IChatGptAssistantRepository<ChatGptAssistant, ChatGptAssistantEntity, typeof prisma.chatGptAssistant> {
     constructor(
         mapper: IMapper<ChatGptAssistant, ChatGptAssistantEntity> = new MapperChatGptAssistant(),
         prismaModel: typeof prisma.chatGptAssistant = prisma.chatGptAssistant
