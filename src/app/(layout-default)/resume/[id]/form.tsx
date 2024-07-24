@@ -13,7 +13,7 @@ import BodySection from "@/app/_lib/components/body/BodySection"
 import ResumeContainer from "@/app/_lib/components/resume/ResumeContainer"
 import ResumeHeader from "@/app/_lib/components/resume/ResumeHeader"
 import { User } from "@/app/_data/user"
-import { Jobs } from "@/app/_data/job"
+import { Job } from "@/app/_data/job"
 import ResumeSummary from "@/app/_lib/components/resume/ResumeSummary"
 import ResumeWorkExperience from "@/app/_lib/components/resume/ResumeWorkExperience"
 import ResumeEducation from "@/app/_lib/components/resume/ResumeEducation"
@@ -123,7 +123,7 @@ export default function ResumeForm(props: Props) {
             <ResumeContainer>
                 <ResumeHeader user={state.resume?.user as User} />
                 <ResumeSummary resume={state.resume as Resume} />
-                <ResumeWorkExperience jobs={state.resume?.jobs as Jobs} resumeId={Number(state.resume?.id)} />
+                <ResumeWorkExperience jobs={state.resume?.jobs as Job[]} resumeId={Number(state.resume?.id)} />
                 <ResumeEducation educations={state.resume?.educations as Education[]} />
             </ResumeContainer>
             <BodySection>

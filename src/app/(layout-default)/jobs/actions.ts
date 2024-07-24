@@ -5,10 +5,11 @@ import { JobFormState } from './types'
 import { deleteIds, fieldGroups } from '@/app/_lib/util/form'
 import { revalidatePath } from 'next/cache'
 import { parseMMYYYY } from '@/app/_lib/util/dates'
-import { Job, Jobs, createJob, deleteJob, updateJob, userOwnsJob } from '../../_data/job'
+import { Job, JobService } from '../../_data/job'
 
 export async function handleFormChange(prevState: JobFormState, formData: FormData): Promise<JobFormState> {
     const session = await auth()
+    const jobService = new JobService()
     if (session?.user?.id) {
         if (prevState.addSection) {
             return {
@@ -17,14 +18,14 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
                 message: 'Added new job section'
             }
         } else {
-            let jobs: Jobs = []
+            let jobs: Job[] = []
             let messages: string[] = []
             let deletes = deleteIds(formData)
             let groups = fieldGroups(formData, 'job')
 
             for (const id of deletes) {
-                if (await userOwnsJob(session.user.id, id)) {
-                    await deleteJob(id)
+                if (await jobService.userOwnsItem(session.user.id, id)) {
+                    await jobService.delete(id)
                     messages.push(`Deleted job ${id}.`) 
                 } else {
                     throw new Error('User does not own this job')
@@ -45,11 +46,11 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
                     attendanceModel: formData.get(group + 'attendanceModel') as string,
                     stillWorksHere: (formData.get(group + 'stillWorksHere') === 'on') ? true : false,
                 }
-                if (job.id && await userOwnsJob(session.user.id, job.id)) {
-                    await updateJob(job)
+                if (job.id && await jobService.userOwnsItem(session.user.id, job.id)) {
+                    await jobService.update(job)
                     messages.push(`Updated ${job.id}.`)
                 } else {
-                    job = await createJob(job)
+                    job = await jobService.create(job) as Job
                     messages.push(`Created ${job.id}.`)
                 }
 

@@ -2,7 +2,7 @@ import { Resume as _ResumeEntity } from "@prisma/client"
 import { JobDescription, JobDescriptionService } from "./job-description"
 import prisma from "../db"
 import { getResumeJobExperiences } from "./resume-job-experience"
-import { getJobs, Jobs } from "./job"
+import { Job, JobService } from "./job"
 import { getUser, User } from "./user"
 import { Education, EducationService } from "./education"
 import { getResumeSummarySuggestions, ResumeSummarySuggestions } from "./resume-summary-suggestion"
@@ -15,7 +15,7 @@ export type Resume = {
     id?: number | undefined
     userId: string
     employer: string
-    jobs?: Jobs
+    jobs?: Job[]
     jobDescription?: JobDescription
     user?: User
     educations?: Education[]
@@ -26,9 +26,10 @@ export type Resume = {
 export type Resumes = Resume[]
 
 export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume> {
+    const jobService = new JobService()
     const jdService = new JobDescriptionService()
     const jd = await jdService.get(entity.jobDescriptionId) as JobDescription
-    const jobs = await getJobs(entity.userId)
+    const jobs = await jobService.getAllByUserId(entity.userId) as Job[]
     const user = await getUser(entity.userId)
     const educationService = new EducationService()
     const educations = await educationService.getAllByUserId(entity.userId) as Education[]

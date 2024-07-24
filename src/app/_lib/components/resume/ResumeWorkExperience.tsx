@@ -1,13 +1,13 @@
 import Link from "next/link"
 import ResumeSubheading from "./ResumeSubheading"
-import { Jobs } from "@/app/_data/job"
+import { Job } from "@/app/_data/job"
 import ResumeWorkExperienceItems from "./ResumeWorkExperienceItems"
 import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
 import ResumeHeading3 from "./ResumeHeading3"
 import BodySection from "@/app/_lib/components/body/BodySection"
 
 type Props = {
-    jobs: Jobs,
+    jobs: Job[],
     resumeId: number
 }
 

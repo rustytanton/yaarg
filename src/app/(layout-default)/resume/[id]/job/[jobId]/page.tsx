@@ -18,7 +18,7 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
     const session = await auth()
     if (session) {
         const resume = await getResume(Number(params.id))
-        const job = resume?.jobs?.filter(job => {
+        const job = resume?.jobs?.filter((job: { id: number }) => {
             return job.id === Number(params.jobId)
         })[0]
 

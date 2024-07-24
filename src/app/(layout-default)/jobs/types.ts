@@ -1,7 +1,7 @@
-import { Jobs } from "../../_data/job"
+import { Job } from "../../_data/job"
 
 export type JobFormState = {
     addSection: boolean
-    jobs: Jobs
+    jobs: Job[]
     message: string
 }

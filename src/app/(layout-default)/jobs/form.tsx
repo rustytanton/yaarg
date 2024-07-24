@@ -6,12 +6,12 @@ import { JobFormState } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from './actions'
 import FormMessage from "@/app/_lib/components/form/FormMessage"
-import { Job, Jobs } from "../../_data/job"
+import { Job } from "../../_data/job"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import RequiredInfo from "@/app/_lib/components/form/RequiredInfo"
 
 type Props = {
-    jobs: Jobs
+    jobs: Job[]
 }
 
 const initialState: JobFormState = {

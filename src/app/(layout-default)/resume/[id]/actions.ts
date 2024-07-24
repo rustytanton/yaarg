@@ -89,7 +89,7 @@ async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormStat
     }
     for (const job of prevState.resume?.jobs) {
         const suggestions = await getUniqueResumeJobExperiences(Number(job.id))
-        const oldContents: string[] = job.experiences?.map(experience => experience.content) || []
+        const oldContents: string[] = job.experiences?.map((experience) => experience.content) || []
         for (const suggestion of suggestions) {
             const fuzzyMatches = 
                 oldContents.map(
