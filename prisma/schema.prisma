@@ -38,6 +38,10 @@ model User {
   jobDescriptions JobDescription[]
   jobDescriptionSkills  JobDescriptionSkill[]
   resumes         Resume[]
+  resumeJobExperiences ResumeJobExperience[]
+  resumeJobExperienceSkills ResumeJobExperienceSkill[]
+  resumeJobExperienceSuggestions ResumeJobExperienceSugggestion[]
+  resumeSummarySuggestions ResumeSummarySuggestion[]
 }
 
 model Account {
@@ -159,6 +163,7 @@ model JobDescriptionSkill {
 
 model ResumeJobExperience {
   id               Int    @id @default(autoincrement())
+  userId           String
   jobId            Int
   resumeId         Int
   content          String
@@ -167,30 +172,37 @@ model ResumeJobExperience {
 
   job Job @relation(fields: [jobId], references: [id], onDelete: Cascade)
   resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ResumeJobExperienceSkill {
   id               Int    @id @default(autoincrement())
+  userId String
   jobExperienceId  Int
   skill            String
 
   experience ResumeJobExperience @relation(fields: [jobExperienceId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ResumeJobExperienceSugggestion {
   id               Int    @id @default(autoincrement())
+  userId           String
   jobExperienceId  Int
   suggestion       String
 
   experience ResumeJobExperience @relation(fields: [jobExperienceId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ResumeSummarySuggestion {
   id               Int    @id @default(autoincrement())
+  userId           String
   resumeId         Int
   suggestion       String
 
   resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ChatGptAsyncJob {
