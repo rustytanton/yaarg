@@ -1,64 +1,91 @@
 import { JobDescriptionSkill as _JobDescriptionSkillEntity } from "@prisma/client";
 import prisma from "../db";
+import { BaseRepository, BaseService, IMapper } from "./_base";
 
 export type JobDescriptionSkillEntity = _JobDescriptionSkillEntity
-export type JobDescriptionSkillEntities = JobDescriptionSkillEntity[]
 
 export type JobDescriptionSkill = {
-    id?: number | undefined
+    id: number
+    userId: string
     jobDescriptionId: number
     skill: string
     mentions: number,
     usedInResume: boolean
 }
-export type JobDescriptionSkills = JobDescriptionSkill[]
 
-export function JobDescriptionSkillModeltoEntity(model: JobDescriptionSkill): JobDescriptionSkillEntity {
-    return model as JobDescriptionSkillEntity
+export class MapperJobDescriptionSkill implements IMapper<JobDescriptionSkill, JobDescriptionSkillEntity> {
+    async toEntity(model: JobDescriptionSkill): Promise<JobDescriptionSkillEntity> {
+        return model as JobDescriptionSkillEntity
+    }
+    async toModel(entity: JobDescriptionSkillEntity): Promise<JobDescriptionSkill> {
+        return entity as JobDescriptionSkill
+    }
 }
 
-export function JobDescriptionSkillEntityToModel(entity: JobDescriptionSkillEntity): JobDescriptionSkill {
-    return entity as JobDescriptionSkill
-}
+export class JobDescriptionSkillRepository extends BaseRepository<JobDescriptionSkill, JobDescriptionSkillEntity, typeof prisma.jobDescriptionSkill> {
+    constructor(
+        mapper: MapperJobDescriptionSkill = new MapperJobDescriptionSkill(),
+        prismaModel: typeof prisma.jobDescriptionSkill = prisma.jobDescriptionSkill
+    ) {
+        super(mapper, prismaModel)
+    }
 
-export async function createJobDescriptionSkill(model: JobDescriptionSkill) {
-    const entity = JobDescriptionSkillModeltoEntity(model)
-    const result = await prisma.jobDescriptionSkill.create({
-        data: {
-            ...entity
+    async getSkillsByJobDescriptionId(jobDescriptionId: number): Promise<JobDescriptionSkill[] | null> {
+        const entities = await this.prismaModel.findMany({
+            where: {
+                jobDescriptionId: jobDescriptionId
+            }
+        })
+        const results: JobDescriptionSkill[] = []
+        for (const entity of entities) {
+            results.push(await this.mapper.toModel(entity))
         }
-    })
-    return JobDescriptionSkillEntityToModel(result)
+        return results
+    }
+
+    async setJobDescriptionSkillUsedBySkillName(jobDescriptionId: number, skillName: string) {
+        await this.prismaModel.updateMany({
+            where: {
+                jobDescriptionId: jobDescriptionId,
+                skill: skillName
+            },
+            data: {
+                usedInResume: true 
+            }
+        })
+    }
+
+    async resetJobDescriptionSkillsUsedField(jobDescriptionId: number) {
+        await this.prismaModel.updateMany({
+            where: {
+                jobDescriptionId: jobDescriptionId
+            },
+            data: {
+                usedInResume: false
+            }
+        })
+    }
 }
 
-export async function getJobDescriptionSkills(jobDescriptionId: number): Promise<JobDescriptionSkills> {
-    const entities = await prisma.jobDescriptionSkill.findMany({
-        where: {
-            jobDescriptionId: jobDescriptionId
-        }
-    })
-    return entities.map(skill => JobDescriptionSkillEntityToModel(skill))
-}
+export class JobDescriptionSkillService extends BaseService<JobDescriptionSkill, JobDescriptionSkillEntity, typeof prisma.jobDescriptionSkill> {
+    repo: JobDescriptionSkillRepository
 
-export async function setJobDescriptionSkillUsedBySkillName(jobDescriptionId: number, skillName: string) {
-    await prisma.jobDescriptionSkill.updateMany({
-        where: {
-            jobDescriptionId: jobDescriptionId,
-            skill: skillName
-        },
-        data: {
-            usedInResume: true
-        }
-    })
-}
+    constructor(
+        repo: JobDescriptionSkillRepository = new JobDescriptionSkillRepository()
+    ) {
+        super(repo)
+        this.repo = repo
+    }
 
-export async function resetJobDescriptionSkillsUsedField(jobDescriptionId: number) {
-    await prisma.jobDescriptionSkill.updateMany({
-        where: {
-            jobDescriptionId: jobDescriptionId
-        },
-        data: {
-            usedInResume: false
-        }
-    })
+    async getSkillsByJobDescriptionId(jobDescriptionId: number): Promise<JobDescriptionSkill[] | null> {
+        return await this.repo.getSkillsByJobDescriptionId(jobDescriptionId)
+    }
+
+    async setJobDescriptionSkillUsedBySkillName(jobDescriptionId: number, skillName: string) {
+        await this.repo.setJobDescriptionSkillUsedBySkillName(jobDescriptionId, skillName)
+    }
+
+    async resetJobDescriptionSkillsUsedField(jobDescriptionId: number) {
+        await this.repo.resetJobDescriptionSkillsUsedField(jobDescriptionId)
+    }
 }

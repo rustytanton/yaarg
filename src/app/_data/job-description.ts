@@ -1,6 +1,6 @@
 import { JobDescription as _JobDescriptionEntity } from "@prisma/client";
 import prisma from "../db";
-import { getJobDescriptionSkills, JobDescriptionSkills } from "./job-description-skill";
+import { JobDescriptionSkill, JobDescriptionSkillService } from "./job-description-skill";
 
 export type JobDescriptionEntity = _JobDescriptionEntity
 
@@ -8,13 +8,14 @@ export type JobDescription = {
     id?: number | undefined
     userId: string
     text: string
-    skills?: JobDescriptionSkills
+    skills?: JobDescriptionSkill[]
 }
 
 export async function JobDescriptionEntityToModel(entity: JobDescriptionEntity): Promise<JobDescription> {
+    const jdService = new JobDescriptionSkillService()
     return {
         ...entity,
-        skills: await getJobDescriptionSkills(entity.id)
+        skills: await jdService.getSkillsByJobDescriptionId(entity.id) as JobDescriptionSkill[]
     }
 }
 
