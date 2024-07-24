@@ -1,9 +1,8 @@
-import { ChatGptAssistant, createChatGptAssistant, getChatGptAssistant, getChatGptAssistantById } from "@/app/_data/chatgpt-assistant";
+import { ChatGptAssistant, ChatGptAssistantService } from "@/app/_data/chatgpt-assistant";
 import { ChatGptAsyncJob, createChatGptAsyncJob } from "@/app/_data/chatgpt-async-job";
 import { userOwnsResume } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import OpenAI from 'openai'
-import { ChatGptSuggestionsResult } from "./assistant-suggestions";
 
 export type assistantProperties = {
     name: string
@@ -21,9 +20,10 @@ export enum chatGptAsyncJobStatuses {
 export async function assistant(props: assistantProperties): Promise<ChatGptAssistant | null> {
     const session = await auth()
     const openai = new OpenAI()
+    const service = new ChatGptAssistantService()
 
     if (session && session.user) {
-        const existingAssitant = await getChatGptAssistant(session.user?.id as string, props.name)
+        const existingAssitant = await service.getAssistantByNameAndUserId(props.name, session.user?.id as string)
         if (existingAssitant) {
             return existingAssitant
         } else {
@@ -33,7 +33,8 @@ export async function assistant(props: assistantProperties): Promise<ChatGptAssi
                 model: props.model,
                 tools: [{ type: 'code_interpreter' }]
             })
-            const assistantLocal = await createChatGptAssistant({
+            const assistantLocal = await service.create({
+                id: 0,
                 userId: session.user.id as string,
                 name: props.name,
                 instructions: props.instructions,
