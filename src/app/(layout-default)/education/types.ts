@@ -1,7 +1,7 @@
-import { Educations } from "../../_data/education"
+import { Education } from "../../_data/education"
 
 export type EducationFormState = {
     addSection: boolean
-    educations: Educations
+    educations: Education[]
     message: string
 }

@@ -6,7 +6,7 @@ import FormMessage from '@/app/_lib/components/form/FormMessage'
 import FormSectionEducation from '@/app/_lib/components/form/FormSectionEducation'
 import FormButton from '@/app/_lib/components/form/FormButton'
 import { EducationFormState } from './types'
-import { Education, Educations } from '../../_data/education'
+import { Education } from '../../_data/education'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
 import RequiredInfo from '@/app/_lib/components/form/RequiredInfo'
 
@@ -17,7 +17,7 @@ const initialState: EducationFormState = {
 }
 
 type Props = {
-    educations: Educations
+    educations: Education[]
 }
 
 export default function EducationForm(props: Props) {

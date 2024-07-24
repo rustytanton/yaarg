@@ -21,6 +21,7 @@ export interface IService<Model extends BaseModel, Entity extends BaseEntity, Pr
     create(model: Model): Promise<Model | null>
     update(model: Model): Promise<Model | null>
     delete(id: number): Promise<void>
+    userOwnsItem(userId: string, itemId: number): Promise<boolean>
 }
 
 export interface IRepository<Model extends BaseModel, Entity extends BaseEntity, PrismaModel extends PrismaFootprint<Entity>> {
@@ -186,6 +187,11 @@ export abstract class BaseService<
 
     async delete(id: number): Promise<void> {
         return await this.repo.delete(id)
+    }
+
+    async userOwnsItem(userId: string, itemId: number): Promise<boolean> {
+        const item = await this.repo.get(itemId)
+        return item?.userId === userId
     }
 }
 

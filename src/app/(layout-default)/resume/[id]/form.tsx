@@ -17,7 +17,7 @@ import { Jobs } from "@/app/_data/job"
 import ResumeSummary from "@/app/_lib/components/resume/ResumeSummary"
 import ResumeWorkExperience from "@/app/_lib/components/resume/ResumeWorkExperience"
 import ResumeEducation from "@/app/_lib/components/resume/ResumeEducation"
-import { Educations } from "@/app/_data/education"
+import { Education } from "@/app/_data/education"
 import BodyParagraphSmall from "@/app/_lib/components/body/BodyParagraphSmall"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import BodyPre from "@/app/_lib/components/body/BodyPre"
@@ -124,7 +124,7 @@ export default function ResumeForm(props: Props) {
                 <ResumeHeader user={state.resume?.user as User} />
                 <ResumeSummary resume={state.resume as Resume} />
                 <ResumeWorkExperience jobs={state.resume?.jobs as Jobs} resumeId={Number(state.resume?.id)} />
-                <ResumeEducation educations={state.resume?.educations as Educations} />
+                <ResumeEducation educations={state.resume?.educations as Education[]} />
             </ResumeContainer>
             <BodySection>
                 <Heading3>Job Description</Heading3>

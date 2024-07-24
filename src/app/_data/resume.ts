@@ -4,7 +4,7 @@ import prisma from "../db"
 import { getResumeJobExperiences } from "./resume-job-experience"
 import { getJobs, Jobs } from "./job"
 import { getUser, User } from "./user"
-import { Educations, getEducations } from "./education"
+import { Education, EducationService } from "./education"
 import { getResumeSummarySuggestions, ResumeSummarySuggestions } from "./resume-summary-suggestion"
 import { ChatGptAsyncJobs, ChatGptAsyncJobService } from "./chatgpt-async-job"
 
@@ -18,7 +18,7 @@ export type Resume = {
     jobs?: Jobs
     jobDescription?: JobDescription
     user?: User
-    educations?: Educations
+    educations?: Education[]
     summary: string,
     summarySuggestions?: ResumeSummarySuggestions
     chatGptAsyncJobs?: ChatGptAsyncJobs
@@ -29,7 +29,8 @@ export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume>
     const jd = await getJobDescription(entity.jobDescriptionId)
     const jobs = await getJobs(entity.userId)
     const user = await getUser(entity.userId)
-    const educations = await getEducations(entity.userId)
+    const educationService = new EducationService()
+    const educations = await educationService.getAllByUserId(entity.userId) as Education[]
     const summarySuggestions = await getResumeSummarySuggestions(entity.id)
     const chatGptJobService = new ChatGptAsyncJobService()
     const chatGptAsyncJobs = await chatGptJobService.getJobsByResumeId(entity.id)

@@ -4,10 +4,11 @@ import { EducationFormState } from './types'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/app/auth'
 import { fieldGroups, deleteIds } from '@/app/_lib/util/form'
-import { Education, Educations, createEducation, userOwnsEducation, updateEducation, deleteEducation } from '../../_data/education'
+import { Education, EducationService } from '../../_data/education'
 
 export async function handleFormChange(prevState: EducationFormState, formData: FormData): Promise<EducationFormState> {
     const session = await auth()
+    const educationService = new EducationService()
     if (session?.user) {
         if (prevState.addSection) {
             return {
@@ -16,14 +17,14 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                 message: 'Added new education section'
             }
         } else {
-            let educations: Educations = []
+            let educations: Education[] = []
             let messages: string[] = []
             let deletes = deleteIds(formData)
             let groups = fieldGroups(formData, 'education')
     
             for (const id of deletes) {
-                if (await userOwnsEducation(session.user.id as string, id)) {
-                    await deleteEducation(id)
+                if (await educationService.userOwnsItem(session.user.id as string, id)) {
+                    await educationService.delete(id)
                 }
                 messages.push(`Deleted education ${id}.`) 
             }
@@ -31,7 +32,7 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
             for (const group of groups) {
                 let education: Education = {
                     userId: session.user.id as string,
-                    id: Number(formData.get(group + 'id')) || undefined,
+                    id: Number(formData.get(group + 'id')) || 0,
                     institution: formData.get(group + 'institution')?.toString() || '',
                     major: formData.get(group + 'major')?.toString() || '',
                     minor: formData.get(group + 'minor')?.toString() || '',
@@ -42,12 +43,12 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                 }
     
                 if (education.id) {
-                    if (await userOwnsEducation(session.user.id as string, education.id)) {
-                        education = await updateEducation(education)
+                    if (await educationService.userOwnsItem(session.user.id as string, education.id)) {
+                        await educationService.delete(education.id)
                     }
                     messages.push(`Updated ${education.id}.`)
                 } else {
-                    education = await createEducation(education)
+                    education = await educationService.create(education) as Education
                     messages.push(`Created ${education.id}.`)
                 }
     
