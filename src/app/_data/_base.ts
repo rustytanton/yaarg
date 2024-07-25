@@ -188,7 +188,12 @@ export abstract class BaseService<
     }
 
     async delete(id: number): Promise<void> {
-        return await this.repo.delete(id)
+        // @todo there were some errors for deleting non-existent records when refreshing resume suggestions that this temporarily fixes
+        try {
+            return await this.repo.delete(id)
+        } catch(e) {
+            console.error(e)
+        }
     }
 
     async userOwnsItem(userId: string, itemId: number): Promise<boolean> {
