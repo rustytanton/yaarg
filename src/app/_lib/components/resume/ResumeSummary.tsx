@@ -23,7 +23,7 @@ export default function ResumeSummary({ resume }: Props) {
                     >{resume?.summary}</TextareaAutosize>
                     <div className="flex gap-2">
                         <FormButton buttonText="Save" isSubmit={true} />
-                        <FormButton buttonText="Cancel" onClick={() => { setEditSummary(false) }} />
+                        <FormButton buttonText="Done" onClick={() => { setEditSummary(false) }} />
                     </div>
                 </div>
                 <ResumeSummarySugggestions resume={resume} />
