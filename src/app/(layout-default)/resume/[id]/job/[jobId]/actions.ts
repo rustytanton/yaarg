@@ -2,14 +2,7 @@
 
 import { ResumeJobFormState } from "./types";
 import { deleteIds, fieldGroups } from "@/app/_lib/util/form";
-import {
-    ResumeJobExperience,
-    ResumeJobExperiences,
-    deleteResumeJobExperience,
-    updateResumeJobExperience,
-    createResumeJobExperience,
-    getResumeJobExperience
-} from "@/app/_data/resume-job-experience";
+import { ResumeJobExperience, ResumeJobExperienceService } from "@/app/_data/resume-job-experience";
 import { userOwnsResume } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import { revalidatePath } from "next/cache";
@@ -26,20 +19,21 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         }
     } else {
         const deletes = deleteIds(formData)
-        const experiences: ResumeJobExperiences = []
+        const experiences: ResumeJobExperience[] = []
         const groups = fieldGroups(formData, 'experience')
         const jobId = Number(formData.get('jobId'))
         const resumeId = Number(formData.get('resumeId'))
         const messages: string[] = []
         const session = await auth()
         const jeSuggestionService = new ResumeJobExperienceSugggestionService()
+        const jeService = new ResumeJobExperienceService()
         
         if (!session?.user || !await userOwnsResume(resumeId, session.user.id as string)) {
             throw new Error('Current user does not have access to edit this resume')
         }
 
         for (const deleteId of deletes) {
-            await deleteResumeJobExperience(deleteId)
+            await jeService.delete(deleteId)
             messages.push('Deleted ' + deleteId)
         }
         
@@ -47,27 +41,27 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
             const content = formData.get(group + 'content') as string
             const experienceId = Number(formData.get(group + 'content_contentId')) 
             if (experienceId) {
-                const experiencePrevious = await getResumeJobExperience(experienceId)
+                const experiencePrevious = await jeService.get(experienceId) as ResumeJobExperience
                 if (experiencePrevious.content !== content) {
-                    const experience = await updateResumeJobExperience({
+                    const experience = await jeService.update({
                         id: experienceId,
                         userId: session.user.id as string,
                         jobId: jobId,
                         resumeId: resumeId,
                         content: content
-                    })
+                    }) as ResumeJobExperience
                     await jeSuggestionService.delete(experienceId)
                     experiences.push(experience)
                     messages.push('Updated ' + experience.id.toString())
                 }                
             } else {
-                const experience = await createResumeJobExperience({
+                const experience = await jeService.create({
                     id: 0,
                     jobId: jobId,
                     userId: session.user.id as string,
                     resumeId: resumeId,
                     content: content
-                })
+                }) as ResumeJobExperience
                 experiences.push(experience)
                 messages.push('Created ' + experience.id as string)
             }

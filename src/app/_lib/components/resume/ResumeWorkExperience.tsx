@@ -2,7 +2,7 @@ import Link from "next/link"
 import ResumeSubheading from "./ResumeSubheading"
 import { Job } from "@/app/_data/job"
 import ResumeWorkExperienceItems from "./ResumeWorkExperienceItems"
-import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperience } from "@/app/_data/resume-job-experience"
 import ResumeHeading3 from "./ResumeHeading3"
 import BodySection from "@/app/_lib/components/body/BodySection"
 
@@ -24,7 +24,7 @@ export default function ResumeWorkExperience({ jobs, resumeId }: Props) {
                         <div className="text-sm">
                             {job.location} | {job.startDate} - {job.stillWorksHere ? 'present' : job.endDate}
                         </div>
-                        <ResumeWorkExperienceItems experiences={job.experiences as ResumeJobExperiences} />
+                        <ResumeWorkExperienceItems experiences={job.experiences as ResumeJobExperience[]} />
                     </div>
                 })}
         </BodySection>        

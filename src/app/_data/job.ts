@@ -1,7 +1,7 @@
 import { Job as _JobEntity } from '@prisma/client'
 import { parseMMYYYY } from '../_lib/util/dates'
 import prisma from '../db'
-import { ResumeJobExperiences } from './resume-job-experience'
+import { ResumeJobExperience } from './resume-job-experience'
 import { BaseRepository, BaseService, IMapper } from './_base'
 
 export type JobEntity = _JobEntity
@@ -18,7 +18,7 @@ export type Job = {
     endDateParsed: Date
     attendanceModel: string
     stillWorksHere: boolean
-    experiences?: ResumeJobExperiences
+    experiences?: ResumeJobExperience[]
 }
 
 export class MapperJob implements IMapper<Job, JobEntity> {

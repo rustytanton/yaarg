@@ -8,14 +8,14 @@ import { useFormState } from "react-dom"
 import FormTextareaBullet from "@/app/_lib/components/form/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/form/FormMessage"
 import { useState } from "react"
-import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperience } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"
 import { ResumeJobExperienceSugggestion } from "@/app/_data/resume-job-experience-suggestion"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import { Job } from "@/app/_data/job"
 
 type Props = {
-    jobExperiences?: ResumeJobExperiences,
+    jobExperiences?: ResumeJobExperience[],
     resumeId: number,
     job: Job
 }

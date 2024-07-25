@@ -1,7 +1,7 @@
 import { Resume as _ResumeEntity } from "@prisma/client"
 import { JobDescription, JobDescriptionService } from "./job-description"
 import prisma from "../db"
-import { getResumeJobExperiences } from "./resume-job-experience"
+import { ResumeJobExperienceService } from "./resume-job-experience"
 import { Job, JobService } from "./job"
 import { getUser, User } from "./user"
 import { Education, EducationService } from "./education"
@@ -28,6 +28,7 @@ export type Resumes = Resume[]
 export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume> {
     const jobService = new JobService()
     const jdService = new JobDescriptionService()
+    const jobExpService = new ResumeJobExperienceService()
     const jd = await jdService.get(entity.jobDescriptionId) as JobDescription
     const jobs = await jobService.getAllByUserId(entity.userId) as Job[]
     const user = await getUser(entity.userId)
@@ -37,7 +38,7 @@ export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume>
     const chatGptJobService = new ChatGptAsyncJobService()
     const chatGptAsyncJobs = await chatGptJobService.getJobsByResumeId(entity.id)
     for (let i = 0; i < jobs.length; i++) {
-        jobs[i].experiences = await getResumeJobExperiences(entity.id, Number(jobs[i].id)) || []
+        jobs[i].experiences = await jobExpService.getAllByResumeIdAndJobId(entity.id, Number(jobs[i].id)) || []
     }
     return {
         id: entity.id,

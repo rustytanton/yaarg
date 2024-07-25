@@ -1,9 +1,9 @@
-import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperience } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "./ResumeWorkExperienceSuggestions"
 import { ResumeJobExperienceSugggestion } from "@/app/_data/resume-job-experience-suggestion"
 
 type Props = {
-    experiences: ResumeJobExperiences
+    experiences: ResumeJobExperience[]
 }
 
 export default function ResumeWorkExperienceItems({ experiences }: Props) {

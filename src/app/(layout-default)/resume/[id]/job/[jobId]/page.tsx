@@ -9,7 +9,7 @@ import FormResumeJob from "./form"
 import { auth } from "@/app/auth"
 import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
 import { getResume } from "@/app/_data/resume"
-import { ResumeJobExperiences } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperience } from "@/app/_data/resume-job-experience"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import { Job } from "@/app/_data/job"
 
@@ -37,7 +37,7 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
     
                 <BodySection>
                     <FormResumeJob
-                        jobExperiences={job?.experiences as ResumeJobExperiences}
+                        jobExperiences={job?.experiences as ResumeJobExperience[]}
                         resumeId={Number(params.id)}
                         job={job as Job}
                     />

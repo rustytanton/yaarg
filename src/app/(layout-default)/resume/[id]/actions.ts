@@ -9,7 +9,7 @@ import { ResumeJobExperienceSugggestionService } from "@/app/_data/resume-job-ex
 import { getResume, updateResume, userOwnsResume } from "@/app/_data/resume"
 import { auth } from "@/app/auth"
 import { JobDescriptionSkillService } from "@/app/_data/job-description-skill"
-import { createResumeJobExperience, getUniqueResumeJobExperiences } from "@/app/_data/resume-job-experience"
+import { ResumeJobExperience, ResumeJobExperienceService } from "@/app/_data/resume-job-experience"
 import { fuzzyMatch } from "fuzzbunny"
 import { ResumeSubmitTypes } from "./types"
 import { ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job"
@@ -87,9 +87,10 @@ async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormStat
     if (!prevState.resume?.jobs) {
         return
     }
+    const jobExpService = new ResumeJobExperienceService()
     for (const job of prevState.resume?.jobs) {
-        const suggestions = await getUniqueResumeJobExperiences(Number(job.id))
-        const oldContents: string[] = job.experiences?.map((experience) => experience.content) || []
+        const suggestions = await jobExpService.getAllUniqueByJobId(Number(job.id))
+        const oldContents: string[] = job.experiences?.map((experience: ResumeJobExperience) => experience.content) || []
         for (const suggestion of suggestions) {
             const fuzzyMatches = 
                 oldContents.map(
@@ -99,7 +100,7 @@ async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormStat
                 })
             
             if (fuzzyMatches.length === 0) {
-                await createResumeJobExperience({
+                await jobExpService.create({
                     ...suggestion,
                     resumeId: Number(prevState.resume.id)
                 })
