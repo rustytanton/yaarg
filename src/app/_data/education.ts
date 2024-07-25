@@ -27,7 +27,7 @@ export class MapperEducation implements IMapper<Education, EducationEntity> {
 
 export class EducationRepository extends BaseRepository<Education, EducationEntity, typeof prisma.education> {
     constructor(
-        mapper: IMapper<Education, EducationEntity> = new MapperEducation(),
+        mapper: MapperEducation = new MapperEducation(),
         prismaModel: typeof prisma.education = prisma.education
     ) {
         super(mapper, prismaModel)
@@ -36,7 +36,7 @@ export class EducationRepository extends BaseRepository<Education, EducationEnti
 
 export class EducationService extends BaseService<Education, EducationEntity, typeof prisma.education> {
     constructor(
-        repo: IRepository<Education, EducationEntity, typeof prisma.education> = new EducationRepository()
+        repo: EducationRepository = new EducationRepository()
     ) {
         super(repo)
         this.repo = repo
