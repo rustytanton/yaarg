@@ -7,6 +7,7 @@ import { Education, EducationService } from "./education"
 import { ResumeSummarySuggestion, ResumeSummarySuggestionService } from "./resume-summary-suggestion"
 import { ChatGptAsyncJobs, ChatGptAsyncJobService } from "./chatgpt-async-job"
 import { BaseRepository, BaseService, IMapper } from "./_base"
+import { ResumeJobExperienceService } from "./resume-job-experience"
 
 export type ResumeEntity = _ResumeEntity
 
@@ -28,6 +29,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
     educationService: EducationService
     jobDescriptionService: JobDescriptionService
     jobService: JobService
+    jobExperienceService: ResumeJobExperienceService
     suggestionService: ResumeSummarySuggestionService
     userService: UserService
     prismaModel: typeof prisma.resume
@@ -36,6 +38,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
         chatGptJobService: ChatGptAsyncJobService = new ChatGptAsyncJobService(),
         educationService: EducationService = new EducationService(),
         jobDescriptionService: JobDescriptionService = new JobDescriptionService(),
+        jobExperienceService: ResumeJobExperienceService = new ResumeJobExperienceService(),
         jobService: JobService = new JobService(),
         suggestionService: ResumeSummarySuggestionService = new ResumeSummarySuggestionService(),
         userService: UserService = new UserService(),
@@ -44,6 +47,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
         this.chatGptJobService = chatGptJobService
         this.educationService = educationService
         this.jobDescriptionService = jobDescriptionService
+        this.jobExperienceService = jobExperienceService
         this.jobService = jobService
         this.suggestionService = suggestionService
         this.userService = userService
@@ -67,12 +71,16 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
     }
 
     async toModel(entity: ResumeEntity): Promise<Resume> {
+        const jobs = await this.jobService.getAllByUserId(entity.userId) || []
+        for (const job of jobs) {
+            job.experiences = await this.jobExperienceService.getAllByResumeIdAndJobId(entity.id, job.id)
+        }
         return {
             id: entity.id,
             userId: entity.userId,
             employer: entity.employer,
             summary: entity.summary as string,
-            jobs: await this.jobService.getAllByUserId(entity.userId) || [],
+            jobs: jobs,
             jobDescription: await this.jobDescriptionService.get(entity.jobDescriptionId) as JobDescription,
             user: await this.userService.get(entity.userId) as User,
             educations: await this.educationService.getAllByUserId(entity.userId) || [],
