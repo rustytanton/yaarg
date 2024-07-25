@@ -6,7 +6,7 @@ type Props = {
     experiences: ResumeJobExperience[]
 }
 
-export default function ResumeWorkExperienceItems({ experiences }: Props) {
+export default function ResumeWorkExperienceItems({ experiences = [] }: Props) {
     if (experiences.length > 0) {
         return (
             <ul className="list-disc pl-5">
