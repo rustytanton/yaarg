@@ -1,18 +1,17 @@
 import { Resume as _ResumeEntity } from "@prisma/client"
 import { JobDescription, JobDescriptionService } from "./job-description"
 import prisma from "../db"
-import { ResumeJobExperienceService } from "./resume-job-experience"
 import { Job, JobService } from "./job"
 import { getUser, User } from "./user"
 import { Education, EducationService } from "./education"
 import { ResumeSummarySuggestion, ResumeSummarySuggestionService } from "./resume-summary-suggestion"
 import { ChatGptAsyncJobs, ChatGptAsyncJobService } from "./chatgpt-async-job"
+import { BaseRepository, BaseService, IMapper } from "./_base"
 
 export type ResumeEntity = _ResumeEntity
-export type ResumeEntities = ResumeEntity[]
 
 export type Resume = {
-    id?: number | undefined
+    id: number
     userId: string
     employer: string
     jobs?: Job[]
@@ -23,117 +22,92 @@ export type Resume = {
     summarySuggestions?: ResumeSummarySuggestion[]
     chatGptAsyncJobs?: ChatGptAsyncJobs
 }
-export type Resumes = Resume[]
 
-export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume> {
-    const jobService = new JobService()
-    const jdService = new JobDescriptionService()
-    const jobExpService = new ResumeJobExperienceService()
-    const suggestionService = new ResumeSummarySuggestionService()
-    const jd = await jdService.get(entity.jobDescriptionId) as JobDescription
-    const jobs = await jobService.getAllByUserId(entity.userId) as Job[]
-    const user = await getUser(entity.userId)
-    const educationService = new EducationService()
-    const educations = await educationService.getAllByUserId(entity.userId) as Education[]
-    const summarySuggestions = await suggestionService.getAllByResumeId(entity.id)
-    const chatGptJobService = new ChatGptAsyncJobService()
-    const chatGptAsyncJobs = await chatGptJobService.getJobsByResumeId(entity.id)
-    for (let i = 0; i < jobs.length; i++) {
-        jobs[i].experiences = await jobExpService.getAllByResumeIdAndJobId(entity.id, Number(jobs[i].id)) || []
+export class MapperResume implements IMapper<Resume, ResumeEntity> {
+    chatGptJobService: ChatGptAsyncJobService
+    educationService: EducationService
+    jobDescriptionService: JobDescriptionService
+    jobService: JobService
+    suggestionService: ResumeSummarySuggestionService
+    prismaModel: typeof prisma.resume
+    
+    constructor(
+        chatGptJobService: ChatGptAsyncJobService = new ChatGptAsyncJobService(),
+        educationService: EducationService = new EducationService(),
+        jobDescriptionService: JobDescriptionService = new JobDescriptionService(),
+        jobService: JobService = new JobService(),
+        suggestionService: ResumeSummarySuggestionService = new ResumeSummarySuggestionService(),
+        prismaModel: typeof prisma.resume = prisma.resume
+    ) {
+        this.chatGptJobService = chatGptJobService
+        this.educationService = educationService
+        this.jobDescriptionService = jobDescriptionService
+        this.jobService = jobService
+        this.suggestionService = suggestionService
+        this.prismaModel = prismaModel
     }
-    return {
-        id: entity.id,
-        userId: entity.userId,
-        employer: entity.employer,
-        summary: entity.summary as string,
-        jobs: jobs,
-        jobDescription: jd,
-        user: user,
-        educations: educations,
-        summarySuggestions: summarySuggestions,
-        chatGptAsyncJobs: chatGptAsyncJobs || []
+
+    async toEntity(model: Resume): Promise<ResumeEntity> {
+        const entityPrevious = await this.prismaModel.findFirst({
+            where: {
+                id: model.id
+            }
+        })
+        return {
+            id: model.id,
+            userId: model.userId,
+            createdAt: entityPrevious?.createdAt as Date,
+            employer: model.employer,
+            jobDescriptionId: model?.jobDescription?.id || 0,
+            summary: model.summary
+        }
     }
-}
 
-export async function ResumeModeltoEntity(model: Resume): Promise<ResumeEntity> {
-    const entityPrevious = await prisma.resume.findFirst({
-        where: {
-            id: model.id
+    async toModel(entity: ResumeEntity): Promise<Resume> {
+        return {
+            id: entity.id,
+            userId: entity.userId,
+            employer: entity.employer,
+            summary: entity.summary as string,
+            jobs: await this.jobService.getAllByUserId(entity.userId) || [],
+            jobDescription: await this.jobDescriptionService.get(entity.jobDescriptionId) as JobDescription,
+            user: await getUser(entity.userId),
+            educations: await this.educationService.getAllByUserId(entity.userId) || [],
+            summarySuggestions: await this.suggestionService.getAllByResumeId(entity.id),
+            chatGptAsyncJobs: await this.chatGptJobService.getJobsByResumeId(entity.id) || []
         }
-    })
-    return {
-        id: model.id || 0,
-        userId: model.userId,
-        createdAt: entityPrevious?.createdAt as Date,
-        employer: model.employer,
-        jobDescriptionId: model?.jobDescription?.id || 0,
-        summary: model.summary
     }
-}
-
-export async function getResume(resumeId: number) {
-    const entity = await prisma.resume.findFirst({
-        where: {
-            id: resumeId
-        }
-    })
-    return await ResumeEntityToModel(entity as ResumeEntity)
-}
-
-export async function getResumes(userId: string): Promise<Resumes> {
-    const entities = await prisma.resume.findMany({
-        where: {
-            userId: userId
-        }
-    })
-    const resumes: Resumes = []
-    for (const entity of entities) {
-        resumes.push(await ResumeEntityToModel(entity))
-    }
-    return resumes
-}
-
-export async function createResume(resume: Resume) {
-    const entity = await ResumeModeltoEntity(resume)
-    const result = await prisma.resume.create({
-        data: {
-            ...entity,
-            id: undefined
-        }
-    })
-    return ResumeEntityToModel(result)
-}
-
-export async function updateResume(resume: Resume) {
-    const entity = await ResumeModeltoEntity(resume)
-    await prisma.resume.update({
-        where: {
-            id: entity.id
-        },
-        data: {
-            ...entity
-        }
-    })
-}
-
-export async function deleteResume(resumeId: number) {
-    await prisma.resume.delete({
-        where: {
-            id: resumeId
-        }
-    })
-}
-
-export async function userOwnsResume(resumeId: number, userId: string) {
-    const entity = await getResume(resumeId)
-    return entity?.userId === userId
 }
 
 type userResumeCountResult = {
     count: string    
 }
 
-export async function userResumeCount(userId: string): Promise<number> {
-    const result: userResumeCountResult[] = await prisma.$queryRaw`SELECT COUNT(*) FROM "Resume" WHERE "userId" = ${userId}`
-    return Number(result[0].count)
+export class ResumeRepository extends BaseRepository<Resume, ResumeEntity, typeof prisma.resume> {
+    constructor(
+        mapper: MapperResume = new MapperResume(),
+        prismaModel: typeof prisma.resume = prisma.resume
+    ) {
+        super(mapper, prismaModel)
+    }
+
+    async userResumeCount(userId: string): Promise<number> {
+        const result: userResumeCountResult[] = await prisma.$queryRaw`SELECT COUNT(*) FROM "Resume" WHERE "userId" = ${userId}`
+        return Number(result[0].count)
+    }
+}
+
+export class ResumeService extends BaseService<Resume, ResumeEntity, typeof prisma.resume> {
+    repo: ResumeRepository
+
+    constructor(
+        repo: ResumeRepository = new ResumeRepository()
+    ) {
+        super(repo)
+        this.repo = repo
+    }
+
+    async userResumeCount(userId: string): Promise<number> {
+        return await this.repo.userResumeCount(userId)
+    }
 }

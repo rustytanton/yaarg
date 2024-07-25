@@ -3,13 +3,14 @@
 import Link from 'next/link'
 import { auth } from '@/app/auth'
 import NoAccessMessage from '@/app/_lib/components/NoAccessMessage'
-import { getResumes } from '../../_data/resume'
+import { Resume, ResumeService } from '@/app/_data/resume'
 
 
 export default async function ResumesPage() {
     const session = await auth()
     if (session && session.user) {
-        const resumes = await getResumes(session.user.id as string)
+        const resumeService = new ResumeService()
+        const resumes = await resumeService.getAllByUserId(session.user.id as string) as Resume[]
         if (resumes.length) {
             return (
                 <table>

@@ -6,7 +6,7 @@ import { ResumeJobExperienceSkillService } from "@/app/_data/resume-job-experien
 import { ResumeSummarySuggestionService } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
 import { ResumeJobExperienceSugggestionService } from "@/app/_data/resume-job-experience-suggestion"
-import { getResume, updateResume, userOwnsResume } from "@/app/_data/resume"
+import { Resume, ResumeService } from "@/app/_data/resume"
 import { auth } from "@/app/auth"
 import { JobDescriptionSkillService } from "@/app/_data/job-description-skill"
 import { ResumeJobExperience, ResumeJobExperienceService } from "@/app/_data/resume-job-experience"
@@ -19,8 +19,9 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
     const summary = formData.get('summary') as string
     const submitType = formData.get('submitType') as string
     const session = await auth()
+    const resumeService = new ResumeService()
 
-    if (await !userOwnsResume(Number(prevState.resume?.id), session?.user?.id as string)) {
+    if (await !resumeService.userOwnsItem(session?.user?.id as string, Number(prevState.resume?.id))) {
         throw new Error('User does not own resume, cannot make edits')
     }
 
@@ -36,7 +37,7 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
 
     // refresh resume content after updates
     revalidatePath('/resume/' + Number(prevState.resume?.id))
-    const resumeUpdated = await getResume(Number(prevState.resume?.id))
+    const resumeUpdated = await resumeService.get(Number(prevState.resume?.id)) as Resume
 
     return {
         loadSuggestions: false,
@@ -49,8 +50,9 @@ async function handFormChangeUpdateSummary(prevState: ResumeFormState, summary: 
     if (!prevState.resume) {
         return
     }
+    const resumeService = new ResumeService()
     const suggestionService = new ResumeSummarySuggestionService()
-    await updateResume({
+    await resumeService.update({
         ...prevState.resume,
         userId: prevState.resume?.userId as string,
         employer: prevState.resume?.employer as string,

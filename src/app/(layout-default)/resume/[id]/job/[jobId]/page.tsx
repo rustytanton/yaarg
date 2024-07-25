@@ -8,7 +8,7 @@ import Link from "next/link"
 import FormResumeJob from "./form"
 import { auth } from "@/app/auth"
 import NoAccessMessage from "@/app/_lib/components/NoAccessMessage"
-import { getResume } from "@/app/_data/resume"
+import { Resume, ResumeService } from "@/app/_data/resume"
 import { ResumeJobExperience } from "@/app/_data/resume-job-experience"
 import Heading1 from "@/app/_lib/components/headings/Heading1"
 import { Job } from "@/app/_data/job"
@@ -17,7 +17,8 @@ export default async function ResumeJobPage({ params }:{ params: { id: string, j
 
     const session = await auth()
     if (session) {
-        const resume = await getResume(Number(params.id))
+        const resumeService = new ResumeService()
+        const resume = await resumeService.get(Number(params.id)) as Resume
         const job = resume?.jobs?.filter((job: { id: number }) => {
             return job.id === Number(params.jobId)
         })[0]

@@ -1,6 +1,6 @@
 'use server'
 
-import { getResume } from '@/app/_data/resume'
+import { Resume, ResumeService } from '@/app/_data/resume'
 import ResumePrintHeader from '@/app/_lib/components/print-resume/ResumePrintHeader'
 import ResumePrintSummary from '@/app/_lib/components/print-resume/ResumePrintSummary'
 import ResumePrintJob from '@/app/_lib/components/print-resume/ResumePrintJob'
@@ -9,7 +9,8 @@ import { Education } from '@/app/_data/education'
 import { Job } from '@/app/_data/job'
 
 export default async function ResumePrintPage({ params }:{ params: { id: string } }) {
-    const resume = await getResume(Number(params.id))
+    const resumeService = new ResumeService()
+    const resume = await resumeService.get(Number(params.id)) as Resume
 
     return (
         <div className="p-10">

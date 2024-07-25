@@ -1,6 +1,6 @@
 import { ChatGptAssistant, ChatGptAssistantService } from "@/app/_data/chatgpt-assistant";
 import { ChatGptAsyncJob, ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job";
-import { userOwnsResume } from "@/app/_data/resume";
+import { ResumeService } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import OpenAI from 'openai'
 
@@ -112,11 +112,12 @@ export type assistantMessageAsyncResult = {
 export async function assistantMessageAsyncResult(job: ChatGptAsyncJob) {
     const session = await auth()
     const openai = new OpenAI()
+    const resumeService = new ResumeService()
     let result: assistantMessageAsyncResult = {
         status: chatGptAsyncJobStatuses.UNKNOWN
     }
 
-    if (await userOwnsResume(job.resumeId, session?.user?.id as string)) {
+    if (await resumeService.userOwnsItem(session?.user?.id as string, job.resumeId)) {
         const run = await openai.beta.threads.runs.retrieve(job.threadId, job.runId)
         if (run.completed_at) {
             result.messages = await openai.beta.threads.messages.list(job.threadId)

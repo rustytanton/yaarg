@@ -3,7 +3,7 @@
 import { ResumeJobFormState } from "./types";
 import { deleteIds, fieldGroups } from "@/app/_lib/util/form";
 import { ResumeJobExperience, ResumeJobExperienceService } from "@/app/_data/resume-job-experience";
-import { userOwnsResume } from "@/app/_data/resume";
+import { ResumeService } from "@/app/_data/resume";
 import { auth } from "@/app/auth";
 import { revalidatePath } from "next/cache";
 import { ResumeJobExperienceSugggestionService } from "@/app/_data/resume-job-experience-suggestion";
@@ -27,8 +27,9 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         const session = await auth()
         const jeSuggestionService = new ResumeJobExperienceSugggestionService()
         const jeService = new ResumeJobExperienceService()
+        const resumeService = new ResumeService()
         
-        if (!session?.user || !await userOwnsResume(resumeId, session.user.id as string)) {
+        if (!session?.user || !await resumeService.userOwnsItem(session.user.id as string, resumeId)) {
             throw new Error('Current user does not have access to edit this resume')
         }
 

@@ -35,11 +35,12 @@ type Props = {
 
 const initialState: ResumeFormState = {
     loadSuggestions: false,
-    message: ''
+    message: '',
+    resume: {} as Resume
 }
 
 export default function ResumeForm(props: Props) {
-    const [state, formAction, third] = useFormState(handleFormChange, {
+    const [state, formAction] = useFormState(handleFormChange, {
         ...initialState,
         resume: props.resume
     })
