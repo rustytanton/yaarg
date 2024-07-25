@@ -27,18 +27,38 @@ export default function FormInputText({
             <span className="w-48">
                 {label}
                 {required ? <RequiredCharacter /> : ''}
-            </span>            
-            <input 
-                className="block text-black flex-1 rounded p-1 mb-5 md:mb-2 w-full"
-                type={inputType}
-                name={inputName}
-                defaultValue={defaultValue || ''}
-                value={value}
-                disabled={isDisabled}
-                pattern={pattern}
-                placeholder={placeholder}
-                required={required}
-            />
+            </span>
+            {isDisabled
+                ?
+                    <>
+                        <input 
+                            className="block text-black flex-1 rounded p-1 mb-5 md:mb-2 w-full"
+                            type={inputType}
+                            defaultValue={defaultValue || ''}
+                            value={value}
+                            disabled={isDisabled}
+                            pattern={pattern}
+                        />
+                        <input 
+                            type='hidden'
+                            name={inputName}
+                            defaultValue={defaultValue || ''}
+                            value={value}
+                        />
+                    </>
+                :
+                    <input 
+                        className="block text-black flex-1 rounded p-1 mb-5 md:mb-2 w-full"
+                        type={inputType}
+                        name={inputName}
+                        defaultValue={defaultValue || ''}
+                        value={value}
+                        disabled={isDisabled}
+                        pattern={pattern}
+                        placeholder={placeholder}
+                        required={required}
+                    />
+            }        
         </label>
     )
 }
