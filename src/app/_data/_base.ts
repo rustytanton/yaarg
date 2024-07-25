@@ -121,24 +121,26 @@ export abstract class BaseRepository<Model extends BaseModel, Entity extends Bas
     }
 
     async create(model: Model): Promise<Model | null> {
-        const entity = await this.prismaModel.create({
+        const entity = await this.mapper.toEntity(model)
+        const result = await this.prismaModel.create({
             data: {
-                ...model
+                ...entity
             }
         })
-        return entity ? this.mapper.toModel(entity) : null
+        return result ? await this.mapper.toModel(result) : null
     }
 
     async update(model: Model): Promise<Model | null> {
-        const entity = await this.prismaModel.update({
+        const entity = await this.mapper.toEntity(model)
+        const result = await this.prismaModel.update({
             where: {
                 id: model.id
             },
             data: {
-                ...model
+                ...entity
             }
         })
-        return entity ? this.mapper.toModel(entity) : null
+        return result ? await this.mapper.toModel(result) : null
     }
 
     async delete(id: number): Promise<void> {
