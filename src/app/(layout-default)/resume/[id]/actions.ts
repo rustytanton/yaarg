@@ -54,11 +54,9 @@ async function handFormChangeUpdateSummary(prevState: ResumeFormState, summary: 
     const suggestionService = new ResumeSummarySuggestionService()
     await resumeService.update({
         ...prevState.resume,
-        userId: prevState.resume?.userId as string,
-        employer: prevState.resume?.employer as string,
         summary: summary
     })
-    await suggestionService.delete(Number(prevState.resume.id))
+    await suggestionService.deleteAllByResumeId(Number(prevState.resume.id))
 }
 
 async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): Promise<void> {
