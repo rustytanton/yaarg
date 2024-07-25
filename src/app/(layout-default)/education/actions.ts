@@ -44,7 +44,7 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
     
                 if (education.id) {
                     if (await educationService.userOwnsItem(session.user.id as string, education.id)) {
-                        await educationService.delete(education.id)
+                        await educationService.update(education)
                     }
                     messages.push(`Updated ${education.id}.`)
                 } else {
