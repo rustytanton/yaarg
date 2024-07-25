@@ -1,65 +1,72 @@
 import { ResumeSummarySuggestion as _ResumeSummarySuggestionEntity } from "@prisma/client"
 import prisma from '../db'
+import { BaseRepository, BaseService, IMapper } from "./_base"
 
 export type ResumeSummarySuggestionEntity = _ResumeSummarySuggestionEntity
-export type ResumeSummarySuggestionEntities = ResumeSummarySuggestionEntity[]
 
 export type ResumeSummarySuggestion = {
-    id?: number,
+    id: number,
+    userId: string
     resumeId: number,
     suggestion: string
 }
-export type ResumeSummarySuggestions = ResumeSummarySuggestion[]
 
-export function ResumeSummarySuggestionModeltoEntity(model: ResumeSummarySuggestion) {
-    return model as ResumeSummarySuggestionEntity
+export class MapperResumeSummarySuggestion implements IMapper<ResumeSummarySuggestion, ResumeSummarySuggestionEntity> {
+    async toEntity(model: ResumeSummarySuggestion): Promise<ResumeSummarySuggestionEntity> {
+        return model as ResumeSummarySuggestionEntity
+    }
+    async toModel(entity: ResumeSummarySuggestionEntity): Promise<ResumeSummarySuggestion> {
+        return entity as ResumeSummarySuggestion
+    }
 }
 
-export function ResumeSummarySuggestionEntityToModel(entity: ResumeSummarySuggestionEntity) {
-    return entity as ResumeSummarySuggestion
-}
+export class ResumeSummarySuggestionRepository extends BaseRepository<
+    ResumeSummarySuggestion, ResumeSummarySuggestionEntity, typeof prisma.resumeSummarySuggestion
+> {
+    constructor(
+        mapper: MapperResumeSummarySuggestion = new MapperResumeSummarySuggestion(),
+        prismaModel: typeof prisma.resumeSummarySuggestion = prisma.resumeSummarySuggestion
+    ) {
+        super(mapper, prismaModel)
+    }
 
-export async function getResumeSummarySuggestion(suggestionId: number) {
-    const entity = await prisma.resumeSummarySuggestion.findFirst({
-        where: {
-            id: suggestionId
+    async getAllByResumeId(resumeId: number): Promise<ResumeSummarySuggestion[]> {
+        const entities = await this.prismaModel.findMany({
+            where: {
+                resumeId: resumeId
+            }
+        })
+        const results: ResumeSummarySuggestion[] = []
+        for (const entity of entities) {
+            results.push(await this.mapper.toModel(entity))
         }
-    }) as ResumeSummarySuggestionEntity
-    return ResumeSummarySuggestionEntityToModel(entity)
+        return results
+    }
+
+    async deleteAllByResumeId(resumeId: number): Promise<void> {
+        await this.prismaModel.deleteMany({
+            where: {
+                resumeId: resumeId
+            }
+        })
+    }
 }
 
-export async function getResumeSummarySuggestions(resumeId: number) {
-    const entities = await prisma.resumeSummarySuggestion.findMany({
-        where: {
-            resumeId: resumeId
-        }
-    })
-    return entities.map(entity => ResumeSummarySuggestionEntityToModel(entity))
-}
+export class ResumeSummarySuggestionService extends BaseService<ResumeSummarySuggestion, ResumeSummarySuggestionEntity, typeof prisma.resumeSummarySuggestion> {
+    repo: ResumeSummarySuggestionRepository
+    
+    constructor(
+        repo: ResumeSummarySuggestionRepository = new ResumeSummarySuggestionRepository()
+    ) {
+        super(repo)
+        this.repo = repo
+    }
 
-export async function createResumeSummarySuggestion(suggestion: ResumeSummarySuggestion) {
-    const entity = ResumeSummarySuggestionModeltoEntity(suggestion)
-    const result = await prisma.resumeSummarySuggestion.create({
-        data: {
-            ...entity,
-            id: undefined
-        }
-    })
-    return ResumeSummarySuggestionEntityToModel(result)
-}
+    async getAllByResumeId(resumeId: number): Promise<ResumeSummarySuggestion[]> {
+        return await this.repo.getAllByResumeId(resumeId)
+    }
 
-export async function deleteResumeSummarySuggestion(suggestionId: number) {
-    await prisma.resumeSummarySuggestion.delete({
-        where: {
-            id: suggestionId
-        }
-    })
-}
-
-export async function deleteResumeSummarySuggestions(resumeId: number) {
-    await prisma.resumeSummarySuggestion.deleteMany({
-        where: {
-            resumeId: resumeId
-        }
-    })
+    async deleteAllByResumeId(resumeId: number): Promise<void> {
+        return await this.repo.deleteAllByResumeId(resumeId)
+    }
 }

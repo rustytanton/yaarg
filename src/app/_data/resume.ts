@@ -5,7 +5,7 @@ import { ResumeJobExperienceService } from "./resume-job-experience"
 import { Job, JobService } from "./job"
 import { getUser, User } from "./user"
 import { Education, EducationService } from "./education"
-import { getResumeSummarySuggestions, ResumeSummarySuggestions } from "./resume-summary-suggestion"
+import { ResumeSummarySuggestion, ResumeSummarySuggestionService } from "./resume-summary-suggestion"
 import { ChatGptAsyncJobs, ChatGptAsyncJobService } from "./chatgpt-async-job"
 
 export type ResumeEntity = _ResumeEntity
@@ -20,7 +20,7 @@ export type Resume = {
     user?: User
     educations?: Education[]
     summary: string,
-    summarySuggestions?: ResumeSummarySuggestions
+    summarySuggestions?: ResumeSummarySuggestion[]
     chatGptAsyncJobs?: ChatGptAsyncJobs
 }
 export type Resumes = Resume[]
@@ -29,12 +29,13 @@ export async function ResumeEntityToModel(entity: ResumeEntity): Promise<Resume>
     const jobService = new JobService()
     const jdService = new JobDescriptionService()
     const jobExpService = new ResumeJobExperienceService()
+    const suggestionService = new ResumeSummarySuggestionService()
     const jd = await jdService.get(entity.jobDescriptionId) as JobDescription
     const jobs = await jobService.getAllByUserId(entity.userId) as Job[]
     const user = await getUser(entity.userId)
     const educationService = new EducationService()
     const educations = await educationService.getAllByUserId(entity.userId) as Education[]
-    const summarySuggestions = await getResumeSummarySuggestions(entity.id)
+    const summarySuggestions = await suggestionService.getAllByResumeId(entity.id)
     const chatGptJobService = new ChatGptAsyncJobService()
     const chatGptAsyncJobs = await chatGptJobService.getJobsByResumeId(entity.id)
     for (let i = 0; i < jobs.length; i++) {

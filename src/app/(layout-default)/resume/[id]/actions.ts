@@ -3,7 +3,7 @@
 import { ChatGptSuggestionsrPromptBullet, getBulletAnalysisAsync, getBulletAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions"
 import { ResumeFormState } from "./types"
 import { ResumeJobExperienceSkillService } from "@/app/_data/resume-job-experience-skill"
-import { deleteResumeSummarySuggestions, createResumeSummarySuggestion } from "@/app/_data/resume-summary-suggestion"
+import { ResumeSummarySuggestionService } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
 import { ResumeJobExperienceSugggestionService } from "@/app/_data/resume-job-experience-suggestion"
 import { getResume, updateResume, userOwnsResume } from "@/app/_data/resume"
@@ -49,13 +49,14 @@ async function handFormChangeUpdateSummary(prevState: ResumeFormState, summary: 
     if (!prevState.resume) {
         return
     }
+    const suggestionService = new ResumeSummarySuggestionService()
     await updateResume({
         ...prevState.resume,
         userId: prevState.resume?.userId as string,
         employer: prevState.resume?.employer as string,
         summary: summary
     })
-    await deleteResumeSummarySuggestions(Number(prevState.resume.id))
+    await suggestionService.delete(Number(prevState.resume.id))
 }
 
 async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): Promise<void> {
@@ -116,6 +117,7 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
         const jdSkillService = new JobDescriptionSkillService()
         const jdResumeJobExpSkillsService = new ResumeJobExperienceSkillService()
         const jeSuggestionService = new ResumeJobExperienceSugggestionService()
+        const suggestionService = new ResumeSummarySuggestionService()
         const session = await auth()
 
         try {
@@ -146,10 +148,12 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
                     }
                 }
     
-                await deleteResumeSummarySuggestions(Number(prevState.resume.id))
+                await suggestionService.delete(Number(prevState.resume.id))
                 for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
-                    await createResumeSummarySuggestion({
+                    await suggestionService.create({
+                        id: 0,
                         resumeId: Number(prevState.resume.id),
+                        userId: session?.user?.id as string,
                         suggestion: summarySuggestion
                     })
                 }
