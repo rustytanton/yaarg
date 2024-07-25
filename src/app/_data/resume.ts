@@ -2,7 +2,7 @@ import { Resume as _ResumeEntity } from "@prisma/client"
 import { JobDescription, JobDescriptionService } from "./job-description"
 import prisma from "../db"
 import { Job, JobService } from "./job"
-import { getUser, User } from "./user"
+import { User, UserService } from "./user"
 import { Education, EducationService } from "./education"
 import { ResumeSummarySuggestion, ResumeSummarySuggestionService } from "./resume-summary-suggestion"
 import { ChatGptAsyncJobs, ChatGptAsyncJobService } from "./chatgpt-async-job"
@@ -29,6 +29,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
     jobDescriptionService: JobDescriptionService
     jobService: JobService
     suggestionService: ResumeSummarySuggestionService
+    userService: UserService
     prismaModel: typeof prisma.resume
     
     constructor(
@@ -37,6 +38,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
         jobDescriptionService: JobDescriptionService = new JobDescriptionService(),
         jobService: JobService = new JobService(),
         suggestionService: ResumeSummarySuggestionService = new ResumeSummarySuggestionService(),
+        userService: UserService = new UserService(),
         prismaModel: typeof prisma.resume = prisma.resume
     ) {
         this.chatGptJobService = chatGptJobService
@@ -44,6 +46,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
         this.jobDescriptionService = jobDescriptionService
         this.jobService = jobService
         this.suggestionService = suggestionService
+        this.userService = userService
         this.prismaModel = prismaModel
     }
 
@@ -71,7 +74,7 @@ export class MapperResume implements IMapper<Resume, ResumeEntity> {
             summary: entity.summary as string,
             jobs: await this.jobService.getAllByUserId(entity.userId) || [],
             jobDescription: await this.jobDescriptionService.get(entity.jobDescriptionId) as JobDescription,
-            user: await getUser(entity.userId),
+            user: await this.userService.get(entity.userId) as User,
             educations: await this.educationService.getAllByUserId(entity.userId) || [],
             summarySuggestions: await this.suggestionService.getAllByResumeId(entity.id),
             chatGptAsyncJobs: await this.chatGptJobService.getJobsByResumeId(entity.id) || []

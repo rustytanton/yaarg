@@ -1,14 +1,15 @@
 'use server'
 
-import { updateUser } from "../../_data/user";
+import { UserService } from "../../_data/user";
 import { auth } from "../../auth";
 import { ContactInfoFormState } from './types'
 
 export async function handleFormChange(prevState: ContactInfoFormState, formData: FormData): Promise<ContactInfoFormState> {
     const session = await auth()
     const userFormId = formData.get('userId')
+    const userService = new UserService()
     if (session?.user?.id === userFormId) {
-        await updateUser({
+        await userService.update({
             id: userFormId,
             firstName: formData.get('firstName') as string,
             lastName: formData.get('lastName') as string,

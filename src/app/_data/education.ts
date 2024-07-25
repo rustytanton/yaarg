@@ -1,6 +1,6 @@
 import { Education as _EducationEntity } from "@prisma/client"
 import prisma from "../db"
-import { BaseRepository, BaseService, IMapper, IRepository } from "./_base"
+import { BaseRepository, BaseService, IMapper } from "./_base"
 
 export type EducationEntity = _EducationEntity
 
