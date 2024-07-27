@@ -2,5 +2,6 @@
     "recommendations": [
         "ms-azuretools.vscode-docker",
         "prisma.prisma",
+        "bradlc.vscode-tailwindcss",
     ]
 }
