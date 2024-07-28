@@ -44,7 +44,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
             const experienceId = Number(formData.get(group + 'content_contentId')) 
             if (experienceId) {
                 const experiencePrevious = await jeService.get(experienceId) as ResumeJobExperience
-                if (experiencePrevious.content !== content) {
+                // if (experiencePrevious.content !== content) {
                     const experience = await jeService.update({
                         id: experienceId,
                         userId: session.user.id as string,
@@ -54,7 +54,7 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                     }) as ResumeJobExperience
                     await jeSuggestionService.delete(experienceId)
                     experiences.push(experience)
-                }                
+                // }                
             } else {
                 const experience = await jeService.create({
                     id: 0,
