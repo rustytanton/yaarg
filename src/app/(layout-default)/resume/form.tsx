@@ -5,7 +5,6 @@ import FormButton from "@/app/_lib/components/form/FormButton"
 import FormTextarea from "@/app/_lib/components/form/FormTextarea"
 import { handleFormChange } from './actions'
 import { ResumeFormNewState, ResumeFormNewStatuses } from './types'
-import FormMessage from "@/app/_lib/components/form/FormMessage"
 import FormInputText from "@/app/_lib/components/form/FormInputText"
 import BodySection from "@/app/_lib/components/body/BodySection"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
