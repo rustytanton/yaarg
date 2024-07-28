@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css";
 import SiteHeader from '@/app/_lib/components/SiteHeader'
+import ToastProvider from "@/app/_lib/components/ToastProvider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,7 +22,7 @@ export default async function RootLayout({
       <body className={inter.className + " flex flex-col items-center"}>
         <SiteHeader />
         <main className="m:w-3/4 flex flex-col items-center">
-          {children}
+          <ToastProvider>{children}</ToastProvider>
         </main>
       </body>
     </html>

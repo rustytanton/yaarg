@@ -2,7 +2,7 @@
 
 import { UserService } from "../../_data/user";
 import { auth } from "../../auth";
-import { ContactInfoFormState } from './types'
+import { ContactInfoFormState, ContactInfoFormStatus } from './types'
 
 export async function handleFormChange(prevState: ContactInfoFormState, formData: FormData): Promise<ContactInfoFormState> {
     const session = await auth()
@@ -22,11 +22,15 @@ export async function handleFormChange(prevState: ContactInfoFormState, formData
             website: formData.get('website') as string,
         })
         return {
-            message: "User updated"
+            message: "User updated",
+            status: ContactInfoFormStatus.SUCCESS,
+            statusUpdated: new Date()
         }
     } else {
         return {
-            message: "Unable to update user"
+            message: "Unable to update user",
+            status: ContactInfoFormStatus.ERROR,
+            statusUpdated: new Date()
         }
     }
 }
