@@ -1,7 +1,7 @@
 'use server'
 
 import { auth } from '@/app/auth'
-import { JobFormState } from './types'
+import { JobFormState, JobFormStatuses } from './types'
 import { deleteIds, fieldGroups } from '@/app/_lib/util/form'
 import { revalidatePath } from 'next/cache'
 import { parseMMYYYY } from '@/app/_lib/util/dates'
@@ -15,20 +15,26 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
             return {
                 addSection: false,
                 jobs: prevState.jobs.concat([{} as Job]),
-                message: 'Added new job section'
+                message: 'Added new job section',
+                status: JobFormStatuses.SUCCESS,
+                statusUpdated: new Date()
             }
         } else {
             let jobs: Job[] = []
-            let messages: string[] = []
             let deletes = deleteIds(formData)
             let groups = fieldGroups(formData, 'job')
 
             for (const id of deletes) {
                 if (await jobService.userOwnsItem(session.user.id, id)) {
                     await jobService.delete(id)
-                    messages.push(`Deleted job ${id}.`) 
                 } else {
-                    throw new Error('User does not own this job')
+                    return {
+                        ...prevState,
+                        addSection: false,
+                        message: 'User does not own this resume',
+                        status: JobFormStatuses.ERROR,
+                        statusUpdated: new Date()
+                    }
                 }
             }
 
@@ -48,10 +54,8 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
                 }
                 if (job.id && await jobService.userOwnsItem(session.user.id, job.id)) {
                     await jobService.update(job)
-                    messages.push(`Updated ${job.id}.`)
                 } else {
                     job = await jobService.create(job) as Job
-                    messages.push(`Created ${job.id}.`)
                 }
 
                 jobs.push(job)
@@ -62,7 +66,9 @@ export async function handleFormChange(prevState: JobFormState, formData: FormDa
             return {
                 ...prevState,
                 jobs: jobs,
-                message: messages.join(' ')
+                message: 'Jobs updated',
+                status: JobFormStatuses.SUCCESS,
+                statusUpdated: new Date()
             }
         }
     }

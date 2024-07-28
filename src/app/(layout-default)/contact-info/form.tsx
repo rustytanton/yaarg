@@ -1,10 +1,8 @@
 'use client'
 
 import toast from 'react-hot-toast'
-
 import { useFormState } from 'react-dom'
 import { handleFormChange } from './actions'
-import FormMessage from '@/app/_lib/components/form/FormMessage'
 import FormInputText from '@/app/_lib/components/form/FormInputText'
 import FormButton from '@/app/_lib/components/form/FormButton'
 import { ContactInfoFormState, ContactInfoFormStatus } from './types'
