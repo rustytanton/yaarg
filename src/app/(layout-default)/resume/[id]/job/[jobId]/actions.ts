@@ -1,6 +1,6 @@
 'use server'
 
-import { ResumeJobFormState } from "./types";
+import { ResumeJobFormState, ResumeJobFormStatuses } from "./types";
 import { deleteIds, fieldGroups } from "@/app/_lib/util/form";
 import { ResumeJobExperience, ResumeJobExperienceService } from "@/app/_data/resume-job-experience";
 import { ResumeService } from "@/app/_data/resume";
@@ -15,7 +15,10 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         return {
             ...prevState,
             addExperience: false,
-            experiences: experiences
+            experiences: experiences,
+            message: 'Experience added',
+            status: ResumeJobFormStatuses.SUCCESS,
+            statusUpdated: new Date()
         }
     } else {
         const deletes = deleteIds(formData)
@@ -23,7 +26,6 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         const groups = fieldGroups(formData, 'experience')
         const jobId = Number(formData.get('jobId'))
         const resumeId = Number(formData.get('resumeId'))
-        const messages: string[] = []
         const session = await auth()
         const jeSuggestionService = new ResumeJobExperienceSugggestionService()
         const jeService = new ResumeJobExperienceService()
@@ -35,7 +37,6 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
 
         for (const deleteId of deletes) {
             await jeService.delete(deleteId)
-            messages.push('Deleted ' + deleteId)
         }
         
         for (const group of groups) {
@@ -53,7 +54,6 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                     }) as ResumeJobExperience
                     await jeSuggestionService.delete(experienceId)
                     experiences.push(experience)
-                    messages.push('Updated ' + experience.id.toString())
                 }                
             } else {
                 const experience = await jeService.create({
@@ -64,7 +64,6 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
                     content: content
                 }) as ResumeJobExperience
                 experiences.push(experience)
-                messages.push('Created ' + experience.id as string)
             }
         }
 
@@ -73,7 +72,9 @@ export async function handleFormChange(prevState: ResumeJobFormState, formData: 
         return {
             ...prevState,
             experiences: experiences,
-            message: messages.join('. ')
+            message: 'Job experience updated',
+            status: ResumeJobFormStatuses.SUCCESS,
+            statusUpdated: new Date()
         }
     }
 }

@@ -2,17 +2,18 @@
 
 import FormButton from "@/app/_lib/components/form/FormButton"
 import Heading2 from "@/app/_lib/components/headings/Heading2"
-import { ResumeJobFormState } from "./types"
+import { ResumeJobFormState, ResumeJobFormStatuses } from "./types"
 import { handleFormChange } from "./actions"
 import { useFormState } from "react-dom"
 import FormTextareaBullet from "@/app/_lib/components/form/FormTextareaBullet"
 import FormMessage from "@/app/_lib/components/form/FormMessage"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ResumeJobExperience } from "@/app/_data/resume-job-experience"
 import ResumeWorkExperienceSuggestions from "@/app/_lib/components/resume/ResumeWorkExperienceSuggestions"
 import { ResumeJobExperienceSugggestion } from "@/app/_data/resume-job-experience-suggestion"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import { Job } from "@/app/_data/job"
+import toast from "react-hot-toast"
 
 type Props = {
     jobExperiences?: ResumeJobExperience[],
@@ -34,12 +35,19 @@ export default function FormResumeJob(props: Props) {
         experiences: props.jobExperiences
     })
 
+    useEffect(() => {
+        if (state.status === ResumeJobFormStatuses.SUCCESS) {
+            toast.success(state.message as string)
+        } else if (state.status === ResumeJobFormStatuses .ERROR) {
+            toast.error(state.message as string)
+        }
+    }, [state.message, state.status, state.statusUpdated])
+
     const [addExperience, setAddExperience] = useState(false)
 
     return (
         <form action={formAction}>
             <Heading2>Experience - {props.job.employer}</Heading2>
-            <FormMessage message={state.message} />
             <ul className="list-outside list-disc-offsettop">
             {state.experiences?.map((experience, index) => {
                 return (
