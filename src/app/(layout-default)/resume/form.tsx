@@ -4,12 +4,14 @@ import { useFormState } from "react-dom"
 import FormButton from "@/app/_lib/components/form/FormButton"
 import FormTextarea from "@/app/_lib/components/form/FormTextarea"
 import { handleFormChange } from './actions'
-import { ResumeFormNewState } from './types'
+import { ResumeFormNewState, ResumeFormNewStatuses } from './types'
 import FormMessage from "@/app/_lib/components/form/FormMessage"
 import FormInputText from "@/app/_lib/components/form/FormInputText"
 import BodySection from "@/app/_lib/components/body/BodySection"
 import ActionsCentered from "@/app/_lib/components/containers/ActionsCentered"
 import RequiredInfo from "@/app/_lib/components/form/RequiredInfo"
+import { useEffect } from "react"
+import toast from "react-hot-toast"
 
 const initialState: ResumeFormNewState = {
     message: '',
@@ -21,9 +23,16 @@ export default function ResumeFormNew() {
         ...initialState
     })
 
+    useEffect(() => {
+        if (state.status === ResumeFormNewStatuses.SUCCESS) {
+            toast.success(state.message as string)
+        } else if (state.status === ResumeFormNewStatuses.ERROR) {
+            toast.error(state.message as string)
+        }
+    }, [state.message, state.status, state.statusUpdated])
+
     return (
         <form action={formAction} className="w-3/4 md:w-full">
-            <FormMessage message={state.message} />
             <RequiredInfo />
             <BodySection>
                 <FormInputText label='Employer' inputName="employer" required={true} />

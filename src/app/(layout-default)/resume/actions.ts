@@ -1,6 +1,6 @@
 'use server'
 
-import { ResumeFormNewState } from './types'
+import { ResumeFormNewState, ResumeFormNewStatuses } from './types'
 import { auth } from '@/app/auth'
 import { redirect } from 'next/navigation'
 import { getSkills } from '@/app/_lib/chatgpt/assistant-skills-extractor'
@@ -8,7 +8,7 @@ import { JobDescription, JobDescriptionService } from '@/app/_data/job-descripti
 import { JobDescriptionSkillService } from '@/app/_data/job-description-skill'
 import { Resume, ResumeService } from '@/app/_data/resume'
 
-export async function handleFormChange(prevState: ResumeFormNewState, formData: FormData) {
+export async function handleFormChange(prevState: ResumeFormNewState, formData: FormData): Promise<ResumeFormNewState> {
     const session = await auth()
     if (session?.user) {
         const employer = formData.get('employer') as string
@@ -55,7 +55,9 @@ export async function handleFormChange(prevState: ResumeFormNewState, formData: 
     } else {
         return {
             ...prevState,
-            message: 'You must be logged in to submit the form'
+            message: 'You must be logged in to submit the form',
+            status: ResumeFormNewStatuses.ERROR,
+            statusUpdated: new Date()
         }
     }
 }
