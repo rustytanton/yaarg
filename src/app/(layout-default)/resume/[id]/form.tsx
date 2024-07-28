@@ -1,7 +1,7 @@
 'use client'
 
 import { Resume } from "@/app/_data/resume"
-import { ResumeFormState } from "./types"
+import { ResumeFormState, ResumeFormStatuses } from "./types"
 import { useFormState } from "react-dom"
 import { handleFormChange } from "./actions"
 import FormButton from "@/app/_lib/components/form/FormButton"
@@ -27,6 +27,7 @@ import { useEffect } from "react"
 import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
 import { ResumeShowOnFirst } from "@/app/_lib/components/resume/ResumeShowOnFirst"
 import { ResumeShowOnMoreThanOne } from "@/app/_lib/components/resume/ResumeShowOnMoreThanOne"
+import toast from "react-hot-toast"
 
 type Props = {
     resume: Resume,
@@ -51,6 +52,17 @@ export default function ResumeForm(props: Props) {
         await formAction(formData)
         setSubmitType("")
     }
+
+    useEffect(() => {
+        if (!state.message) {
+            return
+        }
+        if (state.status === ResumeFormStatuses.SUCCESS) {
+            toast.success(state.message as string)
+        } else if (state.status === ResumeFormStatuses.ERROR) {
+            toast.error(state.message as string)
+        }
+    }, [state.message, state.status, state.statusUpdated])
 
     useEffect(() => {
         const checkInterval = setInterval(() => {

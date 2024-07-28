@@ -1,7 +1,7 @@
 'use server'
 
 import { ChatGptSuggestionsrPromptBullet, getBulletAnalysisAsync, getBulletAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions"
-import { ResumeFormState } from "./types"
+import { ResumeFormState, ResumeFormStatuses } from "./types"
 import { ResumeJobExperienceSkillService } from "@/app/_data/resume-job-experience-skill"
 import { ResumeSummarySuggestionService } from "@/app/_data/resume-summary-suggestion"
 import { revalidatePath } from "next/cache"
@@ -15,11 +15,12 @@ import { ResumeSubmitTypes } from "./types"
 import { ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job"
 import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
 
-export async function handleFormChange(prevState: ResumeFormState, formData: FormData) {
+export async function handleFormChange(prevState: ResumeFormState, formData: FormData): Promise<ResumeFormState> {
     const summary = formData.get('summary') as string
     const submitType = formData.get('submitType') as string
     const session = await auth()
     const resumeService = new ResumeService()
+    let successMessage = ''
 
     if (await !resumeService.userOwnsItem(session?.user?.id as string, Number(prevState.resume?.id))) {
         throw new Error('User does not own resume, cannot make edits')
@@ -27,12 +28,15 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
 
     if (summary) {
         await handFormChangeUpdateSummary(prevState, summary)
+        successMessage = 'Summary updated'
     } else if (submitType === ResumeSubmitTypes.CHATGPT_SUGGESTIONS) {
         await handleFormChangeChatGptSuggestions(prevState)
     } else if (submitType === ResumeSubmitTypes.POPULATE_PAST_EXPERIENCES) {
         await handleFormChangeSuggestionsFromPrevious(prevState)
+        successMessage = 'Loaded experience from previous resumes'
     } else if (submitType === ResumeSubmitTypes.CHATGPT_ASYNC_JOB) {
         await handleFormChangeChatGptAsyncJob(prevState)
+        successMessage = 'Loaded suggestions from ChatGPT'
     }
 
     // refresh resume content after updates
@@ -42,7 +46,9 @@ export async function handleFormChange(prevState: ResumeFormState, formData: For
     return {
         loadSuggestions: false,
         resume: resumeUpdated,
-        message: ''
+        message: successMessage,
+        status: ResumeFormStatuses.SUCCESS,
+        statusUpdated: new Date()
     }
 }
 

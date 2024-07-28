@@ -1,9 +1,16 @@
 import { Resume } from "@/app/_data/resume"
 
+export enum ResumeFormStatuses {
+    ERROR = 'ERROR',
+    SUCCESS = 'SUCCESS'
+}
+
 export type ResumeFormState = {
     resume: Resume
     message: string
     loadSuggestions: boolean
+    status?: ResumeFormStatuses
+    statusUpdated?: Date
 }
 
 export enum ResumeSubmitTypes {
