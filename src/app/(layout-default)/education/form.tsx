@@ -5,10 +5,12 @@ import { handleFormChange } from './actions'
 import FormMessage from '@/app/_lib/components/form/FormMessage'
 import FormSectionEducation from '@/app/_lib/components/form/FormSectionEducation'
 import FormButton from '@/app/_lib/components/form/FormButton'
-import { EducationFormState } from './types'
+import { EducationFormState, EducationFormStatuses } from './types'
 import { Education } from '../../_data/education'
 import ActionsCentered from '@/app/_lib/components/containers/ActionsCentered'
 import RequiredInfo from '@/app/_lib/components/form/RequiredInfo'
+import { useEffect } from 'react'
+import toast from 'react-hot-toast'
 
 const initialState: EducationFormState = {
     addSection: false,
@@ -26,9 +28,16 @@ export default function EducationForm(props: Props) {
         educations: props.educations
     })
 
+    useEffect(() => {
+        if (state.status === EducationFormStatuses.SUCCESS) {
+            toast.success(state.message as string)
+        } else if (state.status === EducationFormStatuses.ERROR) {
+            toast.error(state.message as string)
+        }
+    }, [state.message, state.status, state.statusUpdated])
+
     return (
         <form action={formAction} className="p-10">
-            <FormMessage message={state?.message} />
             <p className="mb-10">Note: You can use this section for credentials too (examples: SCM, PMP, etc)</p>
             <RequiredInfo />
             {state.educations.length > 0 ? state.educations.map((education: Education, index: number) => {

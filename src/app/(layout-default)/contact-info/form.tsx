@@ -1,6 +1,6 @@
 'use client'
 
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 import { useFormState } from 'react-dom'
 import { handleFormChange } from './actions'

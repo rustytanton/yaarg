@@ -1,6 +1,6 @@
 'use server'
 
-import { EducationFormState } from './types'
+import { EducationFormState, EducationFormStatuses } from './types'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/app/auth'
 import { fieldGroups, deleteIds } from '@/app/_lib/util/form'
@@ -14,11 +14,12 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
             return {
                 addSection: false,
                 educations: prevState.educations.concat([{} as Education]),
-                message: 'Added new education section'
+                message: 'Added new education section',
+                status: EducationFormStatuses.SUCCESS,
+                statusUpdated: new Date()
             }
         } else {
             let educations: Education[] = []
-            let messages: string[] = []
             let deletes = deleteIds(formData)
             let groups = fieldGroups(formData, 'education')
     
@@ -26,7 +27,6 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                 if (await educationService.userOwnsItem(session.user.id as string, id)) {
                     await educationService.delete(id)
                 }
-                messages.push(`Deleted education ${id}.`) 
             }
             
             for (const group of groups) {
@@ -46,10 +46,8 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
                     if (await educationService.userOwnsItem(session.user.id as string, education.id)) {
                         await educationService.update(education)
                     }
-                    messages.push(`Updated ${education.id}.`)
                 } else {
                     education = await educationService.create(education) as Education
-                    messages.push(`Created ${education.id}.`)
                 }
     
                 educations.push(education)
@@ -60,7 +58,9 @@ export async function handleFormChange(prevState: EducationFormState, formData: 
             return {
                 ...prevState,
                 educations: educations,
-                message: messages.join(' ')
+                message: 'Education updated',
+                status: EducationFormStatuses.SUCCESS,
+                statusUpdated: new Date()
             }
         }
     } else {
