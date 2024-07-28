@@ -143,7 +143,7 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
                         await jdSkillService.setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
                     }
         
-                    await jeSuggestionService.delete(suggestion.bulletId)
+                    await jeSuggestionService.deleteSuggestionsByExperienceId(suggestion.bulletId)
                     for (const item of suggestion.qualitySuggestions) {
                         await jeSuggestionService.create({
                             id: 0,
@@ -154,7 +154,7 @@ async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
                     }
                 }
     
-                await suggestionService.delete(Number(prevState.resume.id))
+                await suggestionService.deleteAllByResumeId(Number(prevState.resume.id))
                 for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
                     await suggestionService.create({
                         id: 0,
