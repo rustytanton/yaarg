@@ -1,4 +1,5 @@
 import { signIn } from "@/app/auth"
+import ButtonPrimary from "./form/ButtonPrimary"
  
 export default function SignIn() {
   return (
@@ -8,7 +9,7 @@ export default function SignIn() {
         await signIn()
       }}
     >
-      <button className="m-2 p-1 bg-gray-200 text-black" type="submit">Sign In</button>
+      <ButtonPrimary type="submit">Sign In</ButtonPrimary>
     </form>
   )
 } 

@@ -1,4 +1,5 @@
 import { signOut } from "@/app/auth"
+import ButtonPrimary from "./form/ButtonPrimary"
  
 export default function SignOut() {
   return (
@@ -8,7 +9,7 @@ export default function SignOut() {
         await signOut({ redirectTo: '/', redirect: true })
       }}
     >
-      <button type="submit" className="text-amber-500">Sign Out</button>
+      <ButtonPrimary type="submit">Sign Out</ButtonPrimary>
     </form>
   )
 }
