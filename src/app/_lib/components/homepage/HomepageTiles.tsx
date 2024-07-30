@@ -5,8 +5,8 @@ type Props = {
 export default function HomepageTiles({ children }: Props) {
     return (
         <div className="flex justify-center p-10">
-            <div className="w-1/2">
-                <div className="flex flex-wrap gap-5 justify-center">{children}</div>
+            <div className="lg:w-3/5">
+                <div className="flex flex-col md:flex-row md:flex-wrap gap-5 justify-center">{children}</div>
             </div>
         </div>
     )
