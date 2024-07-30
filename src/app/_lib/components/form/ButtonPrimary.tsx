@@ -15,7 +15,7 @@ export default function ButtonPrimary({
     onClick
 }: Props) {
 
-    const buttonStyleClasses = 'rounded bg-orange-500 text-white font-bold pt-2 pb-2 pl-4 pr-4'
+    const buttonStyleClasses = 'rounded bg-orange-500 hover:bg-orange-400 text-white font-bold pt-2 pb-2 pl-4 pr-4'
 
     if (href) {
         return (
