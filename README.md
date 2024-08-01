@@ -30,7 +30,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser
 
 ### C4 Diagrams
 
-Run these commands:
+![System Context Diagram](structurizr/.structurizr/1/images/SystemContext-001-thumbnail.png "YAARG system context diagram")
+
+![Container Diagram](structurizr/.structurizr/1/images/Container-001-thumbnail.png "YAARG container diagram")
+
+![Component Diagram](structurizr/.structurizr/1/images/Component-001-thumbnail.png "YAARG component diagram")
+
+To start the Structurizr server, run these commands:
 ```
 docker pull structurizr/lite
 docker run -it --rm -p 8080:8080 -v $(pwd)/structurizr:/usr/local/structurizr structurizr/lite
