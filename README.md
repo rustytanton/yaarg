@@ -1,6 +1,10 @@
 # YAARG (Yet Another AI Resume Generator)
 
-Uses Next.js, Prisma, Postgresql
+[![Loom Thumbnail](thumbnails/LoomThumbnail.png)](https://www.loom.com/share/ed4a854ec2c7408dae87f993b57b9779)
+
+Generates resumes customized for individual roles with AI suggestions.
+
+Built using [React](https://react.dev/), [NextJS](https://nextjs.org/), [AuthJS](https://authjs.dev/), [Prisma ORM](https://www.prisma.io/), [Tailwind CSS](https://tailwindcss.com/), [PostgreSQL](https://www.postgresql.org/), and the [ChatGPT API](https://platform.openai.com/docs/api-reference/introduction)
 
 Demo site: https://yaarg.vercel.app/
 
