@@ -4,7 +4,7 @@
   "documentation" : { },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-javascript",
-  "lastModifiedDate" : "2024-08-01T02:40:18Z",
+  "lastModifiedDate" : "2024-08-01T11:08:57Z",
   "model" : {
     "people" : [ {
       "id" : "1",
@@ -18,7 +18,7 @@
         "destinationId" : "3",
         "id" : "13",
         "properties" : {
-          "structurizr.dsl.identifier" : "4a5d64b0-80b9-4ef0-a36c-c2ff45cc90b1"
+          "structurizr.dsl.identifier" : "796521bb-5ab6-4c11-8159-23551b8232f1"
         },
         "sourceId" : "1",
         "tags" : "Relationship"
@@ -46,7 +46,7 @@
             "destinationId" : "10",
             "id" : "23",
             "properties" : {
-              "structurizr.dsl.identifier" : "e661ca49-904d-4fec-876b-cf89c3cfe31a"
+              "structurizr.dsl.identifier" : "45faf421-c4fb-4f84-87f5-9c6054fbf4b3"
             },
             "sourceId" : "4",
             "tags" : "Relationship"
@@ -64,7 +64,7 @@
             "destinationId" : "4",
             "id" : "18",
             "properties" : {
-              "structurizr.dsl.identifier" : "d44683cf-532c-4ca2-b6d4-cdc26d4ddbda"
+              "structurizr.dsl.identifier" : "a9194ed1-d7f1-49f4-8390-6a37969a3c62"
             },
             "sourceId" : "5",
             "tags" : "Relationship"
@@ -82,7 +82,7 @@
             "destinationId" : "4",
             "id" : "19",
             "properties" : {
-              "structurizr.dsl.identifier" : "68a8e3ac-d072-46c2-be8a-f272bdf45b64"
+              "structurizr.dsl.identifier" : "c4f05111-b4e4-4143-bddb-b340cd51e861"
             },
             "sourceId" : "6",
             "tags" : "Relationship"
@@ -100,7 +100,7 @@
             "destinationId" : "4",
             "id" : "20",
             "properties" : {
-              "structurizr.dsl.identifier" : "54efbe64-e379-4c0c-83fa-eee69f31bf9f"
+              "structurizr.dsl.identifier" : "0080567a-d1e3-4e64-8e04-3668d1c93c3f"
             },
             "sourceId" : "7",
             "tags" : "Relationship"
@@ -118,7 +118,7 @@
             "destinationId" : "4",
             "id" : "21",
             "properties" : {
-              "structurizr.dsl.identifier" : "801f253c-2875-456d-b445-e34d1f6c922e"
+              "structurizr.dsl.identifier" : "2910c485-bb00-4631-9d58-538d7e36bbac"
             },
             "sourceId" : "8",
             "tags" : "Relationship"
@@ -136,7 +136,7 @@
             "destinationId" : "4",
             "id" : "22",
             "properties" : {
-              "structurizr.dsl.identifier" : "cbaac597-3dd7-4dcf-a403-55acac2de2a8"
+              "structurizr.dsl.identifier" : "a1dc6d8e-d70f-4d25-b5a9-4b2c28a9708f"
             },
             "sourceId" : "9",
             "tags" : "Relationship"
@@ -155,7 +155,7 @@
             "destinationId" : "11",
             "id" : "24",
             "properties" : {
-              "structurizr.dsl.identifier" : "5cd864e8-e269-47cb-955a-96e5e54bec98"
+              "structurizr.dsl.identifier" : "159c6695-9089-425b-995e-0b4de23ea4e9"
             },
             "sourceId" : "10",
             "tags" : "Relationship"
@@ -173,7 +173,7 @@
           "destinationId" : "12",
           "id" : "15",
           "properties" : {
-            "structurizr.dsl.identifier" : "96513af9-a81f-486a-a8a0-339b40055aec"
+            "structurizr.dsl.identifier" : "397dfb1d-7c75-4430-ad7a-dec7734599f8"
           },
           "sourceId" : "3",
           "tags" : "Relationship"
@@ -182,7 +182,7 @@
           "destinationId" : "11",
           "id" : "17",
           "properties" : {
-            "structurizr.dsl.identifier" : "c4d69eed-f7e3-4b79-a7dd-9d2480e90ae6"
+            "structurizr.dsl.identifier" : "0d8f0f8f-c053-4003-a4b7-f9a309ac1c14"
           },
           "sourceId" : "3",
           "tags" : "Relationship"
@@ -299,7 +299,7 @@
     } ],
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "SystemContext-001",
+      "lastSavedView" : "Component-001",
       "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
