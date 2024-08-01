@@ -16,8 +16,6 @@ Copy [.env.example](.env.example) to `.env`, modify as needed.
 
 ### Postgresql
 
-I may eventually do this with docker compose or kubernetes:
-
 ```
 docker pull postgres
 docker run --name yaarg-postgresql -e POSTGRES_PASSWORD=yaarg -e POSTGRES_USER=yaarg -p 5432:5432 -d postgres 
