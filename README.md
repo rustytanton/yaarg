@@ -30,11 +30,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser
 
 ### C4 Diagrams
 
-![System Context Diagram](structurizr/exports/structurizr-1-SystemContext-001.png "YAARG system context diagram" | width=250)
+<img alt="YAARG System Context Diagram" src="structurizr/exports/structurizr-1-SystemContext-001.png" width="250" />
 
-![Container Diagram](structurizr/exports/structurizr-1-Container-001.png "YAARG container diagram" | width=250)
+<img alt="YAARG Container Diagram" src="structurizr/exports/structurizr-1-Container-001.png" width="400" />
 
-![Component Diagram](structurizr/exports/structurizr-1-Component-001.png "YAARG component diagram" | width=250)
+<img alt="YAARG Component Diagram" src="structurizr/exports/structurizr-1-Component-001.png" width="500" />
 
 To start the Structurizr server, run these commands:
 ```
