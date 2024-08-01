@@ -28,6 +28,16 @@ After creating a .env file and database, run the development server:
 
 Open [http://localhost:3000](http://localhost:3000) with your browser
 
+### C4 Diagrams
+
+Run these commands:
+```
+docker pull structurizr/lite
+docker run -it --rm -p 8080:8080 -v $(pwd)/structurizr:/usr/local/structurizr structurizr/lite
+```
+
+Then view at http://localhost:8080
+
 ### Known Issues
 
 *   Resend authenticator throws an error in middleware, issue is described [here](https://github.com/nextauthjs/next-auth/issues/10632)

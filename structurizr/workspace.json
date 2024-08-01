@@ -1,0 +1,395 @@
+{
+  "configuration" : { },
+  "description" : "Description",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedAgent" : "structurizr-javascript",
+  "lastModifiedDate" : "2024-08-01T02:40:18Z",
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "location" : "Unspecified",
+      "name" : "Job Seeker",
+      "properties" : {
+        "structurizr.dsl.identifier" : "jobseeker"
+      },
+      "relationships" : [ {
+        "description" : "Uses",
+        "destinationId" : "3",
+        "id" : "13",
+        "properties" : {
+          "structurizr.dsl.identifier" : "4a5d64b0-80b9-4ef0-a36c-c2ff45cc90b1"
+        },
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Uses",
+        "destinationId" : "2",
+        "id" : "14",
+        "linkedRelationshipId" : "13",
+        "sourceId" : "1"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "containers" : [ {
+        "components" : [ {
+          "description" : "Convert app models to/from database entities",
+          "documentation" : { },
+          "id" : "4",
+          "name" : "Data Layer",
+          "properties" : {
+            "structurizr.dsl.identifier" : "datalayer"
+          },
+          "relationships" : [ {
+            "description" : "Read/Write",
+            "destinationId" : "10",
+            "id" : "23",
+            "properties" : {
+              "structurizr.dsl.identifier" : "e661ca49-904d-4fec-876b-cf89c3cfe31a"
+            },
+            "sourceId" : "4",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "id" : "5",
+          "name" : "Contact Info Form",
+          "properties" : {
+            "structurizr.dsl.identifier" : "contactinfoform"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "4",
+            "id" : "18",
+            "properties" : {
+              "structurizr.dsl.identifier" : "d44683cf-532c-4ca2-b6d4-cdc26d4ddbda"
+            },
+            "sourceId" : "5",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "id" : "6",
+          "name" : "Education Form",
+          "properties" : {
+            "structurizr.dsl.identifier" : "educationform"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "4",
+            "id" : "19",
+            "properties" : {
+              "structurizr.dsl.identifier" : "68a8e3ac-d072-46c2-be8a-f272bdf45b64"
+            },
+            "sourceId" : "6",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "id" : "7",
+          "name" : "Jobs Form",
+          "properties" : {
+            "structurizr.dsl.identifier" : "jobsform"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "4",
+            "id" : "20",
+            "properties" : {
+              "structurizr.dsl.identifier" : "54efbe64-e379-4c0c-83fa-eee69f31bf9f"
+            },
+            "sourceId" : "7",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "id" : "8",
+          "name" : "New Resume Form",
+          "properties" : {
+            "structurizr.dsl.identifier" : "newresumeform"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "4",
+            "id" : "21",
+            "properties" : {
+              "structurizr.dsl.identifier" : "801f253c-2875-456d-b445-e34d1f6c922e"
+            },
+            "sourceId" : "8",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "id" : "9",
+          "name" : "Resume Page",
+          "properties" : {
+            "structurizr.dsl.identifier" : "resume"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "4",
+            "id" : "22",
+            "properties" : {
+              "structurizr.dsl.identifier" : "cbaac597-3dd7-4dcf-a403-55acac2de2a8"
+            },
+            "sourceId" : "9",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "description" : "Database schema as code, entity clients and models",
+          "documentation" : { },
+          "id" : "10",
+          "name" : "Prisma ORM",
+          "properties" : {
+            "structurizr.dsl.identifier" : "prisma"
+          },
+          "relationships" : [ {
+            "description" : "Read/Write",
+            "destinationId" : "11",
+            "id" : "24",
+            "properties" : {
+              "structurizr.dsl.identifier" : "5cd864e8-e269-47cb-955a-96e5e54bec98"
+            },
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        } ],
+        "documentation" : { },
+        "id" : "3",
+        "name" : "NextJS",
+        "properties" : {
+          "structurizr.dsl.identifier" : "nextjs"
+        },
+        "relationships" : [ {
+          "description" : "Uses",
+          "destinationId" : "12",
+          "id" : "15",
+          "properties" : {
+            "structurizr.dsl.identifier" : "96513af9-a81f-486a-a8a0-339b40055aec"
+          },
+          "sourceId" : "3",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Read/Write",
+          "destinationId" : "11",
+          "id" : "17",
+          "properties" : {
+            "structurizr.dsl.identifier" : "c4d69eed-f7e3-4b79-a7dd-9d2480e90ae6"
+          },
+          "sourceId" : "3",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "11",
+        "name" : "PostgreSQL",
+        "properties" : {
+          "structurizr.dsl.identifier" : "postgres"
+        },
+        "tags" : "Element,Container"
+      } ],
+      "description" : "Yet Another AI Resume Generator",
+      "documentation" : { },
+      "id" : "2",
+      "location" : "Unspecified",
+      "name" : "YAARG",
+      "properties" : {
+        "structurizr.dsl.identifier" : "yaarg"
+      },
+      "relationships" : [ {
+        "description" : "Uses",
+        "destinationId" : "12",
+        "id" : "16",
+        "linkedRelationshipId" : "15",
+        "sourceId" : "2"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "documentation" : { },
+      "id" : "12",
+      "location" : "Unspecified",
+      "name" : "ChatGPT",
+      "properties" : {
+        "structurizr.dsl.identifier" : "chatgpt"
+      },
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Name",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlIHsKCiAgICAjICFpZGVudGlmaWVycyBoaWVyYXJjaGljYWwKCiAgICBtb2RlbCB7CiAgICAgICAgIyBkZWZpbmUgbW9kZWxzCiAgICAgICAgam9iU2Vla2VyID0gcGVyc29uICJKb2IgU2Vla2VyIgogICAgICAgIHlhYXJnID0gc29mdHdhcmVTeXN0ZW0gIllBQVJHIiAiWWV0IEFub3RoZXIgQUkgUmVzdW1lIEdlbmVyYXRvciIgewogICAgICAgICAgICBuZXh0SlMgPSBjb250YWluZXIgIk5leHRKUyIgewogICAgICAgICAgICAgICAgZGF0YUxheWVyID0gY29tcG9uZW50ICJEYXRhIExheWVyIiAiQ29udmVydCBhcHAgbW9kZWxzIHRvL2Zyb20gZGF0YWJhc2UgZW50aXRpZXMiCiAgICAgICAgICAgICAgICBjb250YWN0SW5mb0Zvcm0gPSBjb21wb25lbnQgIkNvbnRhY3QgSW5mbyBGb3JtIgogICAgICAgICAgICAgICAgZWR1Y2F0aW9uRm9ybSA9IGNvbXBvbmVudCAiRWR1Y2F0aW9uIEZvcm0iCiAgICAgICAgICAgICAgICBqb2JzRm9ybSA9IGNvbXBvbmVudCAiSm9icyBGb3JtIgogICAgICAgICAgICAgICAgbmV3UmVzdW1lRm9ybSA9IGNvbXBvbmVudCAiTmV3IFJlc3VtZSBGb3JtIgogICAgICAgICAgICAgICAgcmVzdW1lID0gY29tcG9uZW50ICJSZXN1bWUgUGFnZSIKICAgICAgICAgICAgICAgIHByaXNtYSA9IGNvbXBvbmVudCAiUHJpc21hIE9STSIgIkRhdGFiYXNlIHNjaGVtYSBhcyBjb2RlLCBlbnRpdHkgY2xpZW50cyBhbmQgbW9kZWxzIgogICAgICAgICAgICB9CiAgICAgICAgICAgIHBvc3RncmVzID0gY29udGFpbmVyICJQb3N0Z3JlU1FMIgogICAgICAgIH0KICAgICAgICBjaGF0R1BUID0gc29mdHdhcmVTeXN0ZW0gIkNoYXRHUFQiCgogICAgICAgICMgcGVyc29uIHJlbGF0aW9uc2hpcAogICAgICAgIGpvYlNlZWtlciAtPiBuZXh0SlMgIlVzZXMiCiAgICAgICAgCiAgICAgICAgIyBzb2Z0d2FyZSBzeXN0ZW0gcmVsYXRpb25zaGlwcwogICAgICAgIG5leHRKUyAtPiBjaGF0R1BUICJVc2VzIgogICAgICAgIG5leHRKUyAtPiBwb3N0Z3JlcyAiUmVhZC9Xcml0ZSIKICAgICAgICAKICAgICAgICAjIGNvbnRhaW5lciByZWxhdGlvbnNoaXBzCiAgICAgICAgY29udGFjdEluZm9Gb3JtIC0+IGRhdGFMYXllciAiVXNlcyIKICAgICAgICAKICAgICAgICAjIGNvbXBvbmVudCByZWxhdGlvbnNoaXBzCiAgICAgICAgZWR1Y2F0aW9uRm9ybSAtPiBkYXRhTGF5ZXIgIlVzZXMiCiAgICAgICAgam9ic0Zvcm0gLT4gZGF0YUxheWVyICJVc2VzIgogICAgICAgIG5ld1Jlc3VtZUZvcm0gLT4gZGF0YUxheWVyICJVc2VzIgogICAgICAgIHJlc3VtZSAtPiBkYXRhTGF5ZXIgIlVzZXMiCiAgICAgICAgZGF0YUxheWVyIC0+IHByaXNtYSAiUmVhZC9Xcml0ZSIKICAgICAgICBwcmlzbWEgLT4gcG9zdGdyZXMgIlJlYWQvV3JpdGUiCiAgICB9CgogICAgdmlld3MgewoKICAgICAgICBzeXN0ZW1Db250ZXh0IHlhYXJnIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciB5YWFyZyB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKICAgICAgICBjb21wb25lbnQgbmV4dEpTIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIlBlcnNvbiIgewogICAgICAgICAgICAgICAgc2hhcGUgcGVyc29uCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9CgogICAgIyBjb25maWd1cmF0aW9uIHsKICAgICMgICAgIHNjb3BlIHNvZnR3YXJlc3lzdGVtCiAgICAjIH0KCn0K"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "containerId" : "3",
+      "dimensions" : {
+        "height" : 2520,
+        "width" : 3890
+      },
+      "elements" : [ {
+        "id" : "4",
+        "x" : 1720,
+        "y" : 820
+      }, {
+        "id" : "5",
+        "x" : 3220,
+        "y" : 220
+      }, {
+        "id" : "6",
+        "x" : 2470,
+        "y" : 220
+      }, {
+        "id" : "7",
+        "x" : 1720,
+        "y" : 220
+      }, {
+        "id" : "8",
+        "x" : 970,
+        "y" : 220
+      }, {
+        "id" : "9",
+        "x" : 220,
+        "y" : 220
+      }, {
+        "id" : "10",
+        "x" : 1720,
+        "y" : 1420
+      }, {
+        "id" : "11",
+        "x" : 1720,
+        "y" : 2020
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "generatedKey" : true,
+      "key" : "Component-001",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "18"
+      }, {
+        "id" : "19"
+      }, {
+        "id" : "20"
+      }, {
+        "id" : "21"
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "24"
+      } ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "lastSavedView" : "SystemContext-001",
+      "metadataSymbols" : "SquareBrackets",
+      "styles" : {
+        "elements" : [ {
+          "shape" : "Person",
+          "tag" : "Person"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "dimensions" : {
+        "height" : 2091,
+        "width" : 1620
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 245,
+        "y" : 200
+      }, {
+        "id" : "3",
+        "x" : 220,
+        "y" : 900
+      }, {
+        "id" : "11",
+        "x" : 220,
+        "y" : 1500
+      }, {
+        "id" : "12",
+        "x" : 970,
+        "y" : 1500
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "generatedKey" : true,
+      "key" : "Container-001",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "13"
+      }, {
+        "id" : "15"
+      }, {
+        "id" : "17"
+      } ],
+      "softwareSystemId" : "2"
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "applied" : true,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "dimensions" : {
+        "height" : 2000,
+        "width" : 850
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 224,
+        "y" : 200
+      }, {
+        "id" : "2",
+        "x" : 199,
+        "y" : 900
+      }, {
+        "id" : "12",
+        "x" : 199,
+        "y" : 1500
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "generatedKey" : true,
+      "key" : "SystemContext-001",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "14"
+      }, {
+        "id" : "16"
+      } ],
+      "softwareSystemId" : "2"
+    } ]
+  }
+}
