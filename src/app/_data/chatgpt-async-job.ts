@@ -7,6 +7,7 @@ export type ChatGptAsyncJobEntity = _ChatGptAsyncJobEntity
 export type ChatGptAsyncJob = {
     id: number
     userId: string
+    jobType: string
     assistantId: number
     resumeId: number
     runId: string

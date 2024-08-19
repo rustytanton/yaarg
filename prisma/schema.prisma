@@ -212,6 +212,7 @@ model ChatGptAsyncJob {
   resumeId         Int
   runId            String
   threadId         String
+  jobType          String
 
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)

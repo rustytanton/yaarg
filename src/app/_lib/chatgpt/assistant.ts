@@ -8,6 +8,7 @@ export type assistantProperties = {
     name: string
     instructions: string
     model: string
+    responseFormat: any
 }
 
 export enum chatGptAsyncJobStatuses {
@@ -15,6 +16,11 @@ export enum chatGptAsyncJobStatuses {
     COMPLETE = 'complete',
     FAILED = 'failed',
     UNKNOWN = 'unknown'
+}
+
+export enum chatGptAsyncJobTypes {
+    BULLET_SUGGESTIONS = 'bulletSuggestions',
+    SUMMARY_SUGGESTIONS = 'summarySuggestions'
 }
 
 export async function assistant(props: assistantProperties): Promise<ChatGptAssistant | null> {
@@ -31,7 +37,7 @@ export async function assistant(props: assistantProperties): Promise<ChatGptAssi
                 name: props.name,
                 instructions: props.instructions,
                 model: props.model,
-                tools: [{ type: 'code_interpreter' }]
+                response_format: props.responseFormat
             })
             const assistantLocal = await service.create({
                 id: 0,
@@ -74,7 +80,7 @@ export async function assistantMessage(assistantId: string, prompt: string) {
     }
 }
 
-export async function assistantMessageAsync(assistant: ChatGptAssistant, resumeId: number, prompt: string): Promise<ChatGptAsyncJob> {
+export async function assistantMessageAsync(assistant: ChatGptAssistant, resumeId: number, prompt: string, jobType: string): Promise<ChatGptAsyncJob> {
     const session = await auth()
     const openai = new OpenAI()
     const service = new ChatGptAsyncJobService()
@@ -95,9 +101,10 @@ export async function assistantMessageAsync(assistant: ChatGptAssistant, resumeI
             id: 0,
             userId: session.user.id as string,
             assistantId: Number(assistant.id),
+            jobType: jobType,
             resumeId: resumeId,
             runId: run.id,
-            threadId: thread.id            
+            threadId: thread.id       
         }) as ChatGptAsyncJob
     } else {
         throw new Error('No user session')

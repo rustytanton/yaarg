@@ -1,6 +1,6 @@
 'use server'
 
-import { ChatGptSuggestionsrPromptBullet, getBulletAnalysisAsync, getBulletAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions"
+import { ChatGptSuggestionsPromptBullet, getBulletAnalysisAsync, getBulletAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions"
 import { ResumeFormState, ResumeFormStatuses } from "./types"
 import { ResumeJobExperienceSkillService } from "@/app/_data/resume-job-experience-skill"
 import { ResumeSummarySuggestionService } from "@/app/_data/resume-summary-suggestion"
@@ -12,8 +12,9 @@ import { JobDescriptionSkillService } from "@/app/_data/job-description-skill"
 import { ResumeJobExperience, ResumeJobExperienceService } from "@/app/_data/resume-job-experience"
 import { fuzzyMatch } from "fuzzbunny"
 import { ResumeSubmitTypes } from "./types"
-import { ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job"
-import { chatGptAsyncJobStatuses } from "@/app/_lib/chatgpt/assistant"
+import { ChatGptAsyncJob, ChatGptAsyncJobService } from "@/app/_data/chatgpt-async-job"
+import { chatGptAsyncJobStatuses, chatGptAsyncJobTypes } from "@/app/_lib/chatgpt/assistant"
+import { getSummaryAnalysisAsync, getSummaryAnalysisAsyncResult } from "@/app/_lib/chatgpt/assistant-suggestions-summary"
 
 export async function handleFormChange(prevState: ResumeFormState, formData: FormData): Promise<ResumeFormState> {
     const summary = formData.get('summary') as string
@@ -66,14 +67,22 @@ async function handFormChangeUpdateSummary(prevState: ResumeFormState, summary: 
 }
 
 async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): Promise<void> {
-    const bullets: ChatGptSuggestionsrPromptBullet[] = []
     const skills: string[] = prevState.resume?.jobDescription?.skills?.map((skill) => skill.skill) || []
+    const jdSkillService = new JobDescriptionSkillService()
 
     if (!prevState.resume?.jobs) {
         return
     }
 
+    await getSummaryAnalysisAsync(JSON.stringify({
+        summary: prevState.resume?.summary,
+        skills: skills
+    }), prevState.resume?.id as number)
+
+    await jdSkillService.resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
+
     for (const job of prevState.resume.jobs) {
+        const bullets: ChatGptSuggestionsPromptBullet[] = []
         if (job.experiences) {
             for (const experience of job.experiences) {
                 bullets.push({
@@ -81,13 +90,13 @@ async function handleFormChangeChatGptSuggestions(prevState: ResumeFormState): P
                     bulletText: experience.content
                 })
             }
+
+            await getBulletAnalysisAsync(JSON.stringify({
+                skills: skills,
+                bullets: bullets
+            }), prevState.resume?.id as number)
         }
     }
-    const job = await getBulletAnalysisAsync(JSON.stringify({
-        summary: prevState.resume?.summary,
-        skills: skills,
-        bullets: bullets
-    }), prevState.resume?.id as number)
 }
 
 async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormState): Promise<void> {
@@ -118,58 +127,75 @@ async function handleFormChangeSuggestionsFromPrevious(prevState: ResumeFormStat
 
 async function handleFormChangeChatGptAsyncJob(prevState: ResumeFormState) {
     if (prevState.resume?.chatGptAsyncJobs && prevState.resume.chatGptAsyncJobs.length > 0) {
-        const job = prevState.resume.chatGptAsyncJobs[0]
         const chatGptJobService = new ChatGptAsyncJobService()
-        const jdSkillService = new JobDescriptionSkillService()
-        const jdResumeJobExpSkillsService = new ResumeJobExperienceSkillService()
-        const jeSuggestionService = new ResumeJobExperienceSugggestionService()
-        const suggestionService = new ResumeSummarySuggestionService()
-        const session = await auth()
 
-        try {
-            const suggestions = await getBulletAnalysisAsyncResult(job)
-            if (suggestions.status === chatGptAsyncJobStatuses.COMPLETE) {
-                await jdSkillService.resetJobDescriptionSkillsUsedField(Number(prevState.resume?.jobDescription?.id))
-                
-                for (const suggestion of Array.from(suggestions.result)) {
-                    await jdResumeJobExpSkillsService.delete(suggestion.bulletId)
-                    for (const skill of suggestion.skillsUsed) {
-                        await jdResumeJobExpSkillsService.create({
-                            id: 0,
-                            userId: session?.user?.id as string,
-                            jobExperienceId: suggestion.bulletId,
-                            skill: skill
-                        })
-                        await jdSkillService.setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
-                    }
-        
-                    await jeSuggestionService.deleteSuggestionsByExperienceId(suggestion.bulletId)
-                    for (const item of suggestion.qualitySuggestions) {
-                        await jeSuggestionService.create({
-                            id: 0,
-                            userId: session?.user?.id as string,
-                            jobExperienceId: suggestion.bulletId,
-                            suggestion: item
-                        })
-                    }
+        for (const job of prevState.resume.chatGptAsyncJobs) {
+            try {
+                if (job.jobType === chatGptAsyncJobTypes.BULLET_SUGGESTIONS) {
+                    await handleFormChangeChatGptAsyncJobBullets(prevState, job)
+                } else if (job.jobType === chatGptAsyncJobTypes.SUMMARY_SUGGESTIONS) {
+                    await handleFormChangeChatGptAsyncJobSummary(prevState, job)
                 }
-    
-                await suggestionService.deleteAllByResumeId(Number(prevState.resume.id))
-                for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
-                    await suggestionService.create({
-                        id: 0,
-                        resumeId: Number(prevState.resume.id),
-                        userId: session?.user?.id as string,
-                        suggestion: summarySuggestion
-                    })
-                }
-    
+            } catch(err) {
+                // @todo Sometimes ChatGPT does not return valid JSON, should add UI elements to tell the user. Deleting the job at least restores the page buttons and makes it quit polling.
+                console.error(err)
                 await chatGptJobService.delete(Number(job.id))
             }
-        } catch(err) {
-            // @todo Sometimes ChatGPT does not return valid JSON, should add UI elements to tell the user. Deleting the job at least restores the page buttons and makes it quit polling.
-            console.error(err)
-            await chatGptJobService.delete(Number(job.id))
         }
+    }
+}
+
+async function handleFormChangeChatGptAsyncJobSummary(prevState: ResumeFormState, job: ChatGptAsyncJob) {
+    const chatGptJobService = new ChatGptAsyncJobService()
+    const suggestionService = new ResumeSummarySuggestionService()
+    const session = await auth()
+    const suggestions = await getSummaryAnalysisAsyncResult(job)
+    if (suggestions.status === chatGptAsyncJobStatuses.COMPLETE) {
+        await suggestionService.deleteAllByResumeId(Number(prevState.resume.id))
+        for (const summarySuggestion of suggestions.summaryQualitySuggestions) {
+            await suggestionService.create({
+                id: 0,
+                resumeId: Number(prevState.resume.id),
+                userId: session?.user?.id as string,
+                suggestion: summarySuggestion
+            })
+        }
+
+        await chatGptJobService.delete(Number(job.id))
+    }
+}
+
+async function handleFormChangeChatGptAsyncJobBullets(prevState: ResumeFormState, job: ChatGptAsyncJob) {
+    const chatGptJobService = new ChatGptAsyncJobService()
+    const jdSkillService = new JobDescriptionSkillService()
+    const jdResumeJobExpSkillsService = new ResumeJobExperienceSkillService()
+    const jeSuggestionService = new ResumeJobExperienceSugggestionService()
+    const session = await auth()
+    const suggestions = await getBulletAnalysisAsyncResult(job)
+    if (suggestions.status === chatGptAsyncJobStatuses.COMPLETE) {       
+        for (const suggestion of Array.from(suggestions.result)) {
+            await jdResumeJobExpSkillsService.delete(suggestion.bulletId)
+            for (const skill of suggestion.skillsUsed) {
+                await jdResumeJobExpSkillsService.create({
+                    id: 0,
+                    userId: session?.user?.id as string,
+                    jobExperienceId: suggestion.bulletId,
+                    skill: skill
+                })
+                await jdSkillService.setJobDescriptionSkillUsedBySkillName(Number(prevState.resume?.jobDescription?.id), skill)
+            }
+
+            await jeSuggestionService.deleteSuggestionsByExperienceId(suggestion.bulletId)
+            for (const item of suggestion.qualitySuggestions) {
+                await jeSuggestionService.create({
+                    id: 0,
+                    userId: session?.user?.id as string,
+                    jobExperienceId: suggestion.bulletId,
+                    suggestion: item
+                })
+            }
+        }
+
+        await chatGptJobService.delete(Number(job.id))
     }
 }

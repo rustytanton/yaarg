@@ -1,13 +1,24 @@
 import { MessageContent } from "openai/resources/beta/threads/messages.mjs";
-import { assistant, assistantProperties, assistantMessage, assistantMessageAsync, assistantMessageAsyncResult } from "./assistant";
+import { assistant, assistantProperties, assistantMessage, assistantMessageAsync, assistantMessageAsyncResult, chatGptAsyncJobTypes } from "./assistant";
 import { ChatGptAsyncJob } from "@/app/_data/chatgpt-async-job";
+import { z } from 'zod'
+import { zodResponseFormat } from "openai/helpers/zod.mjs";
+
+const ResultFormat = z.object({
+    result: z.array(z.object({
+        bulletText: z.string(),
+        bulletId: z.number(),
+        skillsUsed: z.array(z.string()),
+        skillsNotUsed: z.array(z.string()),
+        qualitySuggestions: z.array(z.string())
+    }))
+})
 
 export const assistantSuggestions: assistantProperties = {
-    name: 'YAARG skills suggestions v5',
+    name: 'YAARG skills suggestions v7',
     instructions: `
 You will be prompted with a JSON object with the following structure:
 {
-    "summary": string,
     "skills": string[],
     "bullets": [
         {
@@ -17,8 +28,6 @@ You will be prompted with a JSON object with the following structure:
     ]
 }
 
-The "summary" property is the text of a resume summary or headline. Offer suggestions to improve the summary text writing quality. Summary text should be gramatically correct and include no misspelled words. Summary text should use strong action verbs and mention as many skills from the "skills" array as possible.
-
 Each item in the "bullets" array is a bullet point which describes an accomplishment to be included in the experience section of a resume. Bullet text should follow STAR format (Situation Task Action Result) and use strong action verbs when possible. Bullet text should include specific success metrics when possible. Bullet text should avoid repetitive language. Bullet text should be gramatically correct and include no misspelled words.
 
 For each item in the "bullets" array:
@@ -27,7 +36,6 @@ For each item in the "bullets" array:
 
 Then return a JSON object with this structure:
 {
-    "summaryQualitySuggestions": string[],
     "result": [
         {
             "bulletText": string,
@@ -38,17 +46,19 @@ Then return a JSON object with this structure:
         }
     ]
 }`,
-    model: 'gpt-3.5-turbo'
+    model: 'gpt-3.5-turbo-1106',
+    // responseFormat: zodResponseFormat(ResultFormat, "skillsSuggestions")
+    responseFormat: { "type": "json_object" }
 }
 
-export type ChatGptSuggestionsrPromptBullet = {
+export type ChatGptSuggestionsPromptBullet = {
     bulletId: number
     bulletText: string
 }
 
-export type ChatGptSuggestionsrPrompt = {
+export type ChatGptSuggestionsPrompt = {
     keywords: string[],
-    bullets: ChatGptSuggestionsrPromptBullet[]
+    bullets: ChatGptSuggestionsPromptBullet[]
 }
 
 type SuggestionsMessageContent = MessageContent & {
@@ -66,7 +76,6 @@ export type ChatGptSuggestionsResultItem = {
 }
 
 export type ChatGptSuggestionsResult = {
-    summaryQualitySuggestions: string[],
     result: ChatGptSuggestionsResultItem[],
     status: string
 }
@@ -87,7 +96,7 @@ export async function getBulletAnalysis(prompt: string): Promise<ChatGptSuggesti
 export async function getBulletAnalysisAsync(prompt: string, resumeId: number) {
     const _assistant = await assistant(assistantSuggestions)
     if (_assistant) {
-        return await assistantMessageAsync(_assistant, resumeId, prompt)
+        return await assistantMessageAsync(_assistant, resumeId, prompt, chatGptAsyncJobTypes.BULLET_SUGGESTIONS)
     } else {
         throw new Error('No assistant found')
     }
