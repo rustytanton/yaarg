@@ -15,7 +15,7 @@
     "@prisma/client": "^5.16.2",
     "@vercel/functions": "^1.4.0",
     "fuzzbunny": "^1.0.1",
-    "next": "14.2.3",
+    "next": "^14.2.14",
     "next-auth": "^5.0.0-beta.19",
     "openai": "^4.51.0",
     "react": "^18",
