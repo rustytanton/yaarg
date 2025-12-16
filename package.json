@@ -16,7 +16,7 @@
     "@vercel/functions": "^1.4.0",
     "fuzzbunny": "^1.0.1",
     "next": "^14.2.35",
-    "next-auth": "^5.0.0-beta.19",
+    "next-auth": "^5.0.0-beta.30",
     "openai": "^4.51.0",
     "react": "^18",
     "react-dom": "^18",
